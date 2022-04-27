@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">zooseeker</string>
     <string name="search_hint">Enter in an animal</string>
+    <string name="app_label">zooseeker</string>
 </resources>
