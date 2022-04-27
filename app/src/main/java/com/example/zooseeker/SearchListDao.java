@@ -1,8 +1,10 @@
 package com.example.zooseeker;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -21,6 +23,12 @@ public interface SearchListDao {
 
     @Query("SELECT * FROM `search_list_items` ORDER BY `id`")
     List<SearchListItem> getAll();
+
+    @Update
+    int update(SearchListItem searchListItem);
+
+    @Delete
+    int delete(SearchListItem searchListItem);
 
 
 }

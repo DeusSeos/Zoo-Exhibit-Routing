@@ -20,7 +20,7 @@ import java.util.List;
 @Entity(tableName = "search_list_items")
 public class SearchListItem {
 
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey
     public String id;
 
     @NonNull
@@ -28,7 +28,7 @@ public class SearchListItem {
     public List<String> tags;
 
 
-    public SearchListItem(String id, @NonNull String itemType, List<String> tags) {
+    public SearchListItem(String id, @NonNull String itemType, List<String> tags) { ;
         this.id = id;
         this.itemType = itemType;
         this.tags = tags;
