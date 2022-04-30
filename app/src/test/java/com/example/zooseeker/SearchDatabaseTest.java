@@ -17,6 +17,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class SearchDatabaseTest {
@@ -87,6 +90,23 @@ public class SearchDatabaseTest {
         int itemsDeleted = dao.delete(item);
         assertEquals(1, itemsDeleted);
         assertNull(dao.get(id));
+    }
+
+    @Test
+    public void testReturnNames() {
+        SearchListItem item = new SearchListItem("entrance_exit_gate", "gate", "FEntrance and Exit Gate", "["animal"]");
+        dao.insert(item);
+        String id1 = item.id;
+
+        SearchListItem item2 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", "["animal"]");
+        dao.insert(item2);
+        String id2 = item2.id;
+
+        List<String> names = dao.getByName();
+        List<String> correctNames = new ArrayList<String>(
+                Arrays.asList("Entrance and Exit Gate",
+                        "FEntrance and Exit Gate"));
+        assertEquals(correctNames, names);
     }
 
 }
