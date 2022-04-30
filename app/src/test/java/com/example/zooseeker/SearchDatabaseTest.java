@@ -9,14 +9,16 @@ import android.content.Context;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
+@RunWith(AndroidJUnit4.class)
 public class SearchDatabaseTest {
 
     private SearchListDao dao;
@@ -37,8 +39,8 @@ public class SearchDatabaseTest {
 
     @Test
     public void testInsert() {
-        SearchListItem item1 = new SearchListItem("entrance-exit-gate-1", "gate", new ArrayList<String>(){{add("enter"); add("start"); add("begin");}});
-        SearchListItem item2 = new SearchListItem("gorilla-viewpoint-1", "exhibit", new ArrayList<String>(){{add("enter"); add("start"); add("begin");}});
+        SearchListItem item1 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", "[\"animal\"]");
+        SearchListItem item2 = new SearchListItem("gorillas", "exhibit", "Gorillas","[\"animal\"]");
 
         long id1 = dao.insert(item1);
         long id2 = dao.insert(item2);
@@ -49,35 +51,35 @@ public class SearchDatabaseTest {
 
     @Test
     public void testGet() {
-        SearchListItem insertedItem = new SearchListItem("entrance-exit-gate-1", "gate", new ArrayList<String>(){{add("enter"); add("start"); add("begin");}});
+        SearchListItem insertedItem = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", "[\"animal\"]");
         dao.insert(insertedItem);
         String id = insertedItem.id;
         SearchListItem item = dao.get(id);
         assertEquals(id, item.id);
-        assertEquals(insertedItem.itemType, item.itemType);
+        assertEquals(insertedItem.name, item.name);
         assertEquals(insertedItem.tags, item.tags);
     }
 
     @Test
     public void testUpdate() {
-        SearchListItem item = new SearchListItem("entrance-exit-gate-1", "gate", new ArrayList<String>(){{add("enter"); add("start"); add("begin");}});
+        SearchListItem item = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", "[\"animal\"]");
         dao.insert(item);
         String id = item.id;
 
         item = dao.get(id);
-        item.itemType = "exhibit";
+        item.name = "exhibit";
         int itemsUpdated = dao.update(item);
         assertEquals(1, itemsUpdated);
 
         item = dao.get(id);
         assertNotNull(item);
-        assertEquals("exhibit", item.itemType);
+        assertEquals("exhibit", item.name);
 
     }
 
     @Test
     public void testDelete() {
-        SearchListItem item = new SearchListItem("entrance-exit-gate-1", "gate", new ArrayList<String>(){{add("enter"); add("start"); add("begin");}});
+        SearchListItem item = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", "[\"animal\"]");
         dao.insert(item);
         String id = item.id;
 

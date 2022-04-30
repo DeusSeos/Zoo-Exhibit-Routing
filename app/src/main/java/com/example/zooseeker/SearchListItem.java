@@ -21,16 +21,19 @@ import java.util.List;
 public class SearchListItem {
 
     @PrimaryKey
+    @NonNull
     public String id;
 
     @NonNull
-    public String itemType;
-    public List<String> tags;
+    public String kind;
+    public String name;
+    public String tags;
 
 
-    public SearchListItem(String id, @NonNull String itemType, List<String> tags) { ;
+    public SearchListItem(@NonNull String id, @NonNull String kind, String name, String tags) {
         this.id = id;
-        this.itemType = itemType;
+        this.kind = kind;
+        this.name = name;
         this.tags = tags;
     }
 
@@ -53,8 +56,9 @@ public class SearchListItem {
     public String toString() {
         return "SearchListItem{" +
                 "id='" + id + '\'' +
-                ", itemType='" + itemType + '\'' +
-                ", tags=" + tags +
+                ", kind='" + kind + '\'' +
+                ", name='" + name + '\'' +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 }

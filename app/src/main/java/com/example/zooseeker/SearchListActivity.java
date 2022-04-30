@@ -22,13 +22,14 @@ public class SearchListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_list);
 
-
+        Log.d("SearchListActivity", "ASL");
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d("SearchListActivity", query);
+            Log.d("SearchListActivity", "query");
         }
+
     }
 }
