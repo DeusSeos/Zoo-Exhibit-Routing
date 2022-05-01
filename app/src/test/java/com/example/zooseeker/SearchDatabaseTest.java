@@ -94,11 +94,11 @@ public class SearchDatabaseTest {
 
     @Test
     public void testReturnNames() {
-        SearchListItem item = new SearchListItem("entrance_exit_gate", "gate", "FEntrance and Exit Gate", "["animal"]");
+        SearchListItem item = new SearchListItem("fentrance_exit_gate", "gate", "FEntrance and Exit Gate", "[\"animal\"]");
         dao.insert(item);
         String id1 = item.id;
 
-        SearchListItem item2 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", "["animal"]");
+        SearchListItem item2 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", "[\"animal\"]");
         dao.insert(item2);
         String id2 = item2.id;
 

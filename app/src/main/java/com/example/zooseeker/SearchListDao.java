@@ -21,7 +21,7 @@ public interface SearchListDao {
     @Query("SELECT * FROM `search_list_items` WHERE `id`=:id")
     SearchListItem get(String id);
 
-    @Query("SELECT name FROM search_list_items ORDER BY name ")
+    @Query("SELECT `name` FROM search_list_items ORDER BY `name`")
     List<String> getByName();
 
 
