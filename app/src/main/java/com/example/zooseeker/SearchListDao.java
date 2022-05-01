@@ -34,5 +34,6 @@ public interface SearchListDao {
     @Delete
     int delete(SearchListItem searchListItem);
 
-
+    @Query("SELECT `name` FROM search_list_items WHERE tags LIKE '%' || :tag || '%' ORDER by name ")
+    List<String> getByTag(String tag);
 }
