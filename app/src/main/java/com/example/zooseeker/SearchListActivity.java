@@ -6,6 +6,8 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -15,6 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
@@ -75,6 +79,14 @@ public class SearchListActivity extends AppCompatActivity {
                 Log.d("SearchListActivity", query);
                 adapter.getFilter().filter(query);
                 return false;
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                MaterialTextView ew = findViewById(view.getId());
+                Log.d("SearchListActivity", ew.getText().toString());
             }
         });
 
