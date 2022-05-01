@@ -89,13 +89,13 @@ public class SearchListActivity extends AppCompatActivity {
                 MaterialTextView ew = findViewById(view.getId());
                 Log.d("SearchListActivity", ew.getText().toString());
                 searchView.setQuery("", false);
+                removeEntry(ew.getText().toString());
             }
         });
     }
 
-    public String removeEntry(List<String> list, String query){
-
-
+    public void removeEntry(String query){
+        this.animalNameList.remove(query);
     }
 
 
