@@ -48,10 +48,10 @@ public class SearchListActivity extends AppCompatActivity {
         animalNameList.add("CAS");
         animalNameList.add("CAB");
 //
-//        listView = findViewById(R.id.search_list);
+        listView = findViewById(R.id.trashy_list);
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalNameList);
-//        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);
 //
         searchView = findViewById(R.id.trash);
 
