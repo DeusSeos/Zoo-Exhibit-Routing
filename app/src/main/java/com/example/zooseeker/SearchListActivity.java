@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SearchListActivity extends AppCompatActivity {
 
@@ -87,8 +88,12 @@ public class SearchListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 MaterialTextView ew = findViewById(view.getId());
                 Log.d("SearchListActivity", ew.getText().toString());
+                searchView.setQuery("", false);
             }
         });
+    }
+
+    public String removeEntry(List<String> list, String query){
 
 
     }
