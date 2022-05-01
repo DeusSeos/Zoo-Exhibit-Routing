@@ -3,6 +3,7 @@ package com.example.zooseeker;
 import android.app.ListActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,8 +33,10 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+        private SearchView searchView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.searchView =itemView.findViewById(R.id.trash);
         }
 
 

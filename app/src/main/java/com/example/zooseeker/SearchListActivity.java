@@ -45,15 +45,11 @@ public class SearchListActivity extends AppCompatActivity {
 //            Log.d("SearchListActivity", "query");
 //        }
 
-        animalNameList = new ArrayList<>();
-        animalNameList.add("AA");
-        animalNameList.add("BAS");
-        animalNameList.add("CA");
-        animalNameList.add("CAS");
-        animalNameList.add("CAB");
+        SearchListDao searchListDao = SearchDatabase.getSingleton(this).searchListDao();
 //
         listView = findViewById(R.id.trashy_list);
 
+        ArrayList<String> animalNameList = (ArrayList<String>) searchListDao.getByName();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalNameList);
         listView.setAdapter(adapter);
 //
@@ -64,7 +60,8 @@ public class SearchListActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 Log.d("SearchListActivity", query);
 
-                if (animalNameList.contains(query)) {
+                ArrayList<String> nameList = (ArrayList<String>) searchListDao.getByInput(query);
+                if (animalNameList.containsAll(nameList)) {
                     adapter.getFilter().filter(query);
                 }
                 else {
