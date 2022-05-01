@@ -8,12 +8,14 @@ import androidx.annotation.VisibleForTesting;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 
 @Database(entities = {SearchListItem.class}, version = 1)
+@TypeConverters({Converters.class})
 public abstract class SearchDatabase extends RoomDatabase {
 
     private static SearchDatabase singleton = null;
