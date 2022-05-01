@@ -103,9 +103,7 @@ public class SearchDatabaseTest {
         String id2 = item2.id;
 
         List<String> names = dao.getByName();
-        List<String> correctNames = new ArrayList<String>(
-                Arrays.asList("Entrance and Exit Gate",
-                        "FEntrance and Exit Gate"));
+        List<String> correctNames = new ArrayList<>(Arrays.asList("Entrance and Exit Gate", "FEntrance and Exit Gate"));
         assertEquals(correctNames, names);
     }
 

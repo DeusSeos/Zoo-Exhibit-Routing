@@ -6,16 +6,26 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+
+import java.util.ArrayList;
 
 public class SearchListActivity extends AppCompatActivity {
 
 
     //Declared variables
     ListView listView;
-    SearchView editsearch;
-    String[] animalNameList;
+    SearchView searchView;
+    ArrayAdapter<String> adapter;
+    ArrayList<String> animalNameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +34,52 @@ public class SearchListActivity extends AppCompatActivity {
 
         Log.d("SearchListActivity", "ASL");
 
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d("SearchListActivity", "query");
-        }
+//        // Get the intent, verify the action and get the query
+//        Intent intent = getIntent();
+//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//            Log.d("SearchListActivity", "query");
+//        }
+
+        animalNameList = new ArrayList<>();
+        animalNameList.add("AA");
+        animalNameList.add("BAS");
+        animalNameList.add("CA");
+        animalNameList.add("CAS");
+        animalNameList.add("CAB");
+//
+//        listView = findViewById(R.id.search_list);
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalNameList);
+//        listView.setAdapter(adapter);
+//
+        searchView = findViewById(R.id.trash);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SearchListActivity", query);
+
+                if (animalNameList.contains(query)) {
+                    adapter.getFilter().filter(query);
+                }
+                else {
+                    Toast.makeText(SearchListActivity.this, "Not found", Toast.LENGTH_LONG).show();
+                }
+                return false;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                Log.d("SearchListActivity", query);
+                adapter.getFilter().filter(query);
+                return false;
+            }
+        });
+
 
     }
+
+
 }
