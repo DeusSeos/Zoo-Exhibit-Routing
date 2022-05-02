@@ -21,7 +21,9 @@ import android.widget.Toast;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SearchListActivity extends AppCompatActivity {
 
@@ -31,6 +33,7 @@ public class SearchListActivity extends AppCompatActivity {
     SearchView searchView;
     ArrayAdapter<String> adapter;
     ArrayList<String> animalNameList;
+    Set<String> selectedItems = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +88,25 @@ public class SearchListActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                MaterialTextView ew = findViewById(view.getId());
-                Log.d("SearchListActivity", ew.getText().toString());
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String ew = (String) adapterView.getItemAtPosition(position);
+//                String thing = Integer.toString(position);
+
+                Log.d("SearchListActivity", ew);
+                selectEntry(ew);
                 searchView.setQuery("", false);
-                removeEntry(ew.getText().toString());
             }
         });
     }
 
-    public void removeEntry(String query){
-        this.animalNameList.remove(query);
+    public void selectEntry(String query){
+//        this.animalNameList.remove(query);
+//        this.adapter.clear();
+//        this.adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalNameList);
+//        this.adapter.notifyDataSetChanged();
+        Log.d("SearchListActivity", "Adding to select: " + query);
+        this.selectedItems.add(query);
+        Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
     }
 
 
