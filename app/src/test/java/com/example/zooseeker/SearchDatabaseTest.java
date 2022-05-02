@@ -124,5 +124,26 @@ public class SearchDatabaseTest {
                         "HEntrance and Exit Gate"));
         assertEquals(correctNames, names);
     }
+    @Test
+    public void testReturnNameByInput() {
+        SearchListItem item = new SearchListItem("fentrance_exit_gate", "gate", "FEntrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal", "area"})));
+        dao.insert(item);
+
+        SearchListItem item2 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
+        dao.insert(item2);
+
+        SearchListItem item3 = new SearchListItem("hentrance_exit_gate", "gate", "HEntrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"area"})));
+        dao.insert(item3);
+
+        List<String> names = dao.getByInput("area");
+        List<String> correctNames = new ArrayList<String>(
+                Arrays.asList("FEntrance and Exit Gate",
+                        "HEntrance and Exit Gate"));
+        assertEquals(correctNames, names);
+        List<String> correctName = new ArrayList<String>(
+                Arrays.asList("Entrance and Exit Gate"));
+        List<String> singleName = dao.getByInput("Entrance and Exit Gate");
+        assertEquals(correctName, singleName);
+    }
 
 }

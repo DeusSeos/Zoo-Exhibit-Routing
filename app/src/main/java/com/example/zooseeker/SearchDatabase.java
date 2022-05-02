@@ -22,7 +22,7 @@ public abstract class SearchDatabase extends RoomDatabase {
 
     public abstract SearchListDao searchListDao();
 
-    private synchronized static SearchDatabase getSingleton(Context context){
+    public synchronized static SearchDatabase getSingleton(Context context){
         if(singleton == null){
             singleton = SearchDatabase.makeDatabase(context);
     }

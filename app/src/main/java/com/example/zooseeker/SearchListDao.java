@@ -36,4 +36,7 @@ public interface SearchListDao {
 
     @Query("SELECT `name` FROM search_list_items WHERE tags LIKE '%' || :tag || '%' ORDER by name ")
     List<String> getByTag(String tag);
+
+    @Query("SELECT `name` FROM search_list_items WHERE tags LIKE '%' || :in || '%' OR name = :in ORDER by name ")
+    List<String> getByInput(String in);
 }
