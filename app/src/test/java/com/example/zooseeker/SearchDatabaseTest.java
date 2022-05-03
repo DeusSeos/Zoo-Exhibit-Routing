@@ -32,6 +32,7 @@ public class SearchDatabaseTest {
         Context context = ApplicationProvider.getApplicationContext();
         db = Room.inMemoryDatabaseBuilder(context, SearchDatabase.class).allowMainThreadQueries().build();
         dao = db.searchListDao();
+
     }
 
     @After

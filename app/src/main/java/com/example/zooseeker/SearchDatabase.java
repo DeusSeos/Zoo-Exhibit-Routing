@@ -38,8 +38,8 @@ public abstract class SearchDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                            List<SearchListItem> todos = SearchListItem.loadJson(context, "sample_node_info.json");
-                            getSingleton(context).searchListDao().insertAll(todos);
+                            List<SearchListItem> searchListItems = SearchListItem.loadJson(context, "sample_node_info.json");
+                            getSingleton(context).searchListDao().insertAll(searchListItems);
                         });
                     }
                 })

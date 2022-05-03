@@ -1,6 +1,7 @@
 package com.example.zooseeker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Database;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -32,8 +33,9 @@ public class SearchListActivity extends AppCompatActivity {
     ListView listView;
     SearchView searchView;
     ArrayAdapter<String> adapter;
-    ArrayList<String> animalNameList;
+    List<SearchListItem> animalNameList;
     Set<String> selectedItems = new HashSet<>();
+    private SearchDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +51,19 @@ public class SearchListActivity extends AppCompatActivity {
 //            Log.d("SearchListActivity", "query");
 //        }
 
-        SearchListDao searchListDao = SearchDatabase.getSingleton(this).searchListDao();
+        db = SearchDatabase.getSingleton(this);
+
+        SearchListDao searchListDao = db.searchListDao();
+
+        List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
+        searchListDao.insertAll(searchListItems);
+
 //
         listView = findViewById(R.id.trashy_list);
 
-        ArrayList<String> animalNameList = (ArrayList<String>) searchListDao.getByName();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalNameList);
+        List<String> animalNameList = searchListDao.getByName();
+        Log.d("SearchListActivity" , "Database names: " + animalNameList.toString());
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, animalNameList);
         listView.setAdapter(adapter);
 //
         searchView = findViewById(R.id.trash);
@@ -67,8 +76,7 @@ public class SearchListActivity extends AppCompatActivity {
                 ArrayList<String> nameList = (ArrayList<String>) searchListDao.getByInput(query);
                 if (animalNameList.containsAll(nameList)) {
                     adapter.getFilter().filter(query);
-                }
-                else {
+                } else {
                     Toast.makeText(SearchListActivity.this, "Not found", Toast.LENGTH_LONG).show();
                 }
                 return false;
@@ -96,7 +104,7 @@ public class SearchListActivity extends AppCompatActivity {
         });
     }
 
-    public void selectEntry(String query){
+    public void selectEntry(String query) {
 //        this.animalNameList.remove(query);
 //        this.adapter.clear();
 //        this.adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalNameList);
@@ -105,6 +113,4 @@ public class SearchListActivity extends AppCompatActivity {
         this.selectedItems.add(query);
         Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
     }
-
-
 }
