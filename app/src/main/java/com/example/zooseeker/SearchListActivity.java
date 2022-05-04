@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -18,16 +19,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SearchListActivity extends AppCompatActivity {
 
 
     //Declared variables
     ListView listView;
+    ListView selectedListView;
     SearchView searchView;
     SearchListItemAdapter adapter;
+    ArrayAdapter<SearchListItem> selectedAdapter;
     List<SearchListItem> animalNameList;
     Set<SearchListItem> selectedItems = new HashSet<>();
+
     private SearchDatabase db;
 
     @Override
@@ -44,13 +49,17 @@ public class SearchListActivity extends AppCompatActivity {
 //        searchListDao.insertAll(searchListItems);
 
         listView = findViewById(R.id.result_list);
+        selectedListView = findViewById(R.id.selected_list);
+
+        selectedListView.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
+
         animalNameList = searchListDao.getAll();
 
         adapter = new SearchListItemAdapter(this, animalNameList);
         listView.setAdapter(adapter);
-
-
+        selectedAdapter = new ArrayAdapter<SearchListItem>(this, R.layout.select_list_view, new ArrayList<>(selectedItems));
+        selectedListView.setAdapter(selectedAdapter);
 
 //        listView.setEmptyView(findViewById(R.id.empty));
 //
@@ -80,12 +89,14 @@ public class SearchListActivity extends AppCompatActivity {
                 Log.d("SearchListActivity", query);
                 if (TextUtils.isEmpty(query)){
                     listView.setVisibility(View.GONE);
+                    selectedListView.setVisibility(View.VISIBLE);
 
                 } else {
                     adapter.getFilter().filter(query, new Filter.FilterListener() {
                         @Override
                         public void onFilterComplete(int i) {
                             listView.setVisibility(View.VISIBLE);
+                            selectedListView.setVisibility(View.GONE);
                         }
                     });
                 }
@@ -106,7 +117,8 @@ public class SearchListActivity extends AppCompatActivity {
                 selectEntry(ew, position);
                 searchView.setQuery("", false);
                 adapter.notifyDataSetChanged();
-
+                selectedAdapter.notifyDataSetChanged();
+                selectedListView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -115,6 +127,7 @@ public class SearchListActivity extends AppCompatActivity {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
         this.selectedItems.add(query);
+        selectedAdapter.add(query);
         Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
     }
 }
