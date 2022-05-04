@@ -3,4 +3,5 @@
     <string name="search_hint">Enter a location</string>
     <string name="app_label">Zooseeker</string>
     <string name="name">Name</string>
+    <string name="plan">Plan</string>
 </resources>

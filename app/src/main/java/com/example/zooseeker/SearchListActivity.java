@@ -2,12 +2,14 @@ package com.example.zooseeker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -22,6 +24,7 @@ import java.util.List;
 public class SearchListActivity extends AppCompatActivity {
 
     //Declared variables
+    Button planButton;
     TextView selectedCount;
     ListView listView;
     ListView selectedListView;
@@ -50,6 +53,7 @@ public class SearchListActivity extends AppCompatActivity {
         listView = findViewById(R.id.result_list);
         selectedListView = findViewById(R.id.selected_list);
         selectedCount = findViewById(R.id.count);
+        planButton = findViewById(R.id.plan_button);
 
         selectedListView.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
@@ -114,6 +118,15 @@ public class SearchListActivity extends AppCompatActivity {
                 selectedAdapter.notifyDataSetChanged();
                 selectedListView.setVisibility(View.VISIBLE);
                 selectedCount.setText(String.valueOf(selectedItems.size()));
+            }
+        });
+
+
+        planButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
+                startActivity(intent);
             }
         });
     }
