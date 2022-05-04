@@ -37,6 +37,8 @@ public class SearchListActivity extends AppCompatActivity {
     Set<String> selectedItems = new HashSet<>();
     private SearchDatabase db;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +55,11 @@ public class SearchListActivity extends AppCompatActivity {
 
         db = SearchDatabase.getSingleton(this);
 
+
         SearchListDao searchListDao = db.searchListDao();
 
-        List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
-        searchListDao.insertAll(searchListItems);
+//        List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
+//        searchListDao.insertAll(searchListItems);
 
 //
         listView = findViewById(R.id.trashy_list);
@@ -98,17 +101,16 @@ public class SearchListActivity extends AppCompatActivity {
 //                String thing = Integer.toString(position);
 
                 Log.d("SearchListActivity", ew);
-                selectEntry(ew);
+                selectEntry(ew, position);
                 searchView.setQuery("", false);
+
+
             }
         });
     }
 
-    public void selectEntry(String query) {
-//        this.animalNameList.remove(query);
-//        this.adapter.clear();
-//        this.adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalNameList);
-//        this.adapter.notifyDataSetChanged();
+    public void selectEntry(String query, int position) {
+        this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
         this.selectedItems.add(query);
         Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
