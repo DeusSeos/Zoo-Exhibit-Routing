@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -126,7 +128,8 @@ public class SearchListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
-                intent.putExtra("selected_list", selectedItems);
+                ArrayList<SearchListItem> arraySelectedItems = new ArrayList(selectedItems);
+                intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
                 startActivity(intent);
             }
         });
