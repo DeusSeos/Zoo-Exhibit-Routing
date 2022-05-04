@@ -30,8 +30,7 @@ public class DirectionActivity extends AppCompatActivity {
     ArrayList<SearchListItem> selectedItems;
     String zooJsonName;
 
-    ArrayList<String> directionsArray;
-    LinkedHashSet<SearchListItem> selectedItems = (LinkedHashSet<SearchListItem>) getIntent().getSerializableExtra("selected_list");
+    ArrayList<String> directionsArray = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
