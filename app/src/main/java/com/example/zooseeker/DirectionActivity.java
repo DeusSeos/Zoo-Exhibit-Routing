@@ -39,7 +39,7 @@ public class DirectionActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // update to Next (next attraction, distance to it)
             }
         });
 
