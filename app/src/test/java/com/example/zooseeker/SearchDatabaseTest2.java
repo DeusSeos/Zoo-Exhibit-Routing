@@ -38,9 +38,7 @@ public class SearchDatabaseTest2 {
     @Test
     public void dead(){
         List<String> names = dao.getByName();
-        System.out.print("Jlkasdf;klafjadffd");
-        System.out.print(names.toString());
-        assertTrue(names.contains("adjfadf"));
+        assertTrue(names.contains("Entrance and Exit Gate"));
 
 
     }
