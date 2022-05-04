@@ -23,18 +23,14 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
     private List<SearchListItem> originalItems;
     private List<SearchListItem> filteredItems;
     private Filter itemFilter = new ItemFilter();
-    private LayoutInflater inflater;
 
 
     public SearchListItemAdapter(@NonNull Context context, List<SearchListItem> items) {
-        this(context, 0);
+        super(context, 0);
         this.originalItems = items;
         this.filteredItems = items;
     }
 
-    public SearchListItemAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
-    }
 
 
     @Override
@@ -68,10 +64,6 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
 
         return convertView;
 
-    }
-
-    static class ViewHolder {
-        TextView text;
     }
 
     @NonNull

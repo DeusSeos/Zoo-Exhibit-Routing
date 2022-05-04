@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 
 public class SearchListActivity extends AppCompatActivity {
 
-
     //Declared variables
     ListView listView;
     ListView selectedListView;
     SearchView searchView;
     SearchListItemAdapter adapter;
-    ArrayAdapter<SearchListItem> selectedAdapter;
+    SelectedListAdapter selectedAdapter;
+
     List<SearchListItem> animalNameList;
     Set<SearchListItem> selectedItems = new HashSet<>();
 
@@ -58,7 +58,7 @@ public class SearchListActivity extends AppCompatActivity {
 
         adapter = new SearchListItemAdapter(this, animalNameList);
         listView.setAdapter(adapter);
-        selectedAdapter = new ArrayAdapter<SearchListItem>(this, R.layout.select_list_view, new ArrayList<>(selectedItems));
+        selectedAdapter = new SelectedListAdapter(this, 0 , selectedItems);
         selectedListView.setAdapter(selectedAdapter);
 
 //        listView.setEmptyView(findViewById(R.id.empty));
@@ -81,7 +81,6 @@ public class SearchListActivity extends AppCompatActivity {
                     Toast.makeText(SearchListActivity.this, "Not found", Toast.LENGTH_LONG).show();
                 }
                 return false;
-
             }
 
             @Override
@@ -90,7 +89,6 @@ public class SearchListActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(query)){
                     listView.setVisibility(View.GONE);
                     selectedListView.setVisibility(View.VISIBLE);
-
                 } else {
                     adapter.getFilter().filter(query, new Filter.FilterListener() {
                         @Override
@@ -100,12 +98,9 @@ public class SearchListActivity extends AppCompatActivity {
                         }
                     });
                 }
-
-
                 return false;
             }
         });
-
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
