@@ -17,8 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  implements Filterable {
 
@@ -98,11 +100,16 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             final ArrayList<SearchListItem> listItems = new ArrayList<>(count);
 
             String filterableString;
+            List<String> filterableArray;
 
             for (int i = 0; i < count; i++) {
                 SearchListItem searchItem = list.get(i);
                 filterableString = searchItem.name;
-                if (filterableString.toLowerCase().startsWith(filterString)) {
+                filterableArray = searchItem.tags;
+                boolean contains = filterableArray.stream()
+                        .filter(element -> element.startsWith(filterString))
+                        .collect(Collectors.toList()).size() > 0;
+                if (filterableString.toLowerCase().startsWith(filterString) || contains) {
                     Log.d("Filter", "adding: " + filterableString);
                     listItems.add(searchItem);
                 }
