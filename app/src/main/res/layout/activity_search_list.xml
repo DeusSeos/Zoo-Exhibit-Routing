@@ -36,6 +36,8 @@
         <ListView
             android:id="@+id/selected_list"
             android:clickable="false"
+            android:listSelector="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
             android:layout_width="371dp"
             android:layout_height="621dp"
             app:layout_constraintBottom_toBottomOf="parent"

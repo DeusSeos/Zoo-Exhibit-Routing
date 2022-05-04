@@ -122,5 +122,6 @@ public class SearchListActivity extends AppCompatActivity {
         this.selectedItems.add(query);
         selectedAdapter.add(query);
         Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
+        Log.d("SearchListActivity", "Adapter updated: " + adapter.toString() );
     }
 }

@@ -31,7 +31,10 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
         this.filteredItems = items;
     }
 
-
+    @Override
+    public void remove(@Nullable SearchListItem object) {
+        originalItems.remove(object);
+    }
 
     @Override
     public int getCount() {

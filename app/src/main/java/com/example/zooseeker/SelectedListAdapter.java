@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Set;
 
 public class SelectedListAdapter extends ArrayAdapter<SearchListItem> {
-    private List<SearchListItem> selctedItems;
+    private List<SearchListItem> selectedItems;
 
     public SelectedListAdapter(@NonNull Context context, int resource, Set<SearchListItem> selctedItems) {
         super(context, resource);
-        this.selctedItems = new ArrayList<>(selctedItems);
+        this.selectedItems = new ArrayList<>(selctedItems);
     }
 
     @Override
