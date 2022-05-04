@@ -11,20 +11,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 public class SelectedListAdapter extends ArrayAdapter<SearchListItem> {
-    private List<SearchListItem> selectedItems;
 
-    public SelectedListAdapter(@NonNull Context context, int resource, Set<SearchListItem> selctedItems) {
+
+    private LinkedHashSet<SearchListItem> selectedItems;
+
+    public SelectedListAdapter(@NonNull Context context, int resource, LinkedHashSet<SearchListItem> selectedItems) {
         super(context, resource);
-        this.selectedItems = new ArrayList<>(selctedItems);
+        this.selectedItems = selectedItems;
     }
 
     @Override
     public int getCount() {
-        return super.getCount();
+        return selectedItems.size();
+    }
+
+    @Nullable
+    @Override
+    public SearchListItem getItem(int position) {
+        //convert to arrayList
+        ArrayList<SearchListItem> thing;
+        thing = new ArrayList<>(selectedItems);
+        return thing.get(position);
     }
 
     @Override
@@ -50,4 +60,12 @@ public class SelectedListAdapter extends ArrayAdapter<SearchListItem> {
 
 
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
+
+
+
 }

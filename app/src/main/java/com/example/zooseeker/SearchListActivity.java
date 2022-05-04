@@ -12,17 +12,17 @@ import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 
-
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SearchListActivity extends AppCompatActivity {
 
     //Declared variables
+    TextView selectedCount;
     ListView listView;
     ListView selectedListView;
     SearchView searchView;
@@ -30,7 +30,7 @@ public class SearchListActivity extends AppCompatActivity {
     SelectedListAdapter selectedAdapter;
 
     List<SearchListItem> animalNameList;
-    Set<SearchListItem> selectedItems = new HashSet<>();
+    LinkedHashSet<SearchListItem> selectedItems = new LinkedHashSet<>();
 
     private SearchDatabase db;
 
@@ -49,6 +49,7 @@ public class SearchListActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.result_list);
         selectedListView = findViewById(R.id.selected_list);
+        selectedCount = findViewById(R.id.count);
 
         selectedListView.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
@@ -112,6 +113,7 @@ public class SearchListActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 selectedAdapter.notifyDataSetChanged();
                 selectedListView.setVisibility(View.VISIBLE);
+                selectedCount.setText(String.valueOf(selectedItems.size()));
             }
         });
     }
@@ -120,8 +122,8 @@ public class SearchListActivity extends AppCompatActivity {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
         this.selectedItems.add(query);
-        selectedAdapter.add(query);
+        //selectedAdapter.add(query);
         Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
-        Log.d("SearchListActivity", "Adapter updated: " + adapter.toString() );
+        Log.d("SearchListActivity", "Adapter updated: " + selectedAdapter.toString() );
     }
 }
