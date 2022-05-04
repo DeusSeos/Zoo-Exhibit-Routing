@@ -6,59 +6,64 @@
     android:layout_height="match_parent"
     tools:context=".SearchListActivity">
 
-        <SearchView
-            android:id="@+id/search_bar"
-            android:layout_width="306dp"
-            android:layout_height="51dp"
-            android:iconifiedByDefault="false"
-            android:queryHint="@string/search_hint"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.152"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.023" />
+    <SearchView
+        android:id="@+id/search_bar"
+        android:layout_width="306dp"
+        android:layout_height="51dp"
+        android:iconifiedByDefault="false"
+        android:textSize="20sp"
+        android:queryHint="@string/search_hint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
 
-        <ListView
-            android:id="@+id/result_list"
-            android:layout_width="371dp"
-            android:layout_height="312dp"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="45dp"
-            android:layout_marginEnd="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.394"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/search_bar"
-            app:layout_constraintVertical_bias="0.019" />
+    <ListView
+        android:id="@+id/selected_list"
+        android:layout_width="371dp"
+        android:layout_height="593dp"
+        android:cacheColorHint="@android:color/transparent"
+        android:clickable="false"
+        android:divider="@null"
+        android:dividerHeight="0sp"
+        android:listSelector="@android:color/transparent"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.63" />
 
-        <ListView
-            android:id="@+id/selected_list"
-            android:clickable="false"
-            android:listSelector="@android:color/transparent"
-            android:cacheColorHint="@android:color/transparent"
-            android:layout_width="371dp"
-            android:layout_height="621dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.609" />
+    <ListView
+        android:id="@+id/result_list"
+        android:layout_width="371dp"
+        android:layout_height="312dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.394"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_bar"
+        app:layout_constraintVertical_bias="0.055" />
 
-        <TextView
-            android:id="@+id/count"
-            android:layout_width="65dp"
-            android:layout_height="49dp"
-            android:gravity="center"
-            android:text="0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/search_bar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.023" />
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="65dp"
+        android:layout_height="49dp"
+        android:gravity="center"
+        android:text="0"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/search_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
