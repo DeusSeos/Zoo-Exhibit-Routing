@@ -34,9 +34,15 @@ public interface SearchListDao {
     @Delete
     int delete(SearchListItem searchListItem);
 
+    @Query("DELETE FROM `search_list_items`")
+    void deleteAll();
+
     @Query("SELECT `name` FROM search_list_items WHERE tags LIKE '%' || :tag || '%' ORDER by name ")
     List<String> getByTag(String tag);
 
     @Query("SELECT `name` FROM search_list_items WHERE tags LIKE '%' || :in || '%' OR name = :in ORDER by name ")
     List<String> getByInput(String in);
+
+    @Query("SELECT * FROM `search_list_items` WHERE tags LIKE '%' || :in || name = :in ORDER by name")
+    List<SearchListItem> getItemsByInput(String in);
 }
