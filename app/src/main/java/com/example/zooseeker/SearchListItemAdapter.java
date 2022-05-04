@@ -27,11 +27,17 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
     private Filter itemFilter = new ItemFilter();
     private LayoutInflater inflater;
 
+
     public SearchListItemAdapter(@NonNull Context context, List<SearchListItem> items) {
-        super(context, 0, items);
+        this(context, 0);
         this.originalItems = items;
         this.filteredItems = items;
     }
+
+    public SearchListItemAdapter(@NonNull Context context, int resource) {
+        super(context, resource);
+    }
+
 
     @Override
     public int getCount() {
@@ -101,6 +107,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
                     listItems.add(searchItem);
                 }
             }
+
 
             results.values = listItems;
             results.count = listItems.size();
