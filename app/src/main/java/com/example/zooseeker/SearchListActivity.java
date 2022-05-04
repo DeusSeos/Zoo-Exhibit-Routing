@@ -49,8 +49,12 @@ public class SearchListActivity extends AppCompatActivity {
 
 
 //       searchListDao.deleteAll();
-//       List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
-//       searchListDao.insertAll(searchListItems);
+
+        if (searchListDao.getAll() == null) {
+            List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
+            searchListDao.insertAll(searchListItems);
+        }
+
 
         listView = findViewById(R.id.result_list);
         selectedListView = findViewById(R.id.selected_list);
@@ -64,7 +68,7 @@ public class SearchListActivity extends AppCompatActivity {
 
         adapter = new SearchListItemAdapter(this, animalNameList);
         listView.setAdapter(adapter);
-        selectedAdapter = new SelectedListAdapter(this, 0 , selectedItems);
+        selectedAdapter = new SelectedListAdapter(this, 0, selectedItems);
         selectedListView.setAdapter(selectedAdapter);
 
 //        listView.setEmptyView(findViewById(R.id.empty));
@@ -75,7 +79,7 @@ public class SearchListActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d("SearchListActivity", query);
-                List<SearchListItem> nameList =  searchListDao.getItemsByInput(query);
+                List<SearchListItem> nameList = searchListDao.getItemsByInput(query);
                 if (animalNameList.containsAll(nameList)) {
                     adapter.getFilter().filter(query, new Filter.FilterListener() {
                         @Override
@@ -92,7 +96,7 @@ public class SearchListActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String query) {
                 Log.d("SearchListActivity", query);
-                if (TextUtils.isEmpty(query)){
+                if (TextUtils.isEmpty(query)) {
                     listView.setVisibility(View.GONE);
                     selectedListView.setVisibility(View.VISIBLE);
                 } else {
@@ -143,6 +147,6 @@ public class SearchListActivity extends AppCompatActivity {
         this.selectedItems.add(query);
         //selectedAdapter.add(query);
         Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
-        Log.d("SearchListActivity", "Adapter updated: " + selectedAdapter.toString() );
+        Log.d("SearchListActivity", "Adapter updated: " + selectedAdapter.toString());
     }
 }
