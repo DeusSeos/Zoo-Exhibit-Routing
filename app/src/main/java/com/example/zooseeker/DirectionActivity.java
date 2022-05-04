@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Pair;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +25,11 @@ public class DirectionActivity extends AppCompatActivity {
 
     String start = "entrance_exit_gate";
     String goal = "arctic_foxes";
-    private ListView directionsList;
+    private ListView directionList;
     private Button nextButton;
+    ArrayList<SearchListItem> selectedItems;
     String zooJsonName;
+
     ArrayList<String> directionsArray;
     LinkedHashSet<SearchListItem> selectedItems = (LinkedHashSet<SearchListItem>) getIntent().getSerializableExtra("selected_list");
 
@@ -34,7 +38,15 @@ public class DirectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_direction);
 
-        directionsList = findViewById(R.id.direction_list);
+        directionList = findViewById(R.id.direction_list);
+        if (getIntent().getParcelableArrayListExtra("selected_list") != null){
+            selectedItems = getIntent().getParcelableArrayListExtra("selected_list");
+            Log.d("DirectionActivity", selectedItems.toString());
+        } else {
+            Log.d("DirectionActivity", "trash :)");
+        }
+
+        directionList = findViewById(R.id.direction_list);
         nextButton = findViewById(R.id.next_button);
 
         //generate the graph - Currently uses example asset
@@ -43,7 +55,7 @@ public class DirectionActivity extends AppCompatActivity {
         Map<String, ZooData.EdgeInfo> eInfo = ZooData.loadEdgeInfoJSON(this,"sample_edge_info.json");
 
         //create a new list view
-        directionsList = (ListView) findViewById(R.id.direction_list);
+        directionList = (ListView) findViewById(R.id.direction_list);
 
         //Create array to loop directions into
         ArrayAdapter<String> directionsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, directionsArray);
@@ -62,7 +74,7 @@ public class DirectionActivity extends AppCompatActivity {
         }
 
         //display the directions in our directionList
-        directionsList.setAdapter(directionsAdapter);
+        directionList.setAdapter(directionsAdapter);
 
         //move through to the next item in the list
 
