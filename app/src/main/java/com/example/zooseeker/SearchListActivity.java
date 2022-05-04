@@ -44,9 +44,9 @@ public class SearchListActivity extends AppCompatActivity {
         SearchListDao searchListDao = db.searchListDao();
 
 
-//        searchListDao.deleteAll();
-//        List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
-//        searchListDao.insertAll(searchListItems);
+       searchListDao.deleteAll();
+       List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
+       searchListDao.insertAll(searchListItems);
 
         listView = findViewById(R.id.result_list);
         selectedListView = findViewById(R.id.selected_list);
@@ -61,7 +61,7 @@ public class SearchListActivity extends AppCompatActivity {
         selectedAdapter = new SelectedListAdapter(this, 0 , selectedItems);
         selectedListView.setAdapter(selectedAdapter);
 
-//        listView.setEmptyView(findViewById(R.id.empty));
+        listView.setEmptyView(findViewById(R.id.empty));
 //
         searchView = findViewById(R.id.search_bar);
 
@@ -107,7 +107,7 @@ public class SearchListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
-//                String thing = Integer.toString(position);
+                String thing = Integer.toString(position);
                 Log.d("SearchListActivity", ew.toString());
                 selectEntry(ew, position);
                 searchView.setQuery("", false);
