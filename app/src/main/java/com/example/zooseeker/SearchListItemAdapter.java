@@ -100,7 +100,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
                 filterableTags = searchItem.tags;
                 filterableKind = searchItem.kind;
                 boolean tagsContained = filterableTags.stream()
-                        .filter(element -> element.startsWith(filterString))
+                        .filter(element -> element.equals(filterString))
                         .collect(Collectors.toList()).size() > 0;
                 boolean exhibitContained = filterableKind.equals(filterString) ;
                 if (filterableString.toLowerCase().startsWith(filterString) || tagsContained || exhibitContained) {
