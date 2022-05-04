@@ -1,6 +1,5 @@
 package com.example.zooseeker;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,15 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -100,16 +96,19 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             final ArrayList<SearchListItem> listItems = new ArrayList<>(count);
 
             String filterableString;
-            List<String> filterableArray;
+            List<String> filterableTags;
+            String filterableKind;
 
             for (int i = 0; i < count; i++) {
                 SearchListItem searchItem = list.get(i);
                 filterableString = searchItem.name;
-                filterableArray = searchItem.tags;
-                boolean contains = filterableArray.stream()
+                filterableTags = searchItem.tags;
+                filterableKind = searchItem.kind;
+                boolean tagsContained = filterableTags.stream()
                         .filter(element -> element.startsWith(filterString))
                         .collect(Collectors.toList()).size() > 0;
-                if (filterableString.toLowerCase().startsWith(filterString) || contains) {
+                boolean exhibitContained = filterableKind.equals(filterString) ;
+                if (filterableString.toLowerCase().startsWith(filterString) || tagsContained || exhibitContained) {
                     Log.d("Filter", "adding: " + filterableString);
                     listItems.add(searchItem);
                 }
