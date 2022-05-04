@@ -126,6 +126,7 @@ public class SearchListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
+                intent.putExtra("selected_list", selectedItems);
                 startActivity(intent);
             }
         });
