@@ -1,34 +1,30 @@
 package com.example.zooseeker;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.util.Pair;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 
 public class DirectionActivity extends AppCompatActivity {
 
-    String start = "entrance_exit_gate";
-    String goal = "arctic_foxes";
+    String firstLocation, secondLocation, thirdLocation;
     private ListView directionList;
     private Button nextButton;
     ArrayList<SearchListItem> selectedItems;
     String zooJsonName;
+    String nextLocationName;
+    float nextLocationDistance;
 
     ArrayList<String> directionsArray = new ArrayList<>();
 
@@ -54,26 +50,32 @@ public class DirectionActivity extends AppCompatActivity {
         Map<String, ZooData.EdgeInfo> eInfo = ZooData.loadEdgeInfoJSON(this,"sample_edge_info.json");
 
         //create a new list view
-        directionList = (ListView) findViewById(R.id.direction_list);
+        directionList = findViewById(R.id.direction_list);
 
         //Create array to loop directions into
-        ArrayAdapter<String> directionsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, directionsArray);
+        ArrayAdapter<String> directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
 
         //parse the locations that are selected and run dijkstra between each node (? maybe not)
-        GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, start, goal);
+        GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, firstLocation, secondLocation);
+        GraphPath<String, IdentifiedWeightedEdge> nextPath = DijkstraShortestPath.findPathBetween(g, secondLocation, thirdLocation);
 
         //save the directions
-        int i = 0;
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
             String currDir = ("Walk " + g.getEdgeWeight(e) + " meters along " + eInfo.get(e.getId()).street +
                     "from " + vInfo.get(g.getEdgeSource(e).toString()).name + "to " +
                     vInfo.get(g.getEdgeTarget(e).toString()).name + ".");
             directionsArray.add(currDir);
-            i++;
         }
 
         //display the directions in our directionList
         directionList.setAdapter(directionsAdapter);
+
+        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
+            nextLocationDistance += g.getEdgeWeight(e);
+        }
+
+        String nextButtonText = "Next | " + nextLocationName.toString() + " meters -" + nextLocationName;
+        nextButton.setText(String.valueOf(nextButtonText));
 
         //move through to the next item in the list
 
@@ -85,9 +87,6 @@ public class DirectionActivity extends AppCompatActivity {
                 // update to Next (next attraction, distance to it)
             }
         });
-
-
-
 
 
     }
