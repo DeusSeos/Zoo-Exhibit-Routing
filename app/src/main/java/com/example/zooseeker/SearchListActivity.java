@@ -128,7 +128,9 @@ public class SearchListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
-                ArrayList<SearchListItem> arraySelectedItems = new ArrayList(selectedItems);
+                ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>();
+                arraySelectedItems.addAll(selectedItems);
+                Log.d("SearchListActivity", arraySelectedItems.toString());
                 intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
                 startActivity(intent);
             }

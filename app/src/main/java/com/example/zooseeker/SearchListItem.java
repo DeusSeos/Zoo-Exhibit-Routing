@@ -1,6 +1,8 @@
 package com.example.zooseeker;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -19,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity(tableName = "search_list_items")
-public class SearchListItem {
+public class SearchListItem implements Parcelable {
 
     @PrimaryKey
     @NonNull
@@ -37,6 +39,25 @@ public class SearchListItem {
         this.name = name;
         this.tags = tags;
     }
+
+    protected SearchListItem(Parcel in) {
+        id = in.readString();
+        kind = in.readString();
+        name = in.readString();
+        tags = in.createStringArrayList();
+    }
+
+    public static final Creator<SearchListItem> CREATOR = new Creator<SearchListItem>() {
+        @Override
+        public SearchListItem createFromParcel(Parcel in) {
+            return new SearchListItem(in);
+        }
+
+        @Override
+        public SearchListItem[] newArray(int size) {
+            return new SearchListItem[size];
+        }
+    };
 
     public static List<SearchListItem> loadJson(Context context, String path) {
         try {
@@ -61,5 +82,21 @@ public class SearchListItem {
                 ", name='" + name + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(kind);
+        parcel.writeString(name);
+        parcel.writeList(tags);
+
+
     }
 }
