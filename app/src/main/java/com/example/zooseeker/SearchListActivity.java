@@ -75,70 +75,13 @@ public class SearchListActivity extends AppCompatActivity {
 
         searchView = findViewById(R.id.search_bar);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.d("SearchListActivity", query);
-                List<SearchListItem> nameList = searchListDao.getItemsByInput(query);
-                if (animalNameList.containsAll(nameList)) {
-                    adapter.getFilter().filter(query, new Filter.FilterListener() {
-                        @Override
-                        public void onFilterComplete(int i) {
-                            listView.setVisibility(View.VISIBLE);
-                        }
-                    });
-                } else {
-                    Toast.makeText(SearchListActivity.this, "Not found", Toast.LENGTH_LONG).show();
-                }
-                return false;
-            }
+//        searchView.setOnQueryTextListener(this::onTextChange);
 
-            @Override
-            public boolean onQueryTextChange(String query) {
-                Log.d("SearchListActivity", query);
-                if (TextUtils.isEmpty(query)) {
-                    listView.setVisibility(View.GONE);
-                    selectedListView.setVisibility(View.VISIBLE);
-                } else {
-                    adapter.getFilter().filter(query, new Filter.FilterListener() {
-                        @Override
-                        public void onFilterComplete(int i) {
-                            listView.setVisibility(View.VISIBLE);
-                            selectedListView.setVisibility(View.GONE);
-                        }
-                    });
-                }
-                return false;
-            }
-        });
+        searchView.setOnQueryTextListener(new QueryListener(this, searchListDao, adapter, listView, selectedListView));
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
-                Log.d("SearchListActivity", ew.toString());
-                selectEntry(ew, position);
-                searchView.setQuery("", false);
-                adapter.notifyDataSetChanged();
-                selectedAdapter.notifyDataSetChanged();
-                selectedListView.setVisibility(View.VISIBLE);
-                selectedCount.setText(String.valueOf(selectedItems.size()));
-            }
-        });
-
-
-        planButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
-                ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>();
-                arraySelectedItems.addAll(selectedItems);
-                Log.d("SearchListActivity", arraySelectedItems.toString());
-                intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
-                startActivity(intent);
-            }
-        });
+        listView.setOnItemClickListener(this::onItemClicked);
+        planButton.setOnClickListener(this::onPlanClicked);
     }
 
     public void selectEntry(SearchListItem query, int position) {
@@ -149,4 +92,27 @@ public class SearchListActivity extends AppCompatActivity {
         Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
         Log.d("SearchListActivity", "Adapter updated: " + selectedAdapter.toString());
     }
+
+
+    public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
+        SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
+        Log.d("SearchListActivity", ew.toString());
+        selectEntry(ew, position);
+        searchView.setQuery("", false);
+        adapter.notifyDataSetChanged();
+        selectedAdapter.notifyDataSetChanged();
+        selectedListView.setVisibility(View.VISIBLE);
+        selectedCount.setText(String.valueOf(selectedItems.size()));
+    }
+
+    public void onPlanClicked(View view) {
+        Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
+        ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>(selectedItems);
+        Log.d("SearchListActivity", arraySelectedItems.toString());
+        intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
+        startActivity(intent);
+    }
+
+
 }
+

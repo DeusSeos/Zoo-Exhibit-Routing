@@ -21,8 +21,6 @@ public class SearchListItemTest {
         String item2  = "SearchListItem{" + "id='" + id + '\'' + ", kind='" + kind + "', name='" + name + '\'' + ", tags='" + tags + '\'' + '}';
         assertEquals(item2, item.toString());
 
-
-
     }
 
 }
