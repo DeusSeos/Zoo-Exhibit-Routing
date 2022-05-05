@@ -20,7 +20,9 @@ import java.util.Map;
 public class DirectionActivity extends AppCompatActivity {
 
     String firstLocation = "entrance_exit_gate";
-    String secondLocation, thirdLocation = "arctic_foxes";
+    String secondLocation = "arctic_foxes";
+    String thirdLocation = "arctic_foxes";
+
     private ListView directionList;
     private Button nextButton;
     ArrayList<SearchListItem> selectedItems;
@@ -62,21 +64,23 @@ public class DirectionActivity extends AppCompatActivity {
         GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, firstLocation, secondLocation);
 //        GraphPath<String, IdentifiedWeightedEdge> nextPath = DijkstraShortestPath.findPathBetween(g, secondLocation, thirdLocation);
 
+
+
         //save the directions
-//        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
-//            String currDir = MessageFormat.format("Walk {0} meters along {1}from {2}to {3}.", g.getEdgeWeight(e), eInfo.get(e.getId()).street, vInfo.get(g.getEdgeSource(e).toString()).name, vInfo.get(g.getEdgeTarget(e).toString()).name);
-//            directionsArray.add(currDir);
-//        }
+        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
+            String currDir = MessageFormat.format("Walk {0} meters along {1}from {2}to {3}.", g.getEdgeWeight(e), eInfo.get(e.getId()).street, vInfo.get(g.getEdgeSource(e).toString()).name, vInfo.get(g.getEdgeTarget(e).toString()).name);
+            directionsArray.add(currDir);
+        }
 
         //display the directions in our directionList
-//        directionList.setAdapter(directionsAdapter);
-//
+        directionList.setAdapter(directionsAdapter);
+
 //        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
 //            nextLocationDistance += g.getEdgeWeight(e);
 //        }
-//
+
 //        String nextButtonText = "Next | " + nextLocationName.toString() + " meters -" + nextLocationName;
-//        nextButton.setText(String.valueOf(nextButtonText));
+//        nextButton.setText(nextButtonText);
 
         //move through to the next item in the list
 
