@@ -75,6 +75,7 @@ public class SearchListItem implements Parcelable {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "SearchListItem{" +

@@ -44,53 +44,49 @@ public class SearchListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_list);
 
+        // initialize db stuff
         db = SearchDatabase.getSingleton(this);
         SearchListDao searchListDao = db.searchListDao();
 
-
-//       searchListDao.deleteAll();
-
+        // load database if empty
         if (searchListDao.getAll() == null) {
             List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
             searchListDao.insertAll(searchListItems);
         }
 
-
+        // initialize views
         listView = findViewById(R.id.result_list);
         selectedListView = findViewById(R.id.selected_list);
         selectedCount = findViewById(R.id.count);
         planButton = findViewById(R.id.plan_button);
+        searchView = findViewById(R.id.search_bar);
 
+        // make the views dissapear
         selectedListView.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
-
+        // get from db the items to populate our adapter
         animalNameList = searchListDao.getAll();
 
+        // set and populate adapter
         adapter = new SearchListItemAdapter(this, animalNameList);
         listView.setAdapter(adapter);
         selectedAdapter = new SelectedListAdapter(this, 0, selectedItems);
         selectedListView.setAdapter(selectedAdapter);
 
-//        listView.setEmptyView(findViewById(R.id.empty));
-
-        searchView = findViewById(R.id.search_bar);
-
-//        searchView.setOnQueryTextListener(this::onTextChange);
-
+        //set the listeners
         searchView.setOnQueryTextListener(new QueryListener(this, searchListDao, adapter, listView, selectedListView));
-
-
         listView.setOnItemClickListener(this::onItemClicked);
         planButton.setOnClickListener(this::onPlanClicked);
     }
+
 
     public void selectEntry(SearchListItem query, int position) {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
         this.selectedItems.add(query);
         //selectedAdapter.add(query);
-        Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
-        Log.d("SearchListActivity", "Adapter updated: " + selectedAdapter.toString());
+//        Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
+//        Log.d("SearchListActivity", "Adapter updated: " + selectedAdapter.toString());
     }
 
 
