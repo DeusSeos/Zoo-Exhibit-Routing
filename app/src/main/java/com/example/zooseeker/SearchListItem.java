@@ -44,7 +44,8 @@ public class SearchListItem implements Parcelable {
         id = in.readString();
         kind = in.readString();
         name = in.readString();
-        tags = in.createStringArrayList();
+        this.tags = new ArrayList<>();
+        in.readList(tags, SearchListItem.class.getClassLoader() );
     }
 
     public static final Creator<SearchListItem> CREATOR = new Creator<SearchListItem>() {
