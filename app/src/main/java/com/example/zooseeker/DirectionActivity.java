@@ -16,19 +16,22 @@ import org.jgrapht.graph.GraphWalk;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DirectionActivity extends AppCompatActivity {
 
+    private Pathfinder pathy;
     private ListView directionList;
     private Button nextButton;
     private ArrayList<SearchListItem> selectedItems;
-    String zooJsonName;
-    String nextLocationName;
-    float nextLocationDistance;
+    private String zooJsonName;
+    private String nextLocationName;
+    private float nextLocationDistance;
 
-    ArrayList<String> directionsArray = new ArrayList<>();
+    List<String> directionsArray = new ArrayList<>();
+    private ArrayAdapter<String> directionsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +50,17 @@ public class DirectionActivity extends AppCompatActivity {
             Log.d("DirectionActivity", "trash :)");
         }
 
+        pathy = new Pathfinder(this, selectedItems);
+        // could make this a call in the constructor (depends if we want to always optimize path first or not)
+        pathy.optimizeSelectedItemsIDs();
+
+        directionsArray = pathy.next();
+
         //Create array to loop directions into
-        ArrayAdapter<String> directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+        directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
 
 
-        //display the directions in our directionList
-
-
-//        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
-//            nextLocationDistance += g.getEdgeWeight(e);
-//        }
 
 //        String nextButtonText = "Next | " + nextLocationName.toString() + " meters -" + nextLocationName;
 //        nextButton.setText(nextButtonText);
@@ -66,11 +69,12 @@ public class DirectionActivity extends AppCompatActivity {
 
 
         //edit nextButton onClick
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // update to Next (next attraction, distance to it)
-            }
+        nextButton.setOnClickListener(view -> {
+            directionsArray = pathy.next();
+            Log.d("DirectionActivity", directionsArray.toString());
+//            directionsAdapter  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+            // update to Next (next attraction, distance to it)
         });
 
 

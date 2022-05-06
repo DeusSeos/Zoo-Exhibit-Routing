@@ -102,11 +102,16 @@ public class SearchListActivity extends AppCompatActivity {
     }
 
     public void onPlanClicked(View view) {
-        Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
-        ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>(selectedItems);
-        Log.d("SearchListActivity", arraySelectedItems.toString());
-        intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
-        startActivity(intent);
+        if (!selectedItems.isEmpty()) {
+            Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
+            ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>(selectedItems);
+            Log.d("SearchListActivity", arraySelectedItems.toString());
+            intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
+            startActivity(intent);
+        } else {
+            // Toast that they dum dum
+            Toast.makeText(this, "Ooopsie you can't plan nothing!", Toast.LENGTH_LONG).show();
+        }
     }
 
 
