@@ -72,7 +72,7 @@ public class DirectionActivity extends AppCompatActivity {
         nextButton.setOnClickListener(view -> {
             directionsArray = pathy.next();
             Log.d("DirectionActivity", directionsArray.toString());
-//            directionsAdapter  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionsAdapter  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
             // update to Next (next attraction, distance to it)
         });

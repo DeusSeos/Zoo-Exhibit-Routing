@@ -11,6 +11,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class Pathfinder {
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
-        for (SearchListItem item: selectedItems) {
+        for (SearchListItem item : selectedItems) {
             tempSelectedItemsIDs.add(item.id);
         }
     }
@@ -50,7 +51,7 @@ public class Pathfinder {
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
-        for (SearchListItem item: selectedItems) {
+        for (SearchListItem item : selectedItems) {
             tempSelectedItemsIDs.add(item.id);
         }
 
@@ -64,18 +65,20 @@ public class Pathfinder {
         sortedSelectedItemsIDs = new ArrayList<>();
         sortedSelectedItemsIDs.add("entrance_exit_gate");
         String sourceItemID = "entrance_exit_gate";
-        GraphPath<String, IdentifiedWeightedEdge> path;
         String lastItem = "entrance_exit_gate";
+        GraphPath<String, IdentifiedWeightedEdge> path;
         if (!tempSelectedItemsIDs.isEmpty()) {
             //Loop through each ID in selectedItemsIDs, removing it from the tempSelectedItems list as we do (so that
             // we aren't checking an item's distance from itself or already visited attractions) (this list will update each time the loop runs)
             while (!tempSelectedItemsIDs.isEmpty()) {
                 //For each id in tempSelectedItemsIDs, check which is the shortest distance (has the lowest weight) from sourceItemID,
                 //and then add it into the sortedSelectedItemsIDs list
-                String lowestWeightId = null;
-                double lowestWeightVal = Double.MAX_VALUE;
-                int i = 0;
-                for (String destItemID : tempSelectedItemsIDs) {
+
+                Iterator<String> iterator = tempSelectedItemsIDs.iterator();
+                while (iterator.hasNext()) {
+                    String lowestWeightId = null;
+                    double lowestWeightVal = Double.MAX_VALUE;
+                    String destItemID = iterator.next();
                     path = DijkstraShortestPath.findPathBetween(g, sourceItemID, destItemID);
                     if (path != null) {
                         if (path.getWeight() < lowestWeightVal) {
@@ -83,32 +86,33 @@ public class Pathfinder {
                             lowestWeightVal = path.getWeight();
                         }
                         sortedSelectedItemsIDs.add(lowestWeightId);
-                        tempSelectedItemsIDs.remove(lowestWeightId);
+                        iterator.remove();
                         sourceItemID = lowestWeightId;
-                        lastItem = lowestWeightId;
-                        // initialize this cause some stupid af concurrent issue (java.util.ConcurrentModificationException) idk i hate it here
-                        ArrayList<String> dir = getDirections(path);
-                        fullPath.add(dir);
-                        ++i;
-                    }
-                    // else we skip
+
+                    } // else we skip
                 }
+
             }
             //Ensure it ends at the entrance/exit gate
             sortedSelectedItemsIDs.add("entrance_exit_gate");
-            // run dijkstras again from last item to entrance
-            path = DijkstraShortestPath.findPathBetween(g, lastItem, "entrance_exit_gate");
-            fullPath.add(getDirections(path));
             Log.d("Pathfinder", sortedSelectedItemsIDs.toString());
         } else {
 //            it was empty for some reason so gotta go back to beginning
             sortedSelectedItemsIDs.add("entrance_exit_gate");
             // run dijkstras again from last item to entrance
-            path = DijkstraShortestPath.findPathBetween(g, sourceItemID, lastItem);
+        }
+        int startIndex = 0;
+        int goalIndex = 1;
+        while (goalIndex < sortedSelectedItemsIDs.size()) {
+            sourceItemID = sortedSelectedItemsIDs.get(startIndex++);
+            String goalID = sortedSelectedItemsIDs.get(goalIndex++);
+            Log.d("Pathfinder", sourceItemID);
+            Log.d("Pathfinder", goalID);
+            path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
             fullPath.add(getDirections(path));
 
         }
-        Log.d("Pathfinder" , fullPath.toString());
+        Log.d("Pathfinder", "FULL PATH LOSER: " + fullPath.toString());
 
     }
 
@@ -123,6 +127,7 @@ public class Pathfinder {
             return noMore;
         }
     }
+
 
     public ArrayList<String> getDirections(GraphPath<String, IdentifiedWeightedEdge> path) {
         ArrayList<String> directions = new ArrayList<>();
