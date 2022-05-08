@@ -49,7 +49,7 @@ public class SearchListActivity extends AppCompatActivity {
         SearchListDao searchListDao = db.searchListDao();
 
         // load database if empty
-        if (searchListDao.getAll() == null) {
+        if (searchListDao.getAll().size() == 0) {
             List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
             searchListDao.insertAll(searchListItems);
         }
