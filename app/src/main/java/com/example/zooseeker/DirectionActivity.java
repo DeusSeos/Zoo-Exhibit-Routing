@@ -1,43 +1,47 @@
 package com.example.zooseeker;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.util.Pair;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.GraphWalk;
 
-import java.lang.reflect.Array;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DirectionActivity extends AppCompatActivity {
 
-    String start = "entrance_exit_gate";
-    String goal = "arctic_foxes";
+    private Pathfinder pathy;
     private ListView directionList;
-    private Button nextButton;
-    ArrayList<SearchListItem> selectedItems;
-    String zooJsonName;
+    private ArrayList<SearchListItem> selectedItems;
+    private String zooJsonName;
+    private String nextLocationName;
+    private float nextLocationDistance;
 
-    ArrayList<String> directionsArray = new ArrayList<>();
+    List<String> directionsArray = new ArrayList<>();
+    private ArrayAdapter<String> directionsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_direction);
 
+        // Initialize variables
         directionList = findViewById(R.id.direction_list);
+        Button nextButton = findViewById(R.id.next_button);
+
+        // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null){
             selectedItems = getIntent().getParcelableArrayListExtra("selected_list");
             Log.d("DirectionActivity", selectedItems.toString());
@@ -45,45 +49,29 @@ public class DirectionActivity extends AppCompatActivity {
             Log.d("DirectionActivity", "trash :)");
         }
 
-        directionList = findViewById(R.id.direction_list);
-        nextButton = findViewById(R.id.next_button);
+        pathy = new Pathfinder(this, selectedItems);
+        // could make this a call in the constructor (depends if we want to always optimize path first or not)
+        pathy.optimizeSelectedItemsIDs();
 
-        //generate the graph - Currently uses example asset
-        Graph<String, IdentifiedWeightedEdge> g = ZooData.loadZooGraphJSON(this, "sample_zoo_graph.json");
-        Map<String, ZooData.VertexInfo> vInfo = ZooData.loadVertexInfoJSON(this, "sample_node_info.json");
-        Map<String, ZooData.EdgeInfo> eInfo = ZooData.loadEdgeInfoJSON(this,"sample_edge_info.json");
-
-        //create a new list view
-        directionList = (ListView) findViewById(R.id.direction_list);
+        directionsArray = pathy.next();
 
         //Create array to loop directions into
-        ArrayAdapter<String> directionsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, directionsArray);
-
-        //parse the locations that are selected and run dijkstra between each node (? maybe not)
-        GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, start, goal);
-
-        //save the directions
-        int i = 0;
-        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
-            String currDir = ("Walk " + g.getEdgeWeight(e) + " meters along " + eInfo.get(e.getId()).street +
-                    "from " + vInfo.get(g.getEdgeSource(e).toString()).name + "to " +
-                    vInfo.get(g.getEdgeTarget(e).toString()).name + ".");
-            directionsArray.add(currDir);
-            i++;
-        }
-
-        //display the directions in our directionList
+        directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
+
+//        String nextButtonText = "Next | " + nextLocationName.toString() + " meters -" + nextLocationName;
+//        nextButton.setText(nextButtonText);
 
         //move through to the next item in the list
 
 
         //edit nextButton onClick
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // update to Next (next attraction, distance to it)
-            }
+        nextButton.setOnClickListener(view -> {
+            directionsArray = pathy.next();
+            Log.d("DirectionActivity", directionsArray.toString());
+            directionsAdapter  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+            // update to Next (next attraction, distance to it)
         });
 
 
@@ -91,4 +79,7 @@ public class DirectionActivity extends AppCompatActivity {
 
 
     }
+
+
+
 }
