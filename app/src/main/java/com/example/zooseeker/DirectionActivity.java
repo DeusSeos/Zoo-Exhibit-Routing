@@ -24,7 +24,6 @@ public class DirectionActivity extends AppCompatActivity {
 
     private Pathfinder pathy;
     private ListView directionList;
-    private Button nextButton;
     private ArrayList<SearchListItem> selectedItems;
     private String zooJsonName;
     private String nextLocationName;
@@ -40,7 +39,7 @@ public class DirectionActivity extends AppCompatActivity {
 
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
-        nextButton = findViewById(R.id.next_button);
+        Button nextButton = findViewById(R.id.next_button);
 
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null){
