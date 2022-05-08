@@ -88,7 +88,7 @@ public class SearchListActivity extends AppCompatActivity {
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
         SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
 //        Log.d("SearchListActivity", ew.toString());
-//        selectEntry(ew, position);
+        selectEntry(ew, position);
         searchView.setQuery("", false);
         adapter.notifyDataSetChanged();
         selectedAdapter.notifyDataSetChanged();
