@@ -87,7 +87,7 @@ public class SearchListActivity extends AppCompatActivity {
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
         SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
-//        Log.d("SearchListActivity", ew.toString());
+        Log.d("SearchListActivity", ew.toString());
         selectEntry(ew, position);
         searchView.setQuery("", false);
         adapter.notifyDataSetChanged();
@@ -105,7 +105,7 @@ public class SearchListActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             // Toast that they dum dum
-            Toast.makeText(this, "Ooopsie you can't plan silly!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ooopsie you can't plan nothing silly!", Toast.LENGTH_SHORT).show();
         }
     }
 
