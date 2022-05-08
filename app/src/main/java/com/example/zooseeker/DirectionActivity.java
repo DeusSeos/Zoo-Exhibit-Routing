@@ -60,8 +60,6 @@ public class DirectionActivity extends AppCompatActivity {
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
 
-
-
 //        String nextButtonText = "Next | " + nextLocationName.toString() + " meters -" + nextLocationName;
 //        nextButton.setText(nextButtonText);
 
@@ -82,25 +80,6 @@ public class DirectionActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-    /*
-    public GraphPath<String, IdentifiedWeightedEdge>  generatePath(String start, String goal){
-        GraphPath<String, IdentifiedWeightedEdge> path = new
-        //if start or goal are not vertices
-        // return an empty path
-        if (!vInfo.containsKey(start) || !vInfo.containsKey(goal)){
-
-        } else {
-            path = DijkstraShortestPath.findPathBetween(g, start, goal);
-        }
-        // try to generate path
-        // catch error and display in a toast notifaction
-        return path;
-    }
-     */
 
 
 
