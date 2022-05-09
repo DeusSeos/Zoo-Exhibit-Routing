@@ -44,9 +44,9 @@ public class DirectionActivity extends AppCompatActivity {
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null){
             selectedItems = getIntent().getParcelableArrayListExtra("selected_list");
-            Log.d("DirectionActivity", selectedItems.toString());
+            Log.d("DirectionActivity", "Loaded arraylist from extra: " +selectedItems.toString());
         } else {
-            Log.d("DirectionActivity", "trash :)");
+            Log.d("DirectionActivity", "Oopsie loading broke");
         }
 
         pathy = new Pathfinder(this, selectedItems);
@@ -59,24 +59,14 @@ public class DirectionActivity extends AppCompatActivity {
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
 
-//        String nextButtonText = "Next | " + nextLocationName.toString() + " meters -" + nextLocationName;
-//        nextButton.setText(nextButtonText);
-
-        //move through to the next item in the list
-
 
         //edit nextButton onClick
         nextButton.setOnClickListener(view -> {
             directionsArray = pathy.next();
-            Log.d("DirectionActivity", directionsArray.toString());
+            Log.d("DirectionActivity", "New directions: " + directionsArray.toString());
             directionsAdapter  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
-            // update to Next (next attraction, distance to it)
         });
-
-
-
-
 
     }
 
