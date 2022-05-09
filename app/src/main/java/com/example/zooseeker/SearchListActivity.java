@@ -87,8 +87,8 @@ public class SearchListActivity extends AppCompatActivity {
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
         SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
-//        Log.d("SearchListActivity", ew.toString());
-//        selectEntry(ew, position);
+        Log.d("SearchListActivity", "Adding exhibit to selectedItems:" + ew.toString());
+        selectEntry(ew, position);
         searchView.setQuery("", false);
         adapter.notifyDataSetChanged();
         selectedAdapter.notifyDataSetChanged();
@@ -100,12 +100,12 @@ public class SearchListActivity extends AppCompatActivity {
         if (!selectedItems.isEmpty()) {
             Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
             ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>(selectedItems);
-            Log.d("SearchListActivity", arraySelectedItems.toString());
+            Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems.toString());
             intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
             startActivity(intent);
         } else {
             // Toast that they dum dum
-            Toast.makeText(this, "Ooopsie you can't plan silly!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ooopsie you can't plan nothing silly!", Toast.LENGTH_SHORT).show();
         }
     }
 
