@@ -37,15 +37,13 @@ public class SearchListActivity extends AppCompatActivity {
     List<SearchListItem> animalNameList;
     LinkedHashSet<SearchListItem> selectedItems = new LinkedHashSet<>();
 
-    private SearchDatabase db;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_list);
 
         // initialize db stuff
-        db = SearchDatabase.getSingleton(this);
+        SearchDatabase db = SearchDatabase.getSingleton(this);
         SearchListDao searchListDao = db.searchListDao();
 
         // load database if empty
@@ -84,15 +82,12 @@ public class SearchListActivity extends AppCompatActivity {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
         this.selectedItems.add(query);
-        //selectedAdapter.add(query);
-//        Log.d("SearchListActivity", "Selected Items updated: " + this.selectedItems.toString());
-//        Log.d("SearchListActivity", "Adapter updated: " + selectedAdapter.toString());
     }
 
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
         SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
-        Log.d("SearchListActivity", ew.toString());
+        Log.d("SearchListActivity", "Adding exhibit to selectedItems:" + ew.toString());
         selectEntry(ew, position);
         searchView.setQuery("", false);
         adapter.notifyDataSetChanged();
@@ -105,12 +100,12 @@ public class SearchListActivity extends AppCompatActivity {
         if (!selectedItems.isEmpty()) {
             Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
             ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>(selectedItems);
-            Log.d("SearchListActivity", arraySelectedItems.toString());
+            Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems.toString());
             intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
             startActivity(intent);
         } else {
             // Toast that they dum dum
-            Toast.makeText(this, "Ooopsie you can't plan nothing!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ooopsie you can't plan nothing silly!", Toast.LENGTH_SHORT).show();
         }
     }
 
