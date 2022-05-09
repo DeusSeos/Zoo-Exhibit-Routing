@@ -132,7 +132,7 @@ public class Pathfinder {
     public ArrayList<String> getDirections(GraphPath<String, IdentifiedWeightedEdge> path) {
         ArrayList<String> directions = new ArrayList<>();
         int i = 1;
-        String defaultMessage = "  %d. Walk %.0f meters along %s from '%s' to '%s'.\n";
+        String defaultMessage = "  %d. Walk %.0f meters along %s between '%s' and '%s'.\n";
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
             directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
                     g.getEdgeWeight(e),
