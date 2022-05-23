@@ -14,9 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.324" >
-
-    </ListView>
+        app:layout_constraintVertical_bias="0.324" />
 
     <Button
         android:id="@+id/next_button"
@@ -30,19 +28,6 @@
         app:layout_constraintTop_toBottomOf="@+id/direction_list"
         app:layout_constraintVertical_bias="0.448" />
 
-<<<<<<< HEAD
-    <ImageButton
-        android:id="@+id/settings_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.954"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023"
-        app:srcCompat="@android:drawable/ic_menu_preferences" />
-=======
     <Button
         android:id="@+id/skip_button"
         android:layout_width="wrap_content"
@@ -66,5 +51,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976" />
->>>>>>> e2b2629f5329b186cea708a47aff122172dc2067
 </androidx.constraintlayout.widget.ConstraintLayout>
