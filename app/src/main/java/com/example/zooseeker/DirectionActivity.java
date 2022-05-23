@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public class DirectionActivity extends AppCompatActivity {
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
+        ImageButton settingsButton = findViewById(R.id.settings_button);
 
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null){
