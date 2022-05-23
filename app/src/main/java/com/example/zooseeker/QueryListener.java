@@ -35,12 +35,7 @@ public class QueryListener implements SearchView.OnQueryTextListener {
         List<SearchListItem> nameList = searchListDao.getItemsByInput(query);
 //                Log.d("SearchListActivity", nameList.toString());
         if (!nameList.isEmpty()) {
-            adapter.getFilter().filter(query, new Filter.FilterListener() {
-                @Override
-                public void onFilterComplete(int i) {
-                    listView.setVisibility(View.VISIBLE);
-                }
-            });
+            adapter.getFilter().filter(query, i -> listView.setVisibility(View.VISIBLE));
         } else {
             Toast.makeText(context, "Unable to find location: " + query, Toast.LENGTH_LONG).show();
         }

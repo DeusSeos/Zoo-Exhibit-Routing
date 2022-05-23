@@ -113,7 +113,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             results.values = listItems;
             results.count = listItems.size();
 
-            Log.d("Filter", constraint.toString() + listItems.toString());
+            Log.d("Filter", constraint + listItems.toString());
 
             return results;
 
