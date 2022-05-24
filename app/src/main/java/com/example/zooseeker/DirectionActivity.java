@@ -1,5 +1,6 @@
 package com.example.zooseeker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +42,8 @@ public class DirectionActivity extends AppCompatActivity {
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
-        ImageButton settingsButton = findViewById(R.id.settings_button);
+        Button settingsButton = findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(this::onSettingsClicked);
 
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null){
@@ -71,7 +73,10 @@ public class DirectionActivity extends AppCompatActivity {
         });
 
     }
-
+    void onSettingsClicked(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 
 
 }
