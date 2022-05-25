@@ -41,7 +41,7 @@ public class DirectionActivity extends AppCompatActivity {
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
-        ImageButton settingsButton = findViewById(R.id.settings_button);
+//        ImageButton settingsButton = findViewById(R.id.settings_button);
 
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null){
@@ -71,7 +71,5 @@ public class DirectionActivity extends AppCompatActivity {
         });
 
     }
-
-
 
 }
