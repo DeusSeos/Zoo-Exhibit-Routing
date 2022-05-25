@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".SearchListActivity">
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/search_bar"
         android:layout_width="306dp"
         android:layout_height="51dp"
