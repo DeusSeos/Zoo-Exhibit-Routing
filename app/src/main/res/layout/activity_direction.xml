@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".DirectionActivity">
 
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.991"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.006"
+        app:srcCompat="@drawable/ic_icons8_settings"
+        android:contentDescription="@string/settings_button" />
+
     <ListView
         android:id="@+id/direction_list"
         android:layout_width="331dp"
