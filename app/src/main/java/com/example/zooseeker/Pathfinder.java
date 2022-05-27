@@ -9,6 +9,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -25,14 +26,19 @@ public class Pathfinder {
     private Map<String, Exhibit> exhibitInfo;
     private Map<String, Trail> trailInfo;
     private List<String> sortedSelectedItemsIDs;
-    private List<SearchListItem> selectedItems;
+    private List<Exhibit> selectedItems;
     private List<String> tempSelectedItemsIDs = new ArrayList<>();
     private ArrayList<ArrayList<String>> fullPath = new ArrayList<>();
+    private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
     private int fullPathIndex;
 
-    public Pathfinder(Context context, List<SearchListItem> selectedItems) {
+
+    // Constructor for Pathfinder object
+    // Get selectedItems and populate the exhibitInfo and trailInfo
+    public Pathfinder(Context context, List<Exhibit> selectedItems) {
         this.context = context;
         g = ZooData.loadZooGraphJSON(context, "sample_zoo_graph.json");
+        dijkstra = new DijkstraShortestPath<>(g);
 
         // Populate from the default assets (note: in your own tests, perhaps use test-only assets?)
         InputStreamReader exhibitsReader;
@@ -52,7 +58,7 @@ public class Pathfinder {
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
-        for (SearchListItem item : selectedItems) {
+        for (Exhibit item : selectedItems) {
             tempSelectedItemsIDs.add(item.id);
         }
     }
@@ -63,20 +69,7 @@ public class Pathfinder {
     //subsequent stop)
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
-        sortedSelectedItemsIDs = new ArrayList<>();
-        String sourceID = "entrance_exit_gate";
 
-        while (!tempSelectedItemsIDs.isEmpty()) {
-            int length = tempSelectedItemsIDs.size();
-            String lowestID = "";
-            int lowestWeight = 0;
-            GraphPath <>tempPath;
-            for (int i = 0; i < length; i++) {
-                String sinkID = tempSelectedItemsIDs.get(i);
-                DijkstraShortestPath.findPathBetween(g, sourceID, sinkID);
-
-            }
-        }
 
 
     }
