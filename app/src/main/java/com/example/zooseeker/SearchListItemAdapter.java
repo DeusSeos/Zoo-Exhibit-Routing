@@ -85,6 +85,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             String filterString = constraint.toString().toLowerCase(Locale.ROOT);
+
             FilterResults  results = new FilterResults();
             final List<SearchListItem> list = originalItems;
             int count = list.size();
@@ -94,13 +95,19 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             List<String> filterableTags;
             String filterableKind;
 
+            if (constraint.equals("all")){
+                results.values = list;
+                results.count = list.size();
+                return results;
+            }
+
             for (int i = 0; i < count; i++) {
                 SearchListItem searchItem = list.get(i);
                 filterableString = searchItem.name;
                 filterableTags = searchItem.tags;
                 filterableKind = searchItem.kind;
                 boolean tagsContained = filterableTags.stream()
-                        .filter(element -> element.equals(filterString))
+                        .filter(element -> element.contains(filterString))
                         .collect(Collectors.toList()).size() > 0;
                 boolean exhibitContained = filterableKind.equals(filterString) ;
                 if (filterableString.toLowerCase().startsWith(filterString) || tagsContained || exhibitContained) {
@@ -113,7 +120,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             results.values = listItems;
             results.count = listItems.size();
 
-            Log.d("Filter", constraint.toString() + listItems.toString());
+            Log.d("Filter", constraint + listItems.toString());
 
             return results;
 

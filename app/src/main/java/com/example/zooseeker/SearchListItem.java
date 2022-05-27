@@ -31,13 +31,17 @@ public class SearchListItem implements Parcelable {
     public String kind;
     public String name;
     public ArrayList<String> tags;
+    public Double lat;
+    public Double lng;
 
 
-    public SearchListItem(@NonNull String id, @NonNull String kind, String name, ArrayList<String> tags) {
+    public SearchListItem(@NonNull String id, @NonNull String kind, String name, ArrayList<String> tags, Double lat, Double lng) {
         this.id = id;
         this.kind = kind;
         this.name = name;
         this.tags = tags;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     protected SearchListItem(Parcel in) {
@@ -46,6 +50,8 @@ public class SearchListItem implements Parcelable {
         name = in.readString();
         this.tags = new ArrayList<>();
         in.readList(tags, SearchListItem.class.getClassLoader() );
+        lng = in.readDouble();
+        lat = in.readDouble();
     }
 
     public static final Creator<SearchListItem> CREATOR = new Creator<SearchListItem>() {
@@ -75,17 +81,17 @@ public class SearchListItem implements Parcelable {
         }
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "SearchListItem{" +
                 "id='" + id + '\'' +
                 ", kind='" + kind + '\'' +
                 ", name='" + name + '\'' +
-                ", tags='" + tags + '\'' +
+                ", tags=" + tags +
+                ", lat=" + lat +
+                ", lng=" + lng +
                 '}';
     }
-
 
     @Override
     public int describeContents() {
@@ -98,6 +104,8 @@ public class SearchListItem implements Parcelable {
         parcel.writeString(kind);
         parcel.writeString(name);
         parcel.writeList(tags);
+        parcel.writeDouble(lat);
+        parcel.writeDouble(lng);
 
 
     }
