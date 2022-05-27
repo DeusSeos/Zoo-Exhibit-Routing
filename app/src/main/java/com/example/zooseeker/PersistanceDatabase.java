@@ -1,2 +1,3 @@
-package com.example.zooseeker;public class PersistanceDatabase {
+package com.example.zooseeker;
+public class PersistanceDatabase {
 }

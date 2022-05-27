@@ -18,21 +18,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  implements Filterable {
+public class SearchListItemAdapter extends ArrayAdapter<Exhibit>  implements Filterable {
 
-    private List<SearchListItem> originalItems;
-    private List<SearchListItem> filteredItems;
+    private List<Exhibit> originalItems;
+    private List<Exhibit> filteredItems;
     private Filter itemFilter = new ItemFilter();
 
 
-    public SearchListItemAdapter(@NonNull Context context, List<SearchListItem> items) {
+    public SearchListItemAdapter(@NonNull Context context, List<Exhibit> items) {
         super(context, 0);
         this.originalItems = items;
         this.filteredItems = items;
     }
 
     @Override
-    public void remove(@Nullable SearchListItem object) {
+    public void remove(@Nullable Exhibit object) {
         originalItems.remove(object);
     }
 
@@ -43,7 +43,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
 
     @Nullable
     @Override
-    public SearchListItem getItem(int position) {
+    public Exhibit getItem(int position) {
         return filteredItems.get(position);
     }
 
@@ -56,7 +56,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        SearchListItem item = getItem(position);
+        Exhibit item = getItem(position);
 
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.search_list_view, parent, false);
@@ -87,9 +87,9 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             String filterString = constraint.toString().toLowerCase(Locale.ROOT);
 
             FilterResults  results = new FilterResults();
-            final List<SearchListItem> list = originalItems;
+            final List<Exhibit> list = originalItems;
             int count = list.size();
-            final ArrayList<SearchListItem> listItems = new ArrayList<>(count);
+            final ArrayList<Exhibit> listItems = new ArrayList<>(count);
 
             String filterableString;
             List<String> filterableTags;
@@ -102,7 +102,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             }
 
             for (int i = 0; i < count; i++) {
-                SearchListItem searchItem = list.get(i);
+                Exhibit searchItem = list.get(i);
                 filterableString = searchItem.name;
                 filterableTags = searchItem.tags;
                 filterableKind = searchItem.kind;
@@ -129,7 +129,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults results) {
-            filteredItems = (ArrayList<SearchListItem>) results.values;
+            filteredItems = (ArrayList<Exhibit>) results.values;
             notifyDataSetChanged();
 
         }

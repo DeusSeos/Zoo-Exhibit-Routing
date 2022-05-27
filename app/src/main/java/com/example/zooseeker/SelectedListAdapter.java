@@ -13,12 +13,12 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
-public class SelectedListAdapter extends ArrayAdapter<SearchListItem> {
+public class SelectedListAdapter extends ArrayAdapter<Exhibit> {
 
 
-    private LinkedHashSet<SearchListItem> selectedItems;
+    private LinkedHashSet<Exhibit> selectedItems;
 
-    public SelectedListAdapter(@NonNull Context context, int resource, LinkedHashSet<SearchListItem> selectedItems) {
+    public SelectedListAdapter(@NonNull Context context, int resource, LinkedHashSet<Exhibit> selectedItems) {
         super(context, resource);
         this.selectedItems = selectedItems;
     }
@@ -30,9 +30,9 @@ public class SelectedListAdapter extends ArrayAdapter<SearchListItem> {
 
     @Nullable
     @Override
-    public SearchListItem getItem(int position) {
+    public Exhibit getItem(int position) {
         //convert to arrayList
-        ArrayList<SearchListItem> thing;
+        ArrayList<Exhibit> thing;
         thing = new ArrayList<>(selectedItems);
         return thing.get(position);
     }
@@ -47,7 +47,7 @@ public class SelectedListAdapter extends ArrayAdapter<SearchListItem> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
 
-        SearchListItem item = getItem(position);
+        Exhibit item = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.search_list_view, parent, false);
