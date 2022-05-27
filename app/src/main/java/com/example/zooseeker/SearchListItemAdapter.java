@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class SearchListItemAdapter extends ArrayAdapter<Exhibit>  implements Filterable {
 
     private List<Exhibit> originalItems;
-    private List<Exhibi> filteredItems;
+    private List<Exhibit> filteredItems;
     private Filter itemFilter = new ItemFilter();
 
 
