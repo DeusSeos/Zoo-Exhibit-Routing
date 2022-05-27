@@ -69,7 +69,28 @@ public class Pathfinder {
     //subsequent stop)
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
+<<<<<<< HEAD
 
+=======
+        sortedSelectedItemsIDs = new ArrayList<>();
+        String sourceID = "entrance_exit_gate";
+
+
+        while (!tempSelectedItemsIDs.isEmpty()) {
+            int length = tempSelectedItemsIDs.size();
+            String lowestID = "";
+            int lowestWeight = Double.MAX_VALUE;
+            GraphPath <>tempPath;
+            for (int i = 0; i < length; i++) {
+                String sinkID = tempSelectedItemsIDs.get(i);
+                DijkstraShortestPath.findPathBetween(g, sourceID, sinkID);
+
+            }
+
+
+
+        }
+>>>>>>> f2fce438d49d8967fcd61512da2945b097a7489e
 
 
     }

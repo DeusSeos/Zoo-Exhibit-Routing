@@ -2,6 +2,7 @@ package com.example.zooseeker;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -11,48 +12,54 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
 @Database(entities = {Exhibit.class}, version = 1)
 @TypeConverters({Converters.class})
-public abstract class SearchDatabase extends RoomDatabase {
+public abstract class PersistenceDatabase extends RoomDatabase {
 
-    private static SearchDatabase singleton = null;
+    private static PersistenceDatabase singleton = null;
 
-    public abstract ExhibitsDao exhibitsDao();
+    public abstract SearchListDao searchListDao();
 
-    public synchronized static SearchDatabase getSingleton(Context context){
+    public synchronized static PersistenceDatabase getSingleton(Context context){
         if(singleton == null){
-            singleton = SearchDatabase.makeDatabase(context);
-    }
+            singleton = PersistenceDatabase.makeDatabase(context);
+        }
         return singleton;
 
     }
 
-    private static SearchDatabase makeDatabase(Context context) {
-        return Room.databaseBuilder(context, SearchDatabase.class, "zooseeker.db")
+    public static void populate(PersistenceDatabase instance, List<Exhibit> exhibitList){
+        Log.i(PersistenceDatabase.class.getCanonicalName(), "Populating database from selected exhibit list...");
+        instance.
+
+    }
+
+    private static PersistenceDatabase makeDatabase(Context context) {
+        return Room.databaseBuilder(context, PersistenceDatabase.class, "Persistance.db")
                 .allowMainThreadQueries()
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
-                        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                            List<Exhibit> exhibits = Exhibit.fromJson(context, "sample_node_info.json");
-                            getSingleton(context).searchListDao().insertAll(Exhibit);
-                        });
                     }
                 })
                 .build();
     }
 
+
+
     @VisibleForTesting
-    public static void injectTestDatabase(SearchDatabase testDatabase) {
+    public static void injectTestDatabase(PersistenceDatabase testDatabase) {
         if (singleton != null) {
             singleton.close();
         }
 
         singleton = testDatabase;
     }
+
 
 }
