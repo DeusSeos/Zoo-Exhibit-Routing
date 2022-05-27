@@ -14,13 +14,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-@Database(entities = {SearchListItem.class}, version = 1)
+@Database(entities = {Exhibit.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class SearchDatabase extends RoomDatabase {
 
     private static SearchDatabase singleton = null;
 
-    public abstract SearchListDao searchListDao();
+    public abstract ExhibitsDao exhibitsDao();
 
     public synchronized static SearchDatabase getSingleton(Context context){
         if(singleton == null){
@@ -38,8 +38,8 @@ public abstract class SearchDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                            List<SearchListItem> searchListItems = SearchListItem.loadJson(context, "sample_node_info.json");
-                            getSingleton(context).searchListDao().insertAll(searchListItems);
+                            List<Exhibit> exhibits = Exhibit.fromJson(context, "sample_node_info.json");
+                            getSingleton(context).searchListDao().insertAll(Exhibit);
                         });
                     }
                 })

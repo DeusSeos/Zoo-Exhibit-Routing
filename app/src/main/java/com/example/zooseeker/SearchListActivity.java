@@ -18,6 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -34,8 +40,9 @@ public class SearchListActivity extends AppCompatActivity {
     SearchListItemAdapter adapter;
     SelectedListAdapter selectedAdapter;
 
-    List<SearchListItem> animalNameList;
-    LinkedHashSet<SearchListItem> selectedItems = new LinkedHashSet<>();
+    ExhibitsDao exhDao;
+    List<Exhibit> animalNameList;
+    LinkedHashSet<Exhibit> selectedItems = new LinkedHashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +51,30 @@ public class SearchListActivity extends AppCompatActivity {
 
         // initialize db stuff
         SearchDatabase db = SearchDatabase.getSingleton(this);
-        SearchListDao searchListDao = db.searchListDao();
+        ExhibitsDao exhDao = db.exhibitsDao();
 
         // load database if empty
-        if (searchListDao.getAll().size() == 0) {
-            List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
-            searchListDao.insertAll(searchListItems);
+        if (exhDao.count() == 0) {
+            Reader exhibitsReader = null;
+            Reader trailsReader = null;
+            try {
+                exhibitsReader = new InputStreamReader(getAssets().open("exhibit_info.json"));
+                trailsReader = new InputStreamReader(getAssets().open("trail_info.json"));
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to load data for prepopulation!");
+            }
+
+
+
+            // Clear all of the tables
+            //exhDao.clearAllTables();
+            //shouldForcePopulate = false;
+
+            var exhibits = Exhibit.fromJson(exhibitsReader);
+            exhDao.insert(exhibits);
+
+            var trails = Trail.fromJson(trailsReader);
+            trailsDao().insert(trails);
         }
 
         // initialize views
@@ -86,7 +111,7 @@ public class SearchListActivity extends AppCompatActivity {
 
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
-        SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
+        Exhibit ew = (Exhibit) adapterView.getItemAtPosition(position); //TODO: AdapterView not containing exhibits yet
         Log.d("SearchListActivity", "Adding exhibit to selectedItems:" + ew.toString());
         selectEntry(ew, position);
         searchView.setQuery("", false);
@@ -99,9 +124,9 @@ public class SearchListActivity extends AppCompatActivity {
     public void onPlanClicked(View view) {
         if (!selectedItems.isEmpty()) {
             Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
-            ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>(selectedItems);
+            ArrayList<Exhibit> arraySelectedItems = new ArrayList<>(Exhibit); //TODO: make directionActivity take exhibits
             Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems.toString());
-            intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
+            intent.putParcelableArrayListExtra("selected_list", arraySelectedItems); //TODO: Make parcelable take exhibits
             startActivity(intent);
         } else {
             // Toast that they dum dum
