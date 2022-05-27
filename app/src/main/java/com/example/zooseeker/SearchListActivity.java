@@ -41,7 +41,7 @@ public class SearchListActivity extends AppCompatActivity {
     SelectedListAdapter selectedAdapter;
 
     ExhibitsDao exhDao;
-    List<Exhibit> animalNameList;
+    List<ExhibitWithGroup> animalNameList;
     LinkedHashSet<Exhibit> selectedItems = new LinkedHashSet<>();
 
     @Override
@@ -51,7 +51,8 @@ public class SearchListActivity extends AppCompatActivity {
 
         // initialize db stuff
         SearchDatabase db = SearchDatabase.getSingleton(this);
-        ExhibitsDao exhDao = db.exhibitsDao();
+        exhDao = db.exhibitsDao();
+
 
         // load database if empty
         if (exhDao.count() == 0) {
@@ -73,8 +74,8 @@ public class SearchListActivity extends AppCompatActivity {
             var exhibits = Exhibit.fromJson(exhibitsReader);
             exhDao.insert(exhibits);
 
-            var trails = Trail.fromJson(trailsReader);
-            trailsDao().insert(trails);
+//            var trails = Trail.fromJson(trailsReader);
+//            trailsDao().insert(trails);
         }
 
         // initialize views
@@ -84,11 +85,11 @@ public class SearchListActivity extends AppCompatActivity {
         planButton = findViewById(R.id.plan_button);
         searchView = findViewById(R.id.search_bar);
 
-        // make the views dissapear
+        // make the views disappear
         selectedListView.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
         // get from db the items to populate our adapter
-        animalNameList = searchListDao.getAll();
+        animalNameList = exhDao.getExhibitsWithGroups();
 
         // set and populate adapter
         adapter = new SearchListItemAdapter(this, animalNameList);
@@ -97,7 +98,7 @@ public class SearchListActivity extends AppCompatActivity {
         selectedListView.setAdapter(selectedAdapter);
 
         //set the listeners
-        searchView.setOnQueryTextListener(new QueryListener(this, searchListDao, adapter, listView, selectedListView));
+        searchView.setOnQueryTextListener(new QueryListener(this, exhDao, adapter, listView, selectedListView));
         listView.setOnItemClickListener(this::onItemClicked);
         planButton.setOnClickListener(this::onPlanClicked);
     }

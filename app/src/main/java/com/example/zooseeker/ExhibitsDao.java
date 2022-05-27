@@ -14,7 +14,7 @@ public interface ExhibitsDao {
     void insert(Exhibit... exhibits);
 
     @Insert
-    static void insert(List<Exhibit> exhibits);
+    void insert(List<Exhibit> exhibits);
 
     @Query("SELECT COUNT(*) from exhibits")
     long count();

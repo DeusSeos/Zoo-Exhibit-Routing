@@ -25,7 +25,7 @@ public class SearchListItemAdapter extends ArrayAdapter<Exhibit>  implements Fil
     private Filter itemFilter = new ItemFilter();
 
 
-    public SearchListItemAdapter(@NonNull Context context, List<Exhibit> items) {
+    public SearchListItemAdapter(@NonNull Context context, List<ExhibitWithGroup> items) {
         super(context, 0);
         this.originalItems = items;
         this.filteredItems = items;
