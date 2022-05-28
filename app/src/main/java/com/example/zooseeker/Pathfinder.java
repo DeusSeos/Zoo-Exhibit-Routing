@@ -5,6 +5,9 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.Trail;
+
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
@@ -13,7 +16,6 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -79,8 +81,8 @@ public class Pathfinder {
         while (!tempSelectedItemsIDs.isEmpty()) {
             int length = tempSelectedItemsIDs.size();
             String lowestID = "";
-            int lowestWeight = Double.MAX_VALUE;
-            GraphPath <>tempPath;
+//            int lowestWeight = Double.MAX_VALUE;
+//            GraphPath <>tempPath;
             for (int i = 0; i < length; i++) {
                 String sinkID = tempSelectedItemsIDs.get(i);
                 DijkstraShortestPath.findPathBetween(g, sourceID, sinkID);

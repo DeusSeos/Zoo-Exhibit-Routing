@@ -1,4 +1,4 @@
-package com.example.zooseeker;
+package com.example.zooseeker.db;
 
 import android.util.Pair;
 import androidx.room.Embedded;
