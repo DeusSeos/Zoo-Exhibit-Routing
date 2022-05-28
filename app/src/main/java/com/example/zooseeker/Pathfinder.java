@@ -76,7 +76,6 @@ public class Pathfinder {
 
         sortedSelectedItemsIDs = new ArrayList<>();
         String sourceID = "entrance_exit_gate";
-<<<<<<< HEAD
         String tempSource = "temp"
         double shortest = Double.MAX_VALUE;
 
@@ -88,20 +87,7 @@ public class Pathfinder {
                     shortest = curr;
                     tempSource = sink;
                 }
-=======
 
-
-        while (!tempSelectedItemsIDs.isEmpty()) {
-            int length = tempSelectedItemsIDs.size();
-            String lowestID = "";
-//            int lowestWeight = Double.MAX_VALUE;
-//            GraphPath <>tempPath;
-            for (int i = 0; i < length; i++) {
-                String sinkID = tempSelectedItemsIDs.get(i);
-                DijkstraShortestPath.findPathBetween(g, sourceID, sinkID);
-
->>>>>>> 99f676def45d97c98c582933b743f837b84451af
-            }
             sourceID = tempSource;
             sortedSelectedItemsIDs.add(sourceID);
             tempSelectedItemsIDs.remove(sourceID);
