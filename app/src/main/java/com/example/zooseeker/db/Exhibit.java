@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "exhibits")
@@ -72,7 +73,7 @@ public class Exhibit {
     @ColumnInfo(name = "tags")
     @SerializedName("tags")
     @NonNull
-    public final List<String> tags;
+    public final ArrayList<String> tags;
 
     @ColumnInfo(name = "lat")
     @SerializedName("lat")
@@ -102,7 +103,7 @@ public class Exhibit {
                    @Nullable String groupId,
                    @NonNull Kind kind,
                    @NonNull String name,
-                   @NonNull List<String> tags,
+                   @NonNull ArrayList<String> tags,
                    @Nullable Double lat,
                    @Nullable Double lng) {
         this.id = id;
@@ -118,4 +119,16 @@ public class Exhibit {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Exhibit{" +
+                "id='" + id + '\'' +
+                ", groupId='" + groupId + '\'' +
+                ", kind=" + kind +
+                ", name='" + name + '\'' +
+                ", tags=" + tags +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                '}';
+    }
 }

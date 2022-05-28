@@ -6,8 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.example.zooseeker.SearchListItem;
-
 import java.util.List;
 
 @Dao
@@ -29,19 +27,18 @@ public interface ExhibitsDao {
     @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' ORDER BY name ASC")
     LiveData<List<ExhibitWithGroup>> getExhibitsWithGroupsLive();
 
+
     @Transaction
     @Query("SELECT * FROM exhibits WHERE id=:id")
     ExhibitWithGroup getExhibitWithGroupById(String id);
 
+    @Transaction
+    @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' ORDER BY name ASC")
+    List<ExhibitWithGroup> getExhibits();
 
-    @Query("SELECT `name` FROM exhibits ORDER BY `name` ASC")
-    List<ExhibitWithGroup> getByName();
-
-    @Query("SELECT `name` FROM exhibits WHERE tags LIKE '%' || :in || '%' OR name = :in ORDER by name ")
-    List<String> getByInput(String in);
-
-    @Query("SELECT * FROM `exhibits` WHERE tags LIKE '%' || :in || name = :in ORDER by name")
-    List<SearchListItem> getExhibitsByInput(String in);
+    @Transaction
+    @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' || tags LIKE '%' || :in || name = :in ORDER BY name ASC")
+    List<ExhibitWithGroup> getExhibitsByName(String in);
 
 
 }

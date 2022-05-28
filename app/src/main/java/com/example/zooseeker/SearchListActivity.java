@@ -16,15 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.zooseeker.adapters.SearchListItemAdapter;
+import com.example.zooseeker.adapters.SelectedListAdapter;
 import com.example.zooseeker.db.Exhibit;
 import com.example.zooseeker.db.ExhibitWithGroup;
 import com.example.zooseeker.db.ExhibitsDao;
 import com.example.zooseeker.db.SearchDatabase;
-import com.example.zooseeker.db.ZooDatabase;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -41,21 +39,22 @@ public class SearchListActivity extends AppCompatActivity {
     SelectedListAdapter selectedAdapter;
 
     ExhibitsDao exhibitsDao;
-    List<ExhibitWithGroup> animalNameList;
-    LinkedHashSet<Exhibit> selectedItems = new LinkedHashSet<>();
+    List<ExhibitWithGroup> animalNameList = new ArrayList<>();
+    LinkedHashSet<ExhibitWithGroup> selectedItems = new LinkedHashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
+
         setContentView(R.layout.activity_search_list);
 
         // initialize db stuff
-//        SearchDatabase db = SearchDatabase.getDatabase(this);
-//        exhibitsDao = db.exhibitsDao();
+        SearchDatabase db = SearchDatabase.getDatabase(this);
+
+        exhibitsDao = db.exhibitsDao();
+
 
 //        ZooDatabase db = ZooDatabase.getDatabase(this);
-
 
 
         // initialize views
@@ -69,7 +68,12 @@ public class SearchListActivity extends AppCompatActivity {
         selectedListView.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
         // get from db the items to populate our adapter
-        animalNameList = exhibitsDao.getExhibitsWithGroups();
+
+
+        Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
+        Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
+        animalNameList = exhibitsDao.getExhibits();
+        Log.d("SearchListActivity", "animalNameList: " + animalNameList.toString());
 
         // set and populate adapter
         adapter = new SearchListItemAdapter(this, animalNameList);
@@ -82,11 +86,11 @@ public class SearchListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(this::onItemClicked);
         planButton.setOnClickListener(this::onPlanClicked);
 
-         */
+
     }
 
 
-    public void selectEntry(Exhibit query, int position) {
+    public void selectEntry(ExhibitWithGroup query, int position) {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
         this.selectedItems.add(query);
@@ -94,7 +98,7 @@ public class SearchListActivity extends AppCompatActivity {
 
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
-        Exhibit ew = (Exhibit) adapterView.getItemAtPosition(position); //TODO: AdapterView not containing exhibits yet
+        ExhibitWithGroup ew =  (ExhibitWithGroup) adapterView.getItemAtPosition(position); //TODO: AdapterView not containing exhibits yet
         Log.d("SearchListActivity", "Adding exhibit to selectedItems:" + ew.toString());
         selectEntry(ew, position);
         searchView.setQuery("", false);

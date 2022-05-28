@@ -54,4 +54,12 @@ public class ExhibitWithGroup {
         var dLng = coords.second - otherCoords.second;
         return Math.sqrt(Math.pow(dLat, 2) + Math.pow(dLng, 2)) < delta;
     }
+
+    @Override
+    public String toString() {
+        return "ExhibitWithGroup{" +
+                "exhibit=" + exhibit +
+                ", group=" + group +
+                '}';
+    }
 }

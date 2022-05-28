@@ -51,7 +51,7 @@ public class DirectionActivity extends AppCompatActivity {
             Log.d("DirectionActivity", "Oopsie loading broke");
         }
 
-        pathy = new Pathfinder(this, selectedItems);
+//        pathy = new Pathfinder(this, selectedItems);
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
         pathy.optimizeSelectedItemsIDs();
 

@@ -13,9 +13,14 @@ import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -27,17 +32,22 @@ public abstract class SearchDatabase extends RoomDatabase {
     private static boolean shouldForcePopulate = false;
 
     public abstract ExhibitsDao exhibitsDao();
+
     public abstract TrailsDao trailsDao();
 
-    public synchronized static SearchDatabase getDatabase(Context context){
-        if(singleton == null){
+    public synchronized static SearchDatabase getDatabase(Context context) {
+        if (singleton == null) {
+            Log.d("Database", "YO YO YO");
             singleton = SearchDatabase.makeDatabase(context);
-    }
+        }
         return singleton;
 
     }
 
     private static SearchDatabase makeDatabase(Context context) {
+        Log.d("Database", "making database");
+//        Log.d("Database", "Populated " + String.valueOf(isPopulated()));
+        Log.d("Database", "Force POp " + String.valueOf(shouldForcePopulate));
         return Room.databaseBuilder(context, SearchDatabase.class, "zooseeker.db")
                 .allowMainThreadQueries()
                 .addCallback(new Callback() {
@@ -46,7 +56,8 @@ public abstract class SearchDatabase extends RoomDatabase {
                         Executors.newSingleThreadExecutor().execute(() -> {
                             // Don't populate on open unless the database is empty.
                             if (isPopulated() && !shouldForcePopulate) return;
-                            Log.i(SearchDatabase.class.getCanonicalName(),
+//                            if (shouldForcePopulate) return;
+                            Log.i("Database",
                                     "Database is empty or re-popualtion forced, populating...");
                             populate(context, singleton);
                         });
@@ -55,7 +66,7 @@ public abstract class SearchDatabase extends RoomDatabase {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         Executors.newSingleThreadExecutor().execute(() -> {
-                            Log.i(SearchDatabase.class.getCanonicalName(),
+                            Log.i("Database",
                                     "Database is new, populating...");
                             populate(context, singleton);
                         });
@@ -78,7 +89,7 @@ public abstract class SearchDatabase extends RoomDatabase {
 
     @VisibleForTesting
     public static void populate(Context context, SearchDatabase instance, Reader exhibitsReader, Reader trailsReader) {
-        Log.i(SearchDatabase.class.getCanonicalName(), "Populating database from assets...");
+        Log.i("Database", "Populating database from assets...");
 
         // Clear all of the tables
         instance.clearAllTables();
@@ -113,14 +124,27 @@ public abstract class SearchDatabase extends RoomDatabase {
 
 
     public static class Converters {
+        //        @TypeConverter
+//        public static List<String> fromCsv(String csv) {
+//            return List.of(",".split(csv));
+//        }
+//
+//        @TypeConverter
+//        public static String toCsv(List<String> tags) {
+//            return String.join(",", tags);
+//        }
         @TypeConverter
-        public static List<String> fromCsv(String csv) {
-            return List.of(",".split(csv));
+        public static ArrayList<String> fromString(String value) {
+            Type listType = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            return new Gson().fromJson(value, listType);
         }
 
         @TypeConverter
-        public static String toCsv(List<String> tags) {
-            return String.join(",", tags);
+        public static String fromStringArray(ArrayList<String> list) {
+            Gson gson = new Gson();
+            String json = gson.toJson(list);
+            return json;
         }
     }
 
