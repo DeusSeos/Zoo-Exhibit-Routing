@@ -49,7 +49,15 @@ public class Pathfinder {
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
         for (ExhibitWithGroup item : selectedItems) {
-            tempSelectedItemsIDs.add(item.exhibit.id);
+
+            if(!item.exhibit.hasGroup()){
+                tempSelectedItemsIDs.add(item.exhibit.id);
+                Log.d("itemnamesasadded", item.exhibit.id);
+            }
+            else{
+                tempSelectedItemsIDs.add(item.exhibit.groupId);
+                Log.d("itemnamesasadded", item.exhibit.groupId);
+            }
         }
     }
 
