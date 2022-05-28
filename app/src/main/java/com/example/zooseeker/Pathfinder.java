@@ -28,8 +28,8 @@ public class Pathfinder {
 
     private Context context;
     private Graph<String, IdentifiedWeightedEdge> g;
-    private Map<String, Exhibit> exhibitInfo;
-    private Map<String, Trail> trailInfo;
+    private Map<String, ExhibitWithGroup> vInfo;
+    private Map<String, Trail> eInfo;
     private List<String> sortedSelectedItemsIDs;
     private List<ExhibitWithGroup> selectedItems;
     private List<String> tempSelectedItemsIDs = new ArrayList<>();
@@ -43,22 +43,23 @@ public class Pathfinder {
     public Pathfinder(Context context, List<ExhibitWithGroup> selectedItems) {
         this.context = context;
         g = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
+        vInfo = ZooData.loadVertexInfoJSON(context, "exhibit_info");
+        eInfo = ZooData.loadEdgeInfoJSON(context, "trail_info");
+
         dijkstra = new DijkstraShortestPath<>(g);
 
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
         for (ExhibitWithGroup item : selectedItems) {
-
-            if(!item.exhibit.hasGroup()){
+            if (item.exhibit.hasGroup()){
+                tempSelectedItemsIDs.add(item.group.id);
+            } else {
                 tempSelectedItemsIDs.add(item.exhibit.id);
-                Log.d("itemnamesasadded", item.exhibit.id);
             }
-            else{
-                tempSelectedItemsIDs.add(item.exhibit.groupId);
-                Log.d("itemnamesasadded", item.exhibit.groupId);
-            }
+
         }
+        Log.d("Pathfinder", "temp Selected Items" + tempSelectedItemsIDs.toString());
     }
 
 
@@ -68,7 +69,10 @@ public class Pathfinder {
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
 
+
         sortedSelectedItemsIDs = new ArrayList<>();
+        sortedSelectedItemsIDs.add("entrance_exit_gate");
+
         String sourceID = "entrance_exit_gate";
         String tempSource = "temp";
         double shortest = Double.MAX_VALUE;
@@ -91,6 +95,24 @@ public class Pathfinder {
                 tempSelectedItemsIDs.remove(sourceID);
             }
         }
+
+        sortedSelectedItemsIDs.add("entrance_exit_gate");
+        int startIndex = 0;
+        int goalIndex = 1;
+        String sourceItemID;
+
+        while (goalIndex < sortedSelectedItemsIDs.size()) {
+            sourceItemID = sortedSelectedItemsIDs.get(startIndex++);
+            String goalID = sortedSelectedItemsIDs.get(goalIndex++);
+            Log.d("Pathfinder", sourceItemID);
+            Log.d("Pathfinder", goalID);
+            GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
+            Log.d("Pathfinder", "HIIIII: " + getDirections(path));
+            fullPath.add(getDirections(path));
+
+        }
+        Log.d("Pathfinder", "FULL PATH LOSER: " + fullPath.toString());
+
     }
 
     public ArrayList<String> next() {
@@ -113,9 +135,9 @@ public class Pathfinder {
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
             directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
                     g.getEdgeWeight(e),
-                    trailInfo.get(e.getId()).street,
-                    exhibitInfo.get(g.getEdgeSource(e)).name,
-                    exhibitInfo.get(g.getEdgeTarget(e)).name));
+                    eInfo.get(e.getId()).street,
+                    vInfo.get(g.getEdgeSource(e)).exhibit.name,
+                    vInfo.get(g.getEdgeTarget(e)).exhibit.name));
             i++;
         }
         Log.d("Pathfinder", directions.toString());
