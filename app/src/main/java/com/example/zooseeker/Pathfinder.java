@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
 import com.example.zooseeker.db.Trail;
 
 import org.jgrapht.Graph;
@@ -30,7 +31,7 @@ public class Pathfinder {
     private Map<String, Exhibit> exhibitInfo;
     private Map<String, Trail> trailInfo;
     private List<String> sortedSelectedItemsIDs;
-    private List<Exhibit> selectedItems;
+    private List<ExhibitWithGroup> selectedItems;
     private List<String> tempSelectedItemsIDs = new ArrayList<>();
     private ArrayList<ArrayList<String>> fullPath = new ArrayList<>();
     private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
@@ -39,7 +40,7 @@ public class Pathfinder {
 
     // Constructor for Pathfinder object
     // Get selectedItems and populate the exhibitInfo and trailInfo
-    public Pathfinder(Context context, List<Exhibit> selectedItems) {
+    public Pathfinder(Context context, List<ExhibitWithGroup> selectedItems) {
         this.context = context;
         g = ZooData.loadZooGraphJSON(context, "sample_zoo_graph.json");
         dijkstra = new DijkstraShortestPath<>(g);
@@ -62,8 +63,8 @@ public class Pathfinder {
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
-        for (Exhibit item : selectedItems) {
-            tempSelectedItemsIDs.add(item.id);
+        for (ExhibitWithGroup item : selectedItems) {
+            tempSelectedItemsIDs.add(item.exhibit.id);
         }
     }
 

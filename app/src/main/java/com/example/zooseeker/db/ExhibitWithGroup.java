@@ -1,5 +1,7 @@
 package com.example.zooseeker.db;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Pair;
 import androidx.room.Embedded;
 import androidx.room.Relation;
@@ -9,7 +11,7 @@ import java.util.Locale;
 /**
  * Represents a group, with an optional group.
  */
-public class ExhibitWithGroup {
+public class ExhibitWithGroup implements Parcelable {
     @Embedded
     public Exhibit exhibit;
     @Relation(
@@ -62,4 +64,41 @@ public class ExhibitWithGroup {
                 ", group=" + group +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.exhibit, flags);
+        dest.writeParcelable(this.group, flags);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.exhibit = source.readParcelable(Exhibit.class.getClassLoader());
+        this.group = source.readParcelable(Exhibit.class.getClassLoader());
+    }
+
+    public ExhibitWithGroup() {
+    }
+
+    protected ExhibitWithGroup(Parcel in) {
+        this.exhibit = in.readParcelable(Exhibit.class.getClassLoader());
+        this.group = in.readParcelable(Exhibit.class.getClassLoader());
+    }
+
+    public static final Creator<ExhibitWithGroup> CREATOR = new Creator<ExhibitWithGroup>() {
+        @Override
+        public ExhibitWithGroup createFromParcel(Parcel source) {
+            return new ExhibitWithGroup(source);
+        }
+
+        @Override
+        public ExhibitWithGroup[] newArray(int size) {
+            return new ExhibitWithGroup[size];
+        }
+    };
 }

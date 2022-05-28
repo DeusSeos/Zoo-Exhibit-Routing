@@ -1,5 +1,8 @@
 package com.example.zooseeker.db;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "exhibits")
-public class Exhibit {
+public class Exhibit implements Parcelable {
     /**
      * Load ZooNode's from a JSON file (such as vertex_info.json).
      *
@@ -53,35 +56,35 @@ public class Exhibit {
     @ColumnInfo(name = "id")
     @SerializedName("id")
     @NonNull
-    public final String id;
+    public String id;
 
     @ColumnInfo(name = "group_id")
     @SerializedName("group_id")
     @Nullable
-    public final String groupId;
+    public String groupId;
 
     @ColumnInfo(name = "kind")
     @SerializedName("kind")
     @NonNull
-    public final Kind kind;
+    public Kind kind;
 
     @ColumnInfo(name = "name")
     @SerializedName("name")
     @NonNull
-    public final String name;
+    public String name;
 
     @ColumnInfo(name = "tags")
     @SerializedName("tags")
     @NonNull
-    public final ArrayList<String> tags;
+    public ArrayList<String> tags;
 
     @ColumnInfo(name = "lat")
     @SerializedName("lat")
-    public final Double lat;
+    public Double lat;
 
     @ColumnInfo(name = "lng")
     @SerializedName("lng")
-    public final Double lng;
+    public Double lng;
 
     public boolean isExhibit() {
         return kind.equals(Kind.EXHIBIT);
@@ -131,4 +134,61 @@ public class Exhibit {
                 ", lng=" + lng +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.groupId);
+        dest.writeInt(this.kind == null ? -1 : this.kind.ordinal());
+        dest.writeString(this.name);
+        dest.writeStringList(this.tags);
+        if (this.lat != null || this.lng != null){
+            dest.writeDouble(this.lat);
+            dest.writeDouble(this.lng);
+        } else {
+            dest.writeDouble(0.0);
+            dest.writeDouble(0.0);
+        }
+
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.id = source.readString();
+        this.groupId = source.readString();
+        int tmpKind = source.readInt();
+        this.kind = tmpKind == -1 ? null : Kind.values()[tmpKind];
+        this.name = source.readString();
+        this.tags = source.createStringArrayList();
+        this.lat = source.readDouble();
+        this.lng = source.readDouble();
+    }
+
+    protected Exhibit(Parcel in) {
+        this.id = in.readString();
+        this.groupId = in.readString();
+        int tmpKind = in.readInt();
+        this.kind = tmpKind == -1 ? null : Kind.values()[tmpKind];
+        this.name = in.readString();
+        this.tags = in.createStringArrayList();
+        this.lat = in.readDouble();
+        this.lng = in.readDouble();
+    }
+
+    public static final Creator<Exhibit> CREATOR = new Creator<Exhibit>() {
+        @Override
+        public Exhibit createFromParcel(Parcel source) {
+            return new Exhibit(source);
+        }
+
+        @Override
+        public Exhibit[] newArray(int size) {
+            return new Exhibit[size];
+        }
+    };
 }

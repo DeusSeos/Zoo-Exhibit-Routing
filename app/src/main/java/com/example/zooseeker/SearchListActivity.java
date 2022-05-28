@@ -111,9 +111,9 @@ public class SearchListActivity extends AppCompatActivity {
     public void onPlanClicked(View view) {
         if (!selectedItems.isEmpty()) {
             Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
-            ArrayList<Exhibit> arraySelectedItems = new ArrayList<>(); //TODO: make directionActivity take exhibits
+            ArrayList<ExhibitWithGroup> arraySelectedItems = new ArrayList<>(selectedItems); //TODO: make directionActivity take exhibits
             Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems.toString());
-//            intent.putParcelableArrayListExtra("selected_list", arraySelectedItems); //TODO: Make parcelable take exhibits
+            intent.putParcelableArrayListExtra("selected_list", arraySelectedItems); //TODO: Make parcelable take exhibits
             startActivity(intent);
         } else {
             // Toast that they dum dum
@@ -123,4 +123,3 @@ public class SearchListActivity extends AppCompatActivity {
 
 
 }
-

@@ -20,7 +20,7 @@ public abstract class PersistenceDatabase extends RoomDatabase {
 
     private static PersistenceDatabase singleton = null;
 
-    public abstract ExhibitsDao searchListDao();
+    public abstract ExhibitsDao exhibitsDao();
 
     public synchronized static PersistenceDatabase getSingleton(Context context){
         if(singleton == null){
@@ -48,6 +48,10 @@ public abstract class PersistenceDatabase extends RoomDatabase {
                 .build();
     }
 
+
+    private static boolean isPopulated() {
+        return singleton.exhibitsDao().count() > 0;
+    }
 
 
     @VisibleForTesting

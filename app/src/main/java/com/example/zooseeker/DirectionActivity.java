@@ -10,6 +10,8 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.zooseeker.db.ExhibitWithGroup;
+
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
@@ -25,7 +27,7 @@ public class DirectionActivity extends AppCompatActivity {
 
     private Pathfinder pathy;
     private ListView directionList;
-    private ArrayList<SearchListItem> selectedItems;
+    private ArrayList<ExhibitWithGroup> selectedItems;
     private String zooJsonName;
     private String nextLocationName;
     private float nextLocationDistance;
@@ -44,32 +46,33 @@ public class DirectionActivity extends AppCompatActivity {
 //        ImageButton settingsButton = findViewById(R.id.settings_button);
 
         // Try to load the selected items list from previous activity
-        if (getIntent().getParcelableArrayListExtra("selected_list") != null){
+        if (getIntent().getParcelableArrayListExtra("selected_list") != null) {
             selectedItems = getIntent().getParcelableArrayListExtra("selected_list");
-            Log.d("DirectionActivity", "Loaded arraylist from extra: " +selectedItems.toString());
+            Log.d("DirectionActivity", "Loaded arraylist from extra: " + selectedItems.toString());
         } else {
             Log.d("DirectionActivity", "Oopsie loading broke");
+
+
+            pathy = new Pathfinder(this, selectedItems);
+            // could make this a call in the constructor (depends if we want to always optimize path first or not)
+            pathy.optimizeSelectedItemsIDs();
+
+            directionsArray = pathy.next();
+
+            //Create array to loop directions into
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+
+
+            //edit nextButton onClick
+            nextButton.setOnClickListener(view -> {
+                directionsArray = pathy.next();
+                Log.d("DirectionActivity", "New directions: " + directionsArray.toString());
+                directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+                directionList.setAdapter(directionsAdapter);
+            });
+
         }
 
-//        pathy = new Pathfinder(this, selectedItems);
-        // could make this a call in the constructor (depends if we want to always optimize path first or not)
-        pathy.optimizeSelectedItemsIDs();
-
-        directionsArray = pathy.next();
-
-        //Create array to loop directions into
-        directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-        directionList.setAdapter(directionsAdapter);
-
-
-        //edit nextButton onClick
-        nextButton.setOnClickListener(view -> {
-            directionsArray = pathy.next();
-            Log.d("DirectionActivity", "New directions: " + directionsArray.toString());
-            directionsAdapter  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-            directionList.setAdapter(directionsAdapter);
-        });
-
     }
-
 }
