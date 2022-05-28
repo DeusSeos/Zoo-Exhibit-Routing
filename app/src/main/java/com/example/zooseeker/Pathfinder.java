@@ -76,26 +76,23 @@ public class Pathfinder {
 
         sortedSelectedItemsIDs = new ArrayList<>();
         String sourceID = "entrance_exit_gate";
-        String tempSource = "temp"
+        String tempSource = "temp";
         double shortest = Double.MAX_VALUE;
 
         // Get a sorted strings of exihibits
-        while(!tempSelectedItemsIDs.isEmpty()) {
+        while (!tempSelectedItemsIDs.isEmpty()) {
             for (String sink : tempSelectedItemsIDs) {
                 double curr = dijkstra.getPathWeight(sourceID, sink);
-                if(curr < shortest) {
+                if (curr < shortest) {
                     shortest = curr;
                     tempSource = sink;
                 }
 
-            sourceID = tempSource;
-            sortedSelectedItemsIDs.add(sourceID);
-            tempSelectedItemsIDs.remove(sourceID);
+                sourceID = tempSource;
+                sortedSelectedItemsIDs.add(sourceID);
+                tempSelectedItemsIDs.remove(sourceID);
+            }
         }
-
-
-
-
     }
 
     public ArrayList<String> next() {
