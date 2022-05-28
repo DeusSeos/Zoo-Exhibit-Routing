@@ -17,12 +17,12 @@ import com.example.zooseeker.db.ExhibitWithGroup;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
-public class SelectedListAdapter extends ArrayAdapter<ExhibitWithGroup> {
+public class SelectedExhibitAdapter extends ArrayAdapter<ExhibitWithGroup> {
 
 
     private LinkedHashSet<ExhibitWithGroup> selectedItems;
 
-    public SelectedListAdapter(@NonNull Context context, int resource, LinkedHashSet<ExhibitWithGroup> selectedItems) {
+    public SelectedExhibitAdapter(@NonNull Context context, int resource, LinkedHashSet<ExhibitWithGroup> selectedItems) {
         super(context, resource);
         this.selectedItems = selectedItems;
     }

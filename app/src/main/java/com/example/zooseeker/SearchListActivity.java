@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.zooseeker.adapters.SearchListItemAdapter;
-import com.example.zooseeker.adapters.SelectedListAdapter;
+import com.example.zooseeker.adapters.ExhibitAdapter;
+import com.example.zooseeker.adapters.SelectedExhibitAdapter;
 import com.example.zooseeker.db.Exhibit;
 import com.example.zooseeker.db.ExhibitWithGroup;
 import com.example.zooseeker.db.ExhibitsDao;
@@ -35,8 +35,8 @@ public class SearchListActivity extends AppCompatActivity {
     ListView listView;
     ListView selectedListView;
     SearchView searchView;
-    SearchListItemAdapter adapter;
-    SelectedListAdapter selectedAdapter;
+    ExhibitAdapter adapter;
+    SelectedExhibitAdapter selectedAdapter;
 
     ExhibitsDao exhibitsDao;
     List<ExhibitWithGroup> animalNameList = new ArrayList<>();
@@ -76,9 +76,9 @@ public class SearchListActivity extends AppCompatActivity {
         Log.d("SearchListActivity", "animalNameList: " + animalNameList.toString());
 
         // set and populate adapter
-        adapter = new SearchListItemAdapter(this, animalNameList);
+        adapter = new ExhibitAdapter(this, animalNameList);
         listView.setAdapter(adapter);
-        selectedAdapter = new SelectedListAdapter(this, 0, selectedItems);
+        selectedAdapter = new SelectedExhibitAdapter(this, 0, selectedItems);
         selectedListView.setAdapter(selectedAdapter);
 
         //set the listeners

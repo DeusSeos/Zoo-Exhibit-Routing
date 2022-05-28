@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class SearchListItemAdapter extends ArrayAdapter<ExhibitWithGroup>  implements Filterable {
+public class ExhibitAdapter extends ArrayAdapter<ExhibitWithGroup>  implements Filterable {
 
     private List<ExhibitWithGroup> originalItems;
     private List<ExhibitWithGroup> filteredItems;
     private Filter itemFilter = new ItemFilter();
 
 
-    public SearchListItemAdapter(@NonNull Context context, List<ExhibitWithGroup> items) {
+    public ExhibitAdapter(@NonNull Context context, List<ExhibitWithGroup> items) {
         super(context, 0);
         this.originalItems = items;
         this.filteredItems = items;
@@ -101,7 +101,6 @@ public class SearchListItemAdapter extends ArrayAdapter<ExhibitWithGroup>  imple
 
             if (constraint.equals("all")){
                 results.values = list;
-                results.count = list.size();
                 return results;
             }
 

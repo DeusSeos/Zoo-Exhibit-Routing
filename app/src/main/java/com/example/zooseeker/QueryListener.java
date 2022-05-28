@@ -4,11 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Filter;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.zooseeker.adapters.SearchListItemAdapter;
+import com.example.zooseeker.adapters.ExhibitAdapter;
 import com.example.zooseeker.db.ExhibitWithGroup;
 import com.example.zooseeker.db.ExhibitsDao;
 
@@ -20,11 +19,11 @@ public class QueryListener implements SearchView.OnQueryTextListener {
 
     private final Context context;
     private final ExhibitsDao exhibitsDao;
-    private final SearchListItemAdapter adapter;
+    private final ExhibitAdapter adapter;
     private final View listView;
     private final View selectedListView;
 
-    public QueryListener(Context context, ExhibitsDao searchListDao, SearchListItemAdapter adapter, View listView, View selectedListView) {
+    public QueryListener(Context context, ExhibitsDao searchListDao, ExhibitAdapter adapter, View listView, View selectedListView) {
         this.context = context;
         this.exhibitsDao = searchListDao;
         this.adapter = adapter;
