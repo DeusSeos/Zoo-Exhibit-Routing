@@ -45,21 +45,6 @@ public class Pathfinder {
         g = ZooData.loadZooGraphJSON(context, "sample_zoo_graph.json");
         dijkstra = new DijkstraShortestPath<>(g);
 
-        // Populate from the default assets (note: in your own tests, perhaps use test-only assets?)
-        InputStreamReader exhibitsReader;
-        InputStreamReader trailsReader;
-        try {
-            exhibitsReader = new InputStreamReader(context.getAssets().open("sample_node_info.json"));
-        } catch (IOException e) {
-            Log.d("Pathfinder", e.getLocalizedMessage());
-        }
-        try {
-            trailsReader = new InputStreamReader(context.getAssets().open("sample_edge_info.json"));
-        } catch (IOException e) {
-            Log.d("Pathfinder", e.getLocalizedMessage());
-        }
-
-
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
@@ -83,7 +68,9 @@ public class Pathfinder {
         // Get a sorted strings of exihibits
         while (!tempSelectedItemsIDs.isEmpty()) {
             for (String sink : tempSelectedItemsIDs) {
-                double curr = dijkstra.getPathWeight(sourceID, sink);
+                GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
+                double curr = this.getDistance(path);
+                Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
                 if (curr < shortest) {
                     shortest = curr;
                     tempSource = sink;

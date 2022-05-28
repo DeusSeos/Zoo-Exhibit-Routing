@@ -51,28 +51,27 @@ public class DirectionActivity extends AppCompatActivity {
             Log.d("DirectionActivity", "Loaded arraylist from extra: " + selectedItems.toString());
         } else {
             Log.d("DirectionActivity", "Oopsie loading broke");
-
-
-            pathy = new Pathfinder(this, selectedItems);
-            // could make this a call in the constructor (depends if we want to always optimize path first or not)
-            pathy.optimizeSelectedItemsIDs();
-
-            directionsArray = pathy.next();
-
-            //Create array to loop directions into
-            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-            directionList.setAdapter(directionsAdapter);
-
-
-            //edit nextButton onClick
-            nextButton.setOnClickListener(view -> {
-                directionsArray = pathy.next();
-                Log.d("DirectionActivity", "New directions: " + directionsArray.toString());
-                directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-                directionList.setAdapter(directionsAdapter);
-            });
-
         }
 
+        pathy = new Pathfinder(this, selectedItems);
+        // could make this a call in the constructor (depends if we want to always optimize path first or not)
+        pathy.optimizeSelectedItemsIDs();
+
+        directionsArray = pathy.next();
+
+        //Create array to loop directions into
+        directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+        directionList.setAdapter(directionsAdapter);
+
+
+        //edit nextButton onClick
+        nextButton.setOnClickListener(view -> {
+            directionsArray = pathy.next();
+            Log.d("DirectionActivity", "New directions: " + directionsArray.toString());
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+        });
+
     }
+
 }
