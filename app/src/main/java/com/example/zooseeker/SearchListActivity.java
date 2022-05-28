@@ -93,6 +93,7 @@ public class SearchListActivity extends AppCompatActivity {
     public void selectEntry(ExhibitWithGroup query, int position) {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
+
         this.selectedItems.add(query);
     }
 

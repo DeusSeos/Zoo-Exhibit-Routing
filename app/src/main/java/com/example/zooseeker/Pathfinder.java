@@ -42,7 +42,7 @@ public class Pathfinder {
     // Get selectedItems and populate the exhibitInfo and trailInfo
     public Pathfinder(Context context, List<ExhibitWithGroup> selectedItems) {
         this.context = context;
-        g = ZooData.loadZooGraphJSON(context, "sample_zoo_graph.json");
+        g = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
         dijkstra = new DijkstraShortestPath<>(g);
 
         this.selectedItems = selectedItems;
@@ -64,7 +64,9 @@ public class Pathfinder {
         String sourceID = "entrance_exit_gate";
         String tempSource = "temp";
         double shortest = Double.MAX_VALUE;
-
+        Log.d("Pathfinder", "sourceId:" + sourceID);
+        Log.d("Pathfinder", g.vertexSet().toString());
+        Log.d("Pathfinder", tempSelectedItemsIDs.toString());
         // Get a sorted strings of exihibits
         while (!tempSelectedItemsIDs.isEmpty()) {
             for (String sink : tempSelectedItemsIDs) {
