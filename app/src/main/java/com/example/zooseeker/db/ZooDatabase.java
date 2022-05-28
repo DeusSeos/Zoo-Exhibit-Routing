@@ -113,17 +113,7 @@ public abstract class ZooDatabase extends RoomDatabase {
 
     public static class Converters {
         @TypeConverter
-        public static List<String> fromCsv(String csv) {
-            return List.of(",".split(csv));
-        }
-
-        @TypeConverter
-        public static String toCsv(List<String> tags) {
-            return String.join(",", tags);
-        }
-
-        @TypeConverter
-        public static ArrayList<String> fromString(String value) {
+        public static  ArrayList<String> fromString(String value) {
             Type listType = new TypeToken<ArrayList<String>>() {}.getType();
             return new Gson().fromJson(value, listType);
         }
@@ -133,6 +123,8 @@ public abstract class ZooDatabase extends RoomDatabase {
             String json = gson.toJson(list);
             return json;
         }
+
+
 
     }
 }
