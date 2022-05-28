@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

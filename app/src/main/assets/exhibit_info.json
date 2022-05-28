@@ -188,7 +188,7 @@
   },
   {
     "id": "toucan",
-    "parent_id": "parker_aviary",
+    "group_id": "parker_aviary",
     "kind": "exhibit",
     "name": "Toucan",
     "tags": [
@@ -203,7 +203,7 @@
   },
   {
     "id": "motmot",
-    "parent_id": "parker_aviary",
+    "group_id": "parker_aviary",
     "kind": "exhibit",
     "name": "Blue Capped Motmot",
     "tags": [
@@ -225,7 +225,7 @@
   },
   {
     "id": "spoonbill",
-    "parent_id": "scripps_aviary",
+    "group_id": "scripps_aviary",
     "kind": "exhibit",
     "name": "Spoonbill",
     "tags": [
@@ -276,7 +276,7 @@
   },
   {
     "id": "mynah",
-    "parent_id": "owens_aviary",
+    "group_id": "owens_aviary",
     "kind": "exhibit",
     "name": "Bali Mynah",
     "tags": [
@@ -289,7 +289,7 @@
   },
   {
     "id": "dove",
-    "parent_id": "owens_aviary",
+    "group_id": "owens_aviary",
     "kind": "exhibit",
     "name": "Emerald Dove",
     "tags": [

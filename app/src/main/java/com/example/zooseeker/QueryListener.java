@@ -4,9 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Filter;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import com.example.zooseeker.db.ExhibitsDao;
 
 import java.util.List;
 
@@ -15,14 +16,14 @@ import java.util.List;
 public class QueryListener implements SearchView.OnQueryTextListener {
 
     private final Context context;
-    private final SearchListDao searchListDao;
+    private final ExhibitsDao exhibitsDao;
     private final SearchListItemAdapter adapter;
     private final View listView;
     private final View selectedListView;
 
-    public QueryListener(Context context, SearchListDao searchListDao, SearchListItemAdapter adapter, View listView, View selectedListView) {
+    public QueryListener(Context context, ExhibitsDao exhibitsDao, SearchListItemAdapter adapter, View listView, View selectedListView) {
         this.context = context;
-        this.searchListDao = searchListDao;
+        this.exhibitsDao = exhibitsDao;
         this.adapter = adapter;
         this.listView = listView;
         this.selectedListView = selectedListView;
@@ -32,7 +33,7 @@ public class QueryListener implements SearchView.OnQueryTextListener {
     public boolean onQueryTextSubmit(String query) {
         Log.d("SearchListActivity", query);
 //                Log.d("SearchListActivity", animalNameList.toString());
-        List<SearchListItem> nameList = searchListDao.getItemsByInput(query);
+        List<SearchListItem> nameList = exhibitsDao.getExhibitsByInput(query);
 //                Log.d("SearchListActivity", nameList.toString());
         if (!nameList.isEmpty()) {
             adapter.getFilter().filter(query, i -> listView.setVisibility(View.VISIBLE));
