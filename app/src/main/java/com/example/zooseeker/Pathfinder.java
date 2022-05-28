@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.xml.transform.Source;
+
 // might be an apex reference
 public class Pathfinder {
 
@@ -69,28 +71,27 @@ public class Pathfinder {
     //subsequent stop)
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
-<<<<<<< HEAD
 
-=======
         sortedSelectedItemsIDs = new ArrayList<>();
         String sourceID = "entrance_exit_gate";
+        String tempSource = "temp"
+        double shortest = Double.MAX_VALUE;
 
-
-        while (!tempSelectedItemsIDs.isEmpty()) {
-            int length = tempSelectedItemsIDs.size();
-            String lowestID = "";
-            int lowestWeight = Double.MAX_VALUE;
-            GraphPath <>tempPath;
-            for (int i = 0; i < length; i++) {
-                String sinkID = tempSelectedItemsIDs.get(i);
-                DijkstraShortestPath.findPathBetween(g, sourceID, sinkID);
-
+        // Get a sorted strings of exihibits
+        while(!tempSelectedItemsIDs.isEmpty()) {
+            for (String sink : tempSelectedItemsIDs) {
+                double curr = dijkstra.getPathWeight(sourceID, sink);
+                if(curr < shortest) {
+                    shortest = curr;
+                    tempSource = sink;
+                }
             }
-
-
-
+            sourceID = tempSource;
+            sortedSelectedItemsIDs.add(sourceID);
+            tempSelectedItemsIDs.remove(sourceID);
         }
->>>>>>> f2fce438d49d8967fcd61512da2945b097a7489e
+
+
 
 
     }
