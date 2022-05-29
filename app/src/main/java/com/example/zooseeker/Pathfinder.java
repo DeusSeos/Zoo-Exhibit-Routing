@@ -72,50 +72,24 @@ public class Pathfinder {
         sortedSelectedItemsIDs = new ArrayList<>();
         sortedSelectedItemsIDs.add("entrance_exit_gate");
 
-        if (sourceID == null){
-            sourceID = "entrance_exit_gate";
-        }
-        String tempSource = "temp";
-        double shortest = Double.MAX_VALUE;
+
         Log.d("Pathfinder", "sourceId:" + sourceID);
         Log.d("Pathfinder", g.vertexSet().toString());
         Log.d("Pathfinder", tempSelectedItemsIDs.toString());
         // Get a sorted strings of exhibits
 
-        while (!tempSelectedItemsIDs.isEmpty()) {
-            for (String sink : tempSelectedItemsIDs) {
-                GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
-                double curr = this.getDistance(path);
-                //Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
-                if (curr < shortest) {
-                    shortest = curr;
-                    tempSource = sink;
-                }
-            }
-            shortest = Double.MAX_VALUE;
-            sourceID = tempSource;
-            sortedSelectedItemsIDs.add(sourceID);
-            tempSelectedItemsIDs.remove(sourceID);
+        for(String i : sortID(this.tempSelectedItemsIDs, null)) {
+            sortedSelectedItemsIDs.add(i);
         }
-
         sortedSelectedItemsIDs.add("entrance_exit_gate");
         int startIndex = 0;
         int goalIndex = 1;
-        String sourceItemID;
-
-        while (goalIndex < sortedSelectedItemsIDs.size()) {
-            sourceItemID = sortedSelectedItemsIDs.get(startIndex++);
-            String goalID = sortedSelectedItemsIDs.get(goalIndex++);
-            Log.d("Pathfinder", sourceItemID);
-            Log.d("Pathfinder", goalID);
-            GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
-            for (IdentifiedWeightedEdge e: path.getEdgeList()){
-                Log.d("Pathfinder", "E: " + e.toString());
-            }
-
+        while(goalIndex < sortedSelectedItemsIDs.size()) {
+            GraphPath<String, IdentifiedWeightedEdge> path = buildPath(sortedSelectedItemsIDs, startIndex, goalIndex);
 //            Log.d("Pathfinder", "HIIIII: " + getDirections(path));
             fullPath.add(getDirections(path));
-
+            startIndex++;
+            goalIndex++;
         }
         Log.d("Pathfinder", "FULL PATH LOSER: " + fullPath.toString());
 
@@ -150,9 +124,28 @@ public class Pathfinder {
             noMore.add("No more");
             return noMore;
         }
+        String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
+        sortedSelectedItemsIDs.remove(fullPathIndex + 1);
+        int nextIndex = fullPathIndex + 1;
+        List<String> newSelectedItems = new ArrayList<>();
+        for(int i = nextIndex; i < fullPath.size() - 1; i++) {
+            newSelectedItems.add(sortedSelectedItemsIDs.get(i));
+        }
 
+        ArrayList<String> leftID = sortID(newSelectedItems, sourceID);
+        leftID.add(0, sourceID);
+        leftID.add("entrance_exit_gate");
+        int startIndex = 0;
+        int goalIndex = 1;
+        while(goalIndex < leftID.size()) {
+            GraphPath<String, IdentifiedWeightedEdge> path = buildPath(leftID, startIndex, goalIndex);
+            fullPath.set(fullPathIndex + startIndex, getDirections(path));
+            goalIndex++;
+            startIndex++;
+        }
+//        for(int i = nextIndex)
         Log.d("index", String.valueOf(fullPathIndex));
-        return new ArrayList<>();
+        return fullPath.get(fullPathIndex);
     }
 
 
@@ -181,4 +174,43 @@ public class Pathfinder {
         return totalWeight;
     }
 
+    public ArrayList<String> sortID(List<String> tempSelectedItemsIDs, String sourceID) {
+        if (sourceID == null){
+            sourceID = "entrance_exit_gate";
+        }
+        String tempSource = "temp";
+        double shortest = Double.MAX_VALUE;
+
+        ArrayList<String> selected = new ArrayList<>();
+        while (!tempSelectedItemsIDs.isEmpty()) {
+            for (String sink : tempSelectedItemsIDs) {
+                GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
+                double curr = this.getDistance(path);
+                //Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
+                if (curr < shortest) {
+                    shortest = curr;
+                    tempSource = sink;
+                }
+            }
+            shortest = Double.MAX_VALUE;
+            sourceID = tempSource;
+            selected.add(sourceID);
+            tempSelectedItemsIDs.remove(sourceID);
+        }
+        return selected;
+    }
+
+    public GraphPath<String, IdentifiedWeightedEdge> buildPath(List<String> sortedSelectedItemsIDs, int startIndex, int goalIndex) {
+        String sourceItemID;
+
+        sourceItemID = sortedSelectedItemsIDs.get(startIndex++);
+        String goalID = sortedSelectedItemsIDs.get(goalIndex++);
+        Log.d("Pathfinder", sourceItemID);
+        Log.d("Pathfinder", goalID);
+        GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
+        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
+            Log.d("Pathfinder", "E: " + e.toString());
+        }
+        return path;
+    }
 }
