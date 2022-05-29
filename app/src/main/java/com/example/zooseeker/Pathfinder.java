@@ -91,11 +91,15 @@ public class Pathfinder {
             startIndex++;
             goalIndex++;
         }
-        Log.d("Pathfinder", "FULL PATH LOSER: " + fullPath.toString());
+
+        for(String s: sortedSelectedItemsIDs){
+            Log.d("sortedID", s);
+        }
 
     }
 
     public ArrayList<String> next() {
+        Log.e("Next_index", String.valueOf(fullPathIndex));
         if (fullPathIndex < fullPath.size()) {
             // return the next path from fullpath
             return fullPath.get(fullPathIndex++);
@@ -108,7 +112,7 @@ public class Pathfinder {
     }
 
     public ArrayList<String> back() {
-        if (fullPathIndex >= 0) {
+        if (fullPathIndex > 0) {
             // return the next path from fullpath
             return fullPath.get(fullPathIndex--);
         } else {
@@ -119,33 +123,46 @@ public class Pathfinder {
 
     public ArrayList<String> skip(){
         if(fullPathIndex >= fullPath.size()-1){
-            Toast.makeText(context, "This is the last exhibit!", Toast.LENGTH_LONG).show();
-            ArrayList<String> noMore = new ArrayList<>();
-            noMore.add("No more");
-            return noMore;
+            Log.e("Skip_index", String.valueOf(fullPathIndex));
+
+            Toast.makeText(context, "No more exhibit to skip!", Toast.LENGTH_LONG).show();
+//            ArrayList<String> noMore = new ArrayList<>();
+//            noMore.add("No more");
+            return fullPath.get(fullPathIndex-1);
         }
-        String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
-        sortedSelectedItemsIDs.remove(fullPathIndex + 1);
-        int nextIndex = fullPathIndex + 1;
+        // Get current location
+        String sourceID = sortedSelectedItemsIDs.get(fullPathIndex - 1);
+        Log.d("source:", sourceID);
+
+        // Remove next location
+        sortedSelectedItemsIDs.remove(fullPathIndex);
+        int nextIndex = fullPathIndex;
+        // Add rest locations except exit
         List<String> newSelectedItems = new ArrayList<>();
-        for(int i = nextIndex; i < fullPath.size() - 1; i++) {
+        for(int i = nextIndex; i < sortedSelectedItemsIDs.size() - 1; i++) {
             newSelectedItems.add(sortedSelectedItemsIDs.get(i));
         }
 
         ArrayList<String> leftID = sortID(newSelectedItems, sourceID);
-        leftID.add(0, sourceID);
         leftID.add("entrance_exit_gate");
+        for(int i = 0; i < leftID.size(); i++){
+            this.sortedSelectedItemsIDs.set(i+nextIndex, leftID.get(i));
+        }
+        leftID.add(0, sourceID);
+
+        fullPath.remove(fullPath.size() - 1);
+
         int startIndex = 0;
         int goalIndex = 1;
         while(goalIndex < leftID.size()) {
             GraphPath<String, IdentifiedWeightedEdge> path = buildPath(leftID, startIndex, goalIndex);
-            fullPath.set(fullPathIndex + startIndex, getDirections(path));
+            fullPath.set(fullPathIndex - 1 + startIndex, getDirections(path));
             goalIndex++;
             startIndex++;
         }
 //        for(int i = nextIndex)
-        Log.d("index", String.valueOf(fullPathIndex));
-        return fullPath.get(fullPathIndex);
+        //Log.d("index", String.valueOf(fullPathIndex));
+        return fullPath.get(fullPathIndex - 1);
     }
 
 
