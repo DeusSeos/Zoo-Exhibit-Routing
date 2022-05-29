@@ -28,7 +28,7 @@ public class Pathfinder {
 
     private Context context;
     private Graph<String, IdentifiedWeightedEdge> g;
-    private Map<String, ExhibitWithGroup> vInfo;
+    private Map<String, Exhibit> vInfo;
     private Map<String, Trail> eInfo;
     private List<String> sortedSelectedItemsIDs;
     private List<ExhibitWithGroup> selectedItems;
@@ -60,6 +60,9 @@ public class Pathfinder {
 
         }
         Log.d("Pathfinder", "temp Selected Items" + tempSelectedItemsIDs.toString());
+        Log.d("info", "vInfo: " + vInfo.entrySet());
+        Log.d("info", "eInfo: " + eInfo.entrySet());
+
     }
 
 
@@ -90,7 +93,6 @@ public class Pathfinder {
                     shortest = curr;
                     tempSource = sink;
                 }
-
                 sourceID = tempSource;
                 sortedSelectedItemsIDs.add(sourceID);
                 tempSelectedItemsIDs.remove(sourceID);
@@ -108,7 +110,11 @@ public class Pathfinder {
             Log.d("Pathfinder", sourceItemID);
             Log.d("Pathfinder", goalID);
             GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
-            Log.d("Pathfinder", "HIIIII: " + getDirections(path));
+            for (IdentifiedWeightedEdge e: path.getEdgeList()){
+                Log.d("Pathfinder", "E: " + e.toString());
+            }
+
+//            Log.d("Pathfinder", "HIIIII: " + getDirections(path));
             fullPath.add(getDirections(path));
 
         }
@@ -137,8 +143,8 @@ public class Pathfinder {
             directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
                     g.getEdgeWeight(e),
                     eInfo.get(e.getId()).street,
-                    vInfo.get(g.getEdgeSource(e)).exhibit.name,
-                    vInfo.get(g.getEdgeTarget(e)).exhibit.name));
+                    vInfo.get(g.getEdgeSource(e)).name,
+                    vInfo.get(g.getEdgeTarget(e)).name));
             i++;
         }
         Log.d("Pathfinder", directions.toString());
