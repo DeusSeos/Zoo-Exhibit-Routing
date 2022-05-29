@@ -84,19 +84,21 @@ public class Pathfinder {
         Log.d("Pathfinder", g.vertexSet().toString());
         Log.d("Pathfinder", tempSelectedItemsIDs.toString());
         // Get a sorted strings of exihibits
+
         while (!tempSelectedItemsIDs.isEmpty()) {
             for (String sink : tempSelectedItemsIDs) {
                 GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
                 double curr = this.getDistance(path);
-                Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
+                //Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
                 if (curr < shortest) {
                     shortest = curr;
                     tempSource = sink;
                 }
-                sourceID = tempSource;
-                sortedSelectedItemsIDs.add(sourceID);
-                tempSelectedItemsIDs.remove(sourceID);
             }
+            shortest = Double.MAX_VALUE;
+            sourceID = tempSource;
+            sortedSelectedItemsIDs.add(sourceID);
+            tempSelectedItemsIDs.remove(sourceID);
         }
 
         sortedSelectedItemsIDs.add("entrance_exit_gate");
