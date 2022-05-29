@@ -3,15 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.1331521739130435" />
+        <entry key="..\:/Users/Peter/AndroidStudioProjects/zooseeker-cse-110-team-28/app/src/main/res/layout/activity_direction.xml" value="0.2015625" />
         <entry key="..\:/Users/Peter/AndroidStudioProjects/zooseeker-cse-110-team-28/app/src/main/res/layout/activity_main.xml" value="0.35054347826086957" />
         <entry key="..\:/Users/Peter/AndroidStudioProjects/zooseeker-cse-110-team-28/app/src/main/res/layout/activity_search_list.xml" value="0.25" />
-<<<<<<< HEAD
-        <entry key="..\:/Users/alian/AndroidStudioProjects/zooseeker-cse-110-team-28/app/src/main/res/layout/activity_direction.xml" value="0.14666666666666667" />
-        <entry key="..\:/Users/alian/AndroidStudioProjects/zooseeker-cse-110-team-28/app/src/main/res/layout/activity_main.xml" value="0.16145833333333334" />
-        <entry key="..\:/Users/alian/AndroidStudioProjects/zooseeker-cse-110-team-28/app/src/main/res/layout/activity_search_list.xml" value="0.22" />
-=======
-        <entry key="app/src/main/res/layout/activity_direction.xml" value="0.20208333333333334" />
->>>>>>> e2b2629f5329b186cea708a47aff122172dc2067
+        <entry key="app/src/main/res/drawable/ic_icons8_settings.xml" value="0.2355" />
+        <entry key="app/src/main/res/layout/activity_direction.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.219683837890625" />
         <entry key="app/src/main/res/layout/activity_search_list.xml" value="0.22022857666015624" />
         <entry key="app/src/main/res/layout/search_list_view.xml" value="0.12082066869300911" />

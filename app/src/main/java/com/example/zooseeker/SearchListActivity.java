@@ -4,13 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
 import android.widget.Button;
-import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -18,7 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.lang.reflect.Array;
+import com.example.zooseeker.adapters.ExhibitAdapter;
+import com.example.zooseeker.adapters.SelectedExhibitAdapter;
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
+import com.example.zooseeker.db.ExhibitsDao;
+import com.example.zooseeker.db.SearchDatabase;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,26 +35,27 @@ public class SearchListActivity extends AppCompatActivity {
     ListView listView;
     ListView selectedListView;
     SearchView searchView;
-    SearchListItemAdapter adapter;
-    SelectedListAdapter selectedAdapter;
+    ExhibitAdapter adapter;
+    SelectedExhibitAdapter selectedAdapter;
 
-    List<SearchListItem> animalNameList;
-    LinkedHashSet<SearchListItem> selectedItems = new LinkedHashSet<>();
+    ExhibitsDao exhibitsDao;
+    List<ExhibitWithGroup> animalNameList = new ArrayList<>();
+    LinkedHashSet<ExhibitWithGroup> selectedItems = new LinkedHashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_search_list);
 
         // initialize db stuff
-        SearchDatabase db = SearchDatabase.getSingleton(this);
-        SearchListDao searchListDao = db.searchListDao();
+        SearchDatabase db = SearchDatabase.getDatabase(this);
 
-        // load database if empty
-        if (searchListDao.getAll().size() == 0) {
-            List<SearchListItem> searchListItems = SearchListItem.loadJson(this, "sample_node_info.json");
-            searchListDao.insertAll(searchListItems);
-        }
+        exhibitsDao = db.exhibitsDao();
+
+
+//        ZooDatabase db = ZooDatabase.getDatabase(this);
+
 
         // initialize views
         listView = findViewById(R.id.result_list);
@@ -59,26 +64,33 @@ public class SearchListActivity extends AppCompatActivity {
         planButton = findViewById(R.id.plan_button);
         searchView = findViewById(R.id.search_bar);
 
-        // make the views dissapear
+        // make the views disappear
         selectedListView.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
         // get from db the items to populate our adapter
-        animalNameList = searchListDao.getAll();
+
+
+        Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
+        Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
+        animalNameList = exhibitsDao.getExhibits();
+        Log.d("SearchListActivity", "animalNameList: " + animalNameList.toString());
 
         // set and populate adapter
-        adapter = new SearchListItemAdapter(this, animalNameList);
+        adapter = new ExhibitAdapter(this, animalNameList);
         listView.setAdapter(adapter);
-        selectedAdapter = new SelectedListAdapter(this, 0, selectedItems);
+        selectedAdapter = new SelectedExhibitAdapter(this, 0, selectedItems);
         selectedListView.setAdapter(selectedAdapter);
 
         //set the listeners
-        searchView.setOnQueryTextListener(new QueryListener(this, searchListDao, adapter, listView, selectedListView));
+        searchView.setOnQueryTextListener(new QueryListener(this, exhibitsDao, adapter, listView, selectedListView));
         listView.setOnItemClickListener(this::onItemClicked);
         planButton.setOnClickListener(this::onPlanClicked);
+
+
     }
 
 
-    public void selectEntry(SearchListItem query, int position) {
+    public void selectEntry(ExhibitWithGroup query, int position) {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
         this.selectedItems.add(query);
@@ -86,7 +98,7 @@ public class SearchListActivity extends AppCompatActivity {
 
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
-        SearchListItem ew = (SearchListItem) adapterView.getItemAtPosition(position);
+        ExhibitWithGroup ew =  (ExhibitWithGroup) adapterView.getItemAtPosition(position); //TODO: AdapterView not containing exhibits yet
         Log.d("SearchListActivity", "Adding exhibit to selectedItems:" + ew.toString());
         selectEntry(ew, position);
         searchView.setQuery("", false);
@@ -99,9 +111,9 @@ public class SearchListActivity extends AppCompatActivity {
     public void onPlanClicked(View view) {
         if (!selectedItems.isEmpty()) {
             Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
-            ArrayList<SearchListItem> arraySelectedItems = new ArrayList<>(selectedItems);
+            ArrayList<ExhibitWithGroup> arraySelectedItems = new ArrayList<>(selectedItems); //TODO: make directionActivity take exhibits
             Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems.toString());
-            intent.putParcelableArrayListExtra("selected_list", arraySelectedItems);
+            intent.putParcelableArrayListExtra("selected_list", arraySelectedItems); //TODO: Make parcelable take exhibits
             startActivity(intent);
         } else {
             // Toast that they dum dum
@@ -111,4 +123,3 @@ public class SearchListActivity extends AppCompatActivity {
 
 
 }
-

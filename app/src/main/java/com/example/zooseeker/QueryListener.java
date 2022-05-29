@@ -4,9 +4,12 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Filter;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import com.example.zooseeker.adapters.ExhibitAdapter;
+import com.example.zooseeker.db.ExhibitWithGroup;
+import com.example.zooseeker.db.ExhibitsDao;
 
 import java.util.List;
 
@@ -15,14 +18,14 @@ import java.util.List;
 public class QueryListener implements SearchView.OnQueryTextListener {
 
     private final Context context;
-    private final SearchListDao searchListDao;
-    private final SearchListItemAdapter adapter;
+    private final ExhibitsDao exhibitsDao;
+    private final ExhibitAdapter adapter;
     private final View listView;
     private final View selectedListView;
 
-    public QueryListener(Context context, SearchListDao searchListDao, SearchListItemAdapter adapter, View listView, View selectedListView) {
+    public QueryListener(Context context, ExhibitsDao searchListDao, ExhibitAdapter adapter, View listView, View selectedListView) {
         this.context = context;
-        this.searchListDao = searchListDao;
+        this.exhibitsDao = searchListDao;
         this.adapter = adapter;
         this.listView = listView;
         this.selectedListView = selectedListView;
@@ -32,7 +35,7 @@ public class QueryListener implements SearchView.OnQueryTextListener {
     public boolean onQueryTextSubmit(String query) {
         Log.d("SearchListActivity", query);
 //                Log.d("SearchListActivity", animalNameList.toString());
-        List<SearchListItem> nameList = searchListDao.getItemsByInput(query);
+        List<ExhibitWithGroup> nameList = exhibitsDao.getExhibitsByName(query);
 //                Log.d("SearchListActivity", nameList.toString());
         if (!nameList.isEmpty()) {
             adapter.getFilter().filter(query, i -> listView.setVisibility(View.VISIBLE));
@@ -58,5 +61,4 @@ public class QueryListener implements SearchView.OnQueryTextListener {
 
     }
 }
-
 

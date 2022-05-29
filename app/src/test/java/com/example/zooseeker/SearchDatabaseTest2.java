@@ -8,6 +8,8 @@ import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.example.zooseeker.db.SearchDatabase;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class SearchDatabaseTest2 {
+    /*
 
     private SearchDatabase db;
     private SearchListDao dao;
@@ -42,6 +45,7 @@ public class SearchDatabaseTest2 {
 
 
     }
+    */
 
 
 }

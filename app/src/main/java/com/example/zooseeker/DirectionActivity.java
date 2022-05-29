@@ -11,28 +11,22 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.GraphWalk;
+import com.example.zooseeker.db.ExhibitWithGroup;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class DirectionActivity extends AppCompatActivity {
 
     private Pathfinder pathy;
     private ListView directionList;
-    private ArrayList<SearchListItem> selectedItems;
-    private String zooJsonName;
-    private String nextLocationName;
-    private float nextLocationDistance;
+    private ArrayList<ExhibitWithGroup> selectedItems;
 
     List<String> directionsArray = new ArrayList<>();
     private ArrayAdapter<String> directionsAdapter;
+
+    public DirectionActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +36,15 @@ public class DirectionActivity extends AppCompatActivity {
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
-        Button settingsButton = findViewById(R.id.settings_button);
+
+        Button backButton = findViewById(R.id.back_button);
+        ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(this::onSettingsClicked);
 
         // Try to load the selected items list from previous activity
-        if (getIntent().getParcelableArrayListExtra("selected_list") != null){
+        if (getIntent().getParcelableArrayListExtra("selected_list") != null) {
             selectedItems = getIntent().getParcelableArrayListExtra("selected_list");
-            Log.d("DirectionActivity", "Loaded arraylist from extra: " +selectedItems.toString());
+            Log.d("DirectionActivity", "Loaded arraylist from extra: " + selectedItems.toString());
         } else {
             Log.d("DirectionActivity", "Oopsie loading broke");
         }
@@ -68,15 +64,25 @@ public class DirectionActivity extends AppCompatActivity {
         nextButton.setOnClickListener(view -> {
             directionsArray = pathy.next();
             Log.d("DirectionActivity", "New directions: " + directionsArray.toString());
-            directionsAdapter  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
         });
 
+
+        backButton.setOnClickListener(view -> {
+            directionsArray = pathy.back();
+            Log.d("DirectionActivity", "Previous directions: " + directionsArray.toString());
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+        });
+
+
+
     }
+
     void onSettingsClicked(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
-
 
 }

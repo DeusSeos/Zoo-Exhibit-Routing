@@ -23,6 +23,7 @@ import java.util.List;
 @RunWith(AndroidJUnit4.class)
 public class TestFindPath {
 
+    /*
     @Test
     public void testOnePlace(){
         Context context = ApplicationProvider.getApplicationContext();
@@ -71,4 +72,6 @@ public class TestFindPath {
         ArrayList<String> last = new ArrayList<>(Arrays.asList("No more"));
         assertEquals(last, finder.next());
     }
+    */
+
 }
