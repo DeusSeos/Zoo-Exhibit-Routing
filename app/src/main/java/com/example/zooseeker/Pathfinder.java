@@ -151,7 +151,7 @@ public class Pathfinder {
             return noMore;
         }
 
-        Log.d("index", String.valueOf(fullPathIndex));
+
         return new ArrayList<>();
     }
 

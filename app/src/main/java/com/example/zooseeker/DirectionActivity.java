@@ -71,15 +71,12 @@ public class DirectionActivity extends AppCompatActivity {
             directionList.setAdapter(directionsAdapter);
         });
 
-<<<<<<< HEAD
 
-=======
         skipButton.setOnClickListener(view -> {
             directionsArray = pathy.skip();
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
         });
->>>>>>> 9e4b5bda109a752cf14ee83969d71d71b58b6585
     }
 
 }
