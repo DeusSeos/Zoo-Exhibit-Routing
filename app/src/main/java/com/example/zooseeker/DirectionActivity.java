@@ -2,38 +2,28 @@ package com.example.zooseeker;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zooseeker.db.ExhibitWithGroup;
 
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.GraphWalk;
-
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class DirectionActivity extends AppCompatActivity {
 
     private Pathfinder pathy;
     private ListView directionList;
     private ArrayList<ExhibitWithGroup> selectedItems;
-    private String zooJsonName;
-    private String nextLocationName;
-    private float nextLocationDistance;
 
     List<String> directionsArray = new ArrayList<>();
     private ArrayAdapter<String> directionsAdapter;
+
+    public DirectionActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +33,7 @@ public class DirectionActivity extends AppCompatActivity {
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
+        Button backButton = findViewById(R.id.back_button);
 //        ImageButton settingsButton = findViewById(R.id.settings_button);
 
         // Try to load the selected items list from previous activity
@@ -71,6 +62,14 @@ public class DirectionActivity extends AppCompatActivity {
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
         });
+
+        backButton.setOnClickListener(view -> {
+            directionsArray = pathy.back();
+            Log.d("DirectionActivity", "Previous directions: " + directionsArray.toString());
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+        });
+
 
     }
 

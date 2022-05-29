@@ -13,15 +13,10 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
-
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.xml.transform.Source;
 
 // might be an apex reference
 public class Pathfinder {
@@ -83,7 +78,7 @@ public class Pathfinder {
         Log.d("Pathfinder", "sourceId:" + sourceID);
         Log.d("Pathfinder", g.vertexSet().toString());
         Log.d("Pathfinder", tempSelectedItemsIDs.toString());
-        // Get a sorted strings of exihibits
+        // Get a sorted strings of exhibits
 
         while (!tempSelectedItemsIDs.isEmpty()) {
             for (String sink : tempSelectedItemsIDs) {
@@ -136,7 +131,15 @@ public class Pathfinder {
         }
     }
 
-
+    public ArrayList<String> back() {
+        if (fullPathIndex >= 0) {
+            // return the next path from fullpath
+            return fullPath.get(fullPathIndex--);
+        } else {
+            Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
+            return fullPath.get(0);
+        }
+    }
 
 
     public ArrayList<String> getDirections(GraphPath<String, IdentifiedWeightedEdge> path) {
