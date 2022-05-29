@@ -1,4 +1,4 @@
-package com.example.zooseeker;
+package com.example.zooseeker.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,26 +13,30 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.zooseeker.R;
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  implements Filterable {
+public class ExhibitAdapter extends ArrayAdapter<ExhibitWithGroup>  implements Filterable {
 
-    private List<SearchListItem> originalItems;
-    private List<SearchListItem> filteredItems;
+    private List<ExhibitWithGroup> originalItems;
+    private List<ExhibitWithGroup> filteredItems;
     private Filter itemFilter = new ItemFilter();
 
 
-    public SearchListItemAdapter(@NonNull Context context, List<SearchListItem> items) {
+    public ExhibitAdapter(@NonNull Context context, List<ExhibitWithGroup> items) {
         super(context, 0);
         this.originalItems = items;
         this.filteredItems = items;
     }
 
     @Override
-    public void remove(@Nullable SearchListItem object) {
+    public void remove(@Nullable ExhibitWithGroup object) {
         originalItems.remove(object);
     }
 
@@ -43,7 +47,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
 
     @Nullable
     @Override
-    public SearchListItem getItem(int position) {
+    public ExhibitWithGroup getItem(int position) {
         return filteredItems.get(position);
     }
 
@@ -56,14 +60,14 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        SearchListItem item = getItem(position);
+        ExhibitWithGroup item = getItem(position);
 
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.search_list_view, parent, false);
         }
 
         TextView name = (TextView) convertView.findViewById(R.id.itemName);
-        name.setText(item.name);
+        name.setText(item.exhibit.name);
 
         return convertView;
 
@@ -85,25 +89,32 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             String filterString = constraint.toString().toLowerCase(Locale.ROOT);
+
             FilterResults  results = new FilterResults();
-            final List<SearchListItem> list = originalItems;
+            final List<ExhibitWithGroup> list = originalItems;
             int count = list.size();
-            final ArrayList<SearchListItem> listItems = new ArrayList<>(count);
+            final ArrayList<ExhibitWithGroup> listItems = new ArrayList<>(count);
 
             String filterableString;
             List<String> filterableTags;
             String filterableKind;
 
+            if (constraint.equals("all")){
+                results.values = list;
+                return results;
+            }
+
             for (int i = 0; i < count; i++) {
-                SearchListItem searchItem = list.get(i);
-                filterableString = searchItem.name;
-                filterableTags = searchItem.tags;
-                filterableKind = searchItem.kind;
+                ExhibitWithGroup searchItem = list.get(i);
+
+                filterableString = searchItem.exhibit.name;
+                filterableTags = searchItem.exhibit.tags;
+//                filterableKind = Exhibit.Kind.valueOf(searchItem.kind);
                 boolean tagsContained = filterableTags.stream()
-                        .filter(element -> element.equals(filterString))
+                        .filter(element -> element.contains(filterString))
                         .collect(Collectors.toList()).size() > 0;
-                boolean exhibitContained = filterableKind.equals(filterString) ;
-                if (filterableString.toLowerCase().startsWith(filterString) || tagsContained || exhibitContained) {
+//                boolean exhibitContained = filterableKind.equals(filterString);
+                if (filterableString.toLowerCase().startsWith(filterString) || tagsContained) {
                     Log.d("Filter", "adding: " + filterableString);
                     listItems.add(searchItem);
                 }
@@ -113,7 +124,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
             results.values = listItems;
             results.count = listItems.size();
 
-            Log.d("Filter", constraint.toString() + listItems.toString());
+            Log.d("Filter", constraint + listItems.toString());
 
             return results;
 
@@ -122,7 +133,7 @@ public class SearchListItemAdapter extends ArrayAdapter<SearchListItem>  impleme
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults results) {
-            filteredItems = (ArrayList<SearchListItem>) results.values;
+            filteredItems = (ArrayList<ExhibitWithGroup>) results.values;
             notifyDataSetChanged();
 
         }

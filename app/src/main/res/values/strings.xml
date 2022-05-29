@@ -5,4 +5,7 @@
     <string name="name">Name</string>
     <string name="plan">Plan</string>
     <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="back">Back</string>
+    <string name="settings_button">Settings Button</string>
 </resources>

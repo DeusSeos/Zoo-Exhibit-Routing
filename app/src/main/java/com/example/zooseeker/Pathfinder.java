@@ -5,57 +5,61 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
+import com.example.zooseeker.db.Trail;
+
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 // might be an apex reference
 public class Pathfinder {
 
     private Context context;
     private Graph<String, IdentifiedWeightedEdge> g;
-    private Map<String, ZooData.VertexInfo> vInfo;
-    private Map<String, ZooData.EdgeInfo> eInfo;
+    private Map<String, Exhibit> vInfo;
+    private Map<String, Trail> eInfo;
     private List<String> sortedSelectedItemsIDs;
-    private List<SearchListItem> selectedItems;
+    private List<ExhibitWithGroup> selectedItems;
     private List<String> tempSelectedItemsIDs = new ArrayList<>();
     private ArrayList<ArrayList<String>> fullPath = new ArrayList<>();
+    private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
     private int fullPathIndex;
 
-    public Pathfinder(Context context, List<SearchListItem> selectedItems) {
+
+    // Constructor for Pathfinder object
+    // Get selectedItems and populate the exhibitInfo and trailInfo
+    public Pathfinder(Context context, List<ExhibitWithGroup> selectedItems) {
         this.context = context;
-        g = ZooData.loadZooGraphJSON(context, "sample_zoo_graph.json");
-        vInfo = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
-        eInfo = ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
+        g = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
+        vInfo = ZooData.loadVertexInfoJSON(context, "exhibit_info");
+        eInfo = ZooData.loadEdgeInfoJSON(context, "trail_info");
+
+        dijkstra = new DijkstraShortestPath<>(g);
+
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
-        for (SearchListItem item : selectedItems) {
-            tempSelectedItemsIDs.add(item.id);
-        }
-    }
+        for (ExhibitWithGroup item : selectedItems) {
+            if (item.exhibit.hasGroup()){
+                tempSelectedItemsIDs.add(item.group.id);
+            } else {
+                tempSelectedItemsIDs.add(item.exhibit.id);
+            }
 
-    public Pathfinder(Context context, String gPath, String vInfoPath, String eInfoPath, List<SearchListItem> selectedItems) {
-        this.context = context;
-        g = ZooData.loadZooGraphJSON(context, gPath);
-        vInfo = ZooData.loadVertexInfoJSON(context, vInfoPath);
-        eInfo = ZooData.loadEdgeInfoJSON(context, eInfoPath);
-        this.selectedItems = selectedItems;
-        // this is the naive no check approach (change this to at least check if we go over the list index)
-        this.fullPathIndex = 0;
-        for (SearchListItem item : selectedItems) {
-            tempSelectedItemsIDs.add(item.id);
         }
+        Log.d("Pathfinder", "temp Selected Items" + tempSelectedItemsIDs.toString());
+        Log.d("info", "vInfo: " + vInfo.entrySet());
+        Log.d("info", "eInfo: " + eInfo.entrySet());
 
     }
+
 
     //Create a list of the ids of our selected attractions in an optimized visiting order, also ensures that the list begins and ends with the entrance/exit gate
     //(maybe there's a more optimized route plan we can make I just took shortest distance from the start and kept figuring out which one was the shortest distance from each
@@ -63,52 +67,51 @@ public class Pathfinder {
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
         sortedSelectedItemsIDs = new ArrayList<>();
+        //String sourceID = "entrance_exit_gate";
+
+        sortedSelectedItemsIDs = new ArrayList<>();
         sortedSelectedItemsIDs.add("entrance_exit_gate");
-        String sourceItemID = "entrance_exit_gate";
-        String lastItem = "entrance_exit_gate";
-        GraphPath<String, IdentifiedWeightedEdge> path;
-        if (!tempSelectedItemsIDs.isEmpty()) {
-            //Loop through each ID in selectedItemsIDs, removing it from the tempSelectedItems list as we do (so that
-            // we aren't checking an item's distance from itself or already visited attractions) (this list will update each time the loop runs)
-            while (!tempSelectedItemsIDs.isEmpty()) {
-                //For each id in tempSelectedItemsIDs, check which is the shortest distance (has the lowest weight) from sourceItemID,
-                //and then add it into the sortedSelectedItemsIDs list
 
-                Iterator<String> iterator = tempSelectedItemsIDs.iterator();
-                while (iterator.hasNext()) {
-                    String lowestWeightId = null;
-                    double lowestWeightVal = Double.MAX_VALUE;
-                    String destItemID = iterator.next();
-                    path = DijkstraShortestPath.findPathBetween(g, sourceItemID, destItemID);
-                    if (path != null) {
-                        if (path.getWeight() < lowestWeightVal) {
-                            lowestWeightId = destItemID;
-                            lowestWeightVal = path.getWeight();
-                        }
-                        sortedSelectedItemsIDs.add(lowestWeightId);
-                        iterator.remove();
-                        sourceItemID = lowestWeightId;
+        String sourceID = "entrance_exit_gate";
+        String tempSource = "temp";
+        double shortest = Double.MAX_VALUE;
+        Log.d("Pathfinder", "sourceId:" + sourceID);
+        Log.d("Pathfinder", g.vertexSet().toString());
+        Log.d("Pathfinder", tempSelectedItemsIDs.toString());
+        // Get a sorted strings of exhibits
 
-                    } // else we skip
+        while (!tempSelectedItemsIDs.isEmpty()) {
+            for (String sink : tempSelectedItemsIDs) {
+                GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
+                double curr = this.getDistance(path);
+                //Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
+                if (curr < shortest) {
+                    shortest = curr;
+                    tempSource = sink;
                 }
-
             }
-            //Ensure it ends at the entrance/exit gate
-            sortedSelectedItemsIDs.add("entrance_exit_gate");
-            Log.d("Pathfinder", sortedSelectedItemsIDs.toString());
-        } else {
-//            it was empty for some reason so gotta go back to beginning
-            sortedSelectedItemsIDs.add("entrance_exit_gate");
-            // run dijkstras again from last item to entrance
+            shortest = Double.MAX_VALUE;
+            sourceID = tempSource;
+            sortedSelectedItemsIDs.add(sourceID);
+            tempSelectedItemsIDs.remove(sourceID);
         }
+
+        sortedSelectedItemsIDs.add("entrance_exit_gate");
         int startIndex = 0;
         int goalIndex = 1;
+        String sourceItemID;
+
         while (goalIndex < sortedSelectedItemsIDs.size()) {
             sourceItemID = sortedSelectedItemsIDs.get(startIndex++);
             String goalID = sortedSelectedItemsIDs.get(goalIndex++);
             Log.d("Pathfinder", sourceItemID);
             Log.d("Pathfinder", goalID);
-            path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
+            GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
+            for (IdentifiedWeightedEdge e: path.getEdgeList()){
+                Log.d("Pathfinder", "E: " + e.toString());
+            }
+
+//            Log.d("Pathfinder", "HIIIII: " + getDirections(path));
             fullPath.add(getDirections(path));
 
         }
@@ -128,6 +131,16 @@ public class Pathfinder {
         }
     }
 
+    public ArrayList<String> back() {
+        if (fullPathIndex >= 0) {
+            // return the next path from fullpath
+            return fullPath.get(fullPathIndex--);
+        } else {
+            Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
+            return fullPath.get(0);
+        }
+    }
+
 
     public ArrayList<String> getDirections(GraphPath<String, IdentifiedWeightedEdge> path) {
         ArrayList<String> directions = new ArrayList<>();
@@ -143,6 +156,15 @@ public class Pathfinder {
         }
         Log.d("Pathfinder", directions.toString());
         return directions;
+    }
+
+    public Double getDistance(GraphPath<String, IdentifiedWeightedEdge> path) {
+//        Extract the distance from all the path distances
+        Double totalWeight = 0.0;
+        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
+            totalWeight += g.getEdgeWeight(e);
+        }
+        return totalWeight;
     }
 
 }
