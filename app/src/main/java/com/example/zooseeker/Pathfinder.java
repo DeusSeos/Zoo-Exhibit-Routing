@@ -132,10 +132,6 @@ public class Pathfinder {
             newSelectedItems.add(sortedSelectedItemsIDs.get(i));
         }
 
-<<<<<<< HEAD
-
-        return new ArrayList<>();
-=======
         ArrayList<String> leftID = sortID(newSelectedItems, sourceID);
         leftID.add(0, sourceID);
         leftID.add("entrance_exit_gate");
@@ -150,7 +146,6 @@ public class Pathfinder {
 //        for(int i = nextIndex)
         Log.d("index", String.valueOf(fullPathIndex));
         return fullPath.get(fullPathIndex);
->>>>>>> 579dd9d8b033ad8011c61c1233c297c0ee826175
     }
 
 
