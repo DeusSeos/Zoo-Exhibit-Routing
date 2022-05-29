@@ -64,7 +64,7 @@ public class Pathfinder {
     //Create a list of the ids of our selected attractions in an optimized visiting order, also ensures that the list begins and ends with the entrance/exit gate
     //(maybe there's a more optimized route plan we can make I just took shortest distance from the start and kept figuring out which one was the shortest distance from each
     //subsequent stop)
-    public void optimizeSelectedItemsIDs() {
+    public void optimizeSelectedItemsIDs(String sourceID) {
         //Ensure that the order begins at the entrance gate
         sortedSelectedItemsIDs = new ArrayList<>();
         //String sourceID = "entrance_exit_gate";
@@ -72,7 +72,9 @@ public class Pathfinder {
         sortedSelectedItemsIDs = new ArrayList<>();
         sortedSelectedItemsIDs.add("entrance_exit_gate");
 
-        String sourceID = "entrance_exit_gate";
+        if (sourceID == null){
+            sourceID = "entrance_exit_gate";
+        }
         String tempSource = "temp";
         double shortest = Double.MAX_VALUE;
         Log.d("Pathfinder", "sourceId:" + sourceID);
@@ -139,6 +141,17 @@ public class Pathfinder {
             Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
             return fullPath.get(0);
         }
+    }
+
+    public void skip(){
+        if(fullPathIndex >= fullPath.size()-1){
+            Toast.makeText(context, "This is the last exhibit!", Toast.LENGTH_LONG).show();
+            ArrayList<String> noMore = new ArrayList<>();
+            noMore.add("No more");
+            //return noMore;
+        }
+
+        Log.d("index", String.valueOf(fullPathIndex));
     }
 
 

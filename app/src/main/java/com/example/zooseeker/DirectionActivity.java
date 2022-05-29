@@ -34,6 +34,7 @@ public class DirectionActivity extends AppCompatActivity {
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
         Button backButton = findViewById(R.id.back_button);
+        Button skipButton = findViewById(R.id.skip_button);
 //        ImageButton settingsButton = findViewById(R.id.settings_button);
 
         // Try to load the selected items list from previous activity
@@ -46,7 +47,7 @@ public class DirectionActivity extends AppCompatActivity {
 
         pathy = new Pathfinder(this, selectedItems);
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
-        pathy.optimizeSelectedItemsIDs();
+        pathy.optimizeSelectedItemsIDs(null);
 
         directionsArray = pathy.next();
 
@@ -70,7 +71,7 @@ public class DirectionActivity extends AppCompatActivity {
             directionList.setAdapter(directionsAdapter);
         });
 
-
+        skipButton.setOnClickListener()
     }
 
 }

@@ -23,6 +23,7 @@ import java.util.List;
 @RunWith(AndroidJUnit4.class)
 public class TestFindPath {
 
+
     /*
     @Test
     public void testOnePlace(){
