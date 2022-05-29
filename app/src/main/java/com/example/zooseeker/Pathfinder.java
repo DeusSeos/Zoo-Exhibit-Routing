@@ -143,15 +143,16 @@ public class Pathfinder {
         }
     }
 
-    public void skip(){
+    public ArrayList<String> skip(){
         if(fullPathIndex >= fullPath.size()-1){
             Toast.makeText(context, "This is the last exhibit!", Toast.LENGTH_LONG).show();
             ArrayList<String> noMore = new ArrayList<>();
             noMore.add("No more");
-            //return noMore;
+            return noMore;
         }
 
         Log.d("index", String.valueOf(fullPathIndex));
+        return new ArrayList<>();
     }
 
 
