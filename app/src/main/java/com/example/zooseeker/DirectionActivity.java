@@ -71,7 +71,7 @@ public class DirectionActivity extends AppCompatActivity {
             directionList.setAdapter(directionsAdapter);
         });
 
-        skipButton.setOnClickListener()
+
     }
 
 }
