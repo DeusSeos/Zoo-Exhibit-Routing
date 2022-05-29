@@ -1,39 +1,52 @@
 package com.example.zooseeker;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceFragmentCompat;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    private RadioGroup radioGroup;
+
+    private UserSettings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.settings, new SettingsFragment())
-                    .commit();
-        }
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        setContentView(R.layout.activity_settings);
+        settings = (UserSettings) getApplication();
+        loadSharedPreferences();
+
+        radioGroup = findViewById(R.id.direction_buttons);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedButtonId) {
+                switch (checkedButtonId) {
+                    case R.id.direction_option_a:
+                        settings.setCustomTheme(UserSettings.BRIEF_DIRECTION);
+                        Toast.makeText(SettingsActivity.this, "Brief Directions Enabled", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.direction_option_b:
+                        settings.setCustomTheme(UserSettings.DETAILED_DIRECTION);
+                        Toast.makeText(SettingsActivity.this, "Detailed Directions Enabled", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                SharedPreferences.Editor editor = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE).edit();
+                editor.putString(UserSettings.Custom_Direction, settings.getCustomTheme());
+                editor.apply();
+            }
+        });
+
+
+
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat {
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        }
-    }
-    public boolean onOptionsItemSelected(MenuItem item){
-        finish();
-        return true;
+    private void loadSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
+        String directions = sharedPreferences.getString(UserSettings.Custom_Direction, UserSettings.BRIEF_DIRECTION);
+        settings.setCustomTheme(directions);
     }
 }
