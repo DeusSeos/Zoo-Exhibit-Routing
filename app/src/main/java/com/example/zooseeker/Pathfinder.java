@@ -68,12 +68,8 @@ public class Pathfinder {
     //subsequent stop)
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
-<<<<<<< HEAD
         sortedSelectedItemsIDs = new ArrayList<>();
-        String sourceID = "entrance_exit_gate";
-=======
-
->>>>>>> 99de6f0fed7f0d2b7120931da9ce6728fc942e5a
+        //String sourceID = "entrance_exit_gate";
 
         sortedSelectedItemsIDs = new ArrayList<>();
         sortedSelectedItemsIDs.add("entrance_exit_gate");
@@ -116,11 +112,7 @@ public class Pathfinder {
             fullPath.add(getDirections(path));
 
         }
-<<<<<<< HEAD
-
-=======
         Log.d("Pathfinder", "FULL PATH LOSER: " + fullPath.toString());
->>>>>>> 99de6f0fed7f0d2b7120931da9ce6728fc942e5a
 
     }
 
