@@ -69,9 +69,6 @@ public class Pathfinder {
     //subsequent stop)
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
-<<<<<<< HEAD
-
-=======
         sortedSelectedItemsIDs = new ArrayList<>();
         String sourceID = "entrance_exit_gate";
 
@@ -90,7 +87,6 @@ public class Pathfinder {
 
 
         }
->>>>>>> f2fce438d49d8967fcd61512da2945b097a7489e
 
 
     }
