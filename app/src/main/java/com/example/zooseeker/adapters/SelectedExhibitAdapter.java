@@ -1,4 +1,4 @@
-package com.example.zooseeker;
+package com.example.zooseeker.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,15 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.zooseeker.R;
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
-public class SelectedListAdapter extends ArrayAdapter<Exhibit> {
+public class SelectedExhibitAdapter extends ArrayAdapter<ExhibitWithGroup> {
 
 
-    private LinkedHashSet<Exhibit> selectedItems;
+    private LinkedHashSet<ExhibitWithGroup> selectedItems;
 
-    public SelectedListAdapter(@NonNull Context context, int resource, LinkedHashSet<Exhibit> selectedItems) {
+    public SelectedExhibitAdapter(@NonNull Context context, int resource, LinkedHashSet<ExhibitWithGroup> selectedItems) {
         super(context, resource);
         this.selectedItems = selectedItems;
     }
@@ -30,9 +34,9 @@ public class SelectedListAdapter extends ArrayAdapter<Exhibit> {
 
     @Nullable
     @Override
-    public Exhibit getItem(int position) {
+    public ExhibitWithGroup getItem(int position) {
         //convert to arrayList
-        ArrayList<Exhibit> thing;
+        ArrayList<ExhibitWithGroup> thing;
         thing = new ArrayList<>(selectedItems);
         return thing.get(position);
     }
@@ -47,14 +51,14 @@ public class SelectedListAdapter extends ArrayAdapter<Exhibit> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
 
-        Exhibit item = getItem(position);
+        ExhibitWithGroup item = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.search_list_view, parent, false);
         }
 
         TextView name = (TextView) convertView.findViewById(R.id.itemName);
-        name.setText(item.name);
+        name.setText(item.exhibit.name);
 
         return convertView;
 

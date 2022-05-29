@@ -1,4 +1,4 @@
-package com.example.zooseeker;
+package com.example.zooseeker.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -27,7 +27,18 @@ public interface ExhibitsDao {
     @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' ORDER BY name ASC")
     LiveData<List<ExhibitWithGroup>> getExhibitsWithGroupsLive();
 
+
     @Transaction
     @Query("SELECT * FROM exhibits WHERE id=:id")
     ExhibitWithGroup getExhibitWithGroupById(String id);
+
+    @Transaction
+    @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' ORDER BY name ASC")
+    List<ExhibitWithGroup> getExhibits();
+
+    @Transaction
+    @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' || tags LIKE '%' || :in || name = :in ORDER BY name ASC")
+    List<ExhibitWithGroup> getExhibitsByName(String in);
+
+
 }

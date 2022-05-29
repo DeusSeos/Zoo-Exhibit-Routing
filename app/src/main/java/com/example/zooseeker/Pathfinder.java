@@ -5,6 +5,10 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
+import com.example.zooseeker.db.Trail;
+
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
@@ -13,20 +17,21 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.xml.transform.Source;
 
 // might be an apex reference
 public class Pathfinder {
 
     private Context context;
     private Graph<String, IdentifiedWeightedEdge> g;
-    private Map<String, Exhibit> exhibitInfo;
-    private Map<String, Trail> trailInfo;
+    private Map<String, ExhibitWithGroup> vInfo;
+    private Map<String, Trail> eInfo;
     private List<String> sortedSelectedItemsIDs;
-    private List<Exhibit> selectedItems;
+    private List<ExhibitWithGroup> selectedItems;
     private List<String> tempSelectedItemsIDs = new ArrayList<>();
     private ArrayList<ArrayList<String>> fullPath = new ArrayList<>();
     private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
@@ -35,32 +40,26 @@ public class Pathfinder {
 
     // Constructor for Pathfinder object
     // Get selectedItems and populate the exhibitInfo and trailInfo
-    public Pathfinder(Context context, List<Exhibit> selectedItems) {
+    public Pathfinder(Context context, List<ExhibitWithGroup> selectedItems) {
         this.context = context;
-        g = ZooData.loadZooGraphJSON(context, "sample_zoo_graph.json");
+        g = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
+        vInfo = ZooData.loadVertexInfoJSON(context, "exhibit_info");
+        eInfo = ZooData.loadEdgeInfoJSON(context, "trail_info");
+
         dijkstra = new DijkstraShortestPath<>(g);
-
-        // Populate from the default assets (note: in your own tests, perhaps use test-only assets?)
-        InputStreamReader exhibitsReader;
-        InputStreamReader trailsReader;
-        try {
-            exhibitsReader = new InputStreamReader(context.getAssets().open("sample_node_info.json"));
-        } catch (IOException e) {
-            Log.d("Pathfinder", e.getLocalizedMessage());
-        }
-        try {
-            trailsReader = new InputStreamReader(context.getAssets().open("sample_edge_info.json"));
-        } catch (IOException e) {
-            Log.d("Pathfinder", e.getLocalizedMessage());
-        }
-
 
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = 0;
-        for (Exhibit item : selectedItems) {
-            tempSelectedItemsIDs.add(item.id);
+        for (ExhibitWithGroup item : selectedItems) {
+            if (item.exhibit.hasGroup()){
+                tempSelectedItemsIDs.add(item.group.id);
+            } else {
+                tempSelectedItemsIDs.add(item.exhibit.id);
+            }
+
         }
+        Log.d("Pathfinder", "temp Selected Items" + tempSelectedItemsIDs.toString());
     }
 
 
@@ -69,25 +68,59 @@ public class Pathfinder {
     //subsequent stop)
     public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
+<<<<<<< HEAD
         sortedSelectedItemsIDs = new ArrayList<>();
         String sourceID = "entrance_exit_gate";
+=======
 
+>>>>>>> 99de6f0fed7f0d2b7120931da9ce6728fc942e5a
 
+        sortedSelectedItemsIDs = new ArrayList<>();
+        sortedSelectedItemsIDs.add("entrance_exit_gate");
+
+        String sourceID = "entrance_exit_gate";
+        String tempSource = "temp";
+        double shortest = Double.MAX_VALUE;
+        Log.d("Pathfinder", "sourceId:" + sourceID);
+        Log.d("Pathfinder", g.vertexSet().toString());
+        Log.d("Pathfinder", tempSelectedItemsIDs.toString());
+        // Get a sorted strings of exihibits
         while (!tempSelectedItemsIDs.isEmpty()) {
-            int length = tempSelectedItemsIDs.size();
-            String lowestID = "";
-            int lowestWeight = Double.MAX_VALUE;
-            GraphPath <>tempPath;
-            for (int i = 0; i < length; i++) {
-                String sinkID = tempSelectedItemsIDs.get(i);
-                DijkstraShortestPath.findPathBetween(g, sourceID, sinkID);
+            for (String sink : tempSelectedItemsIDs) {
+                GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
+                double curr = this.getDistance(path);
+                Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
+                if (curr < shortest) {
+                    shortest = curr;
+                    tempSource = sink;
+                }
 
+                sourceID = tempSource;
+                sortedSelectedItemsIDs.add(sourceID);
+                tempSelectedItemsIDs.remove(sourceID);
             }
-
-
-
         }
 
+        sortedSelectedItemsIDs.add("entrance_exit_gate");
+        int startIndex = 0;
+        int goalIndex = 1;
+        String sourceItemID;
+
+        while (goalIndex < sortedSelectedItemsIDs.size()) {
+            sourceItemID = sortedSelectedItemsIDs.get(startIndex++);
+            String goalID = sortedSelectedItemsIDs.get(goalIndex++);
+            Log.d("Pathfinder", sourceItemID);
+            Log.d("Pathfinder", goalID);
+            GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, sourceItemID, goalID);
+            Log.d("Pathfinder", "HIIIII: " + getDirections(path));
+            fullPath.add(getDirections(path));
+
+        }
+<<<<<<< HEAD
+
+=======
+        Log.d("Pathfinder", "FULL PATH LOSER: " + fullPath.toString());
+>>>>>>> 99de6f0fed7f0d2b7120931da9ce6728fc942e5a
 
     }
 
@@ -111,9 +144,9 @@ public class Pathfinder {
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
             directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
                     g.getEdgeWeight(e),
-                    trailInfo.get(e.getId()).street,
-                    exhibitInfo.get(g.getEdgeSource(e)).name,
-                    exhibitInfo.get(g.getEdgeTarget(e)).name));
+                    eInfo.get(e.getId()).street,
+                    vInfo.get(g.getEdgeSource(e)).exhibit.name,
+                    vInfo.get(g.getEdgeTarget(e)).exhibit.name));
             i++;
         }
         Log.d("Pathfinder", directions.toString());

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.zooseeker.db.ExhibitWithGroup;
+import com.example.zooseeker.db.Trail;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -42,15 +44,15 @@ public class ZooData {
         public String street;
     }
 
-    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context context, String path) {
+    public static Map<String, ExhibitWithGroup> loadVertexInfoJSON(Context context, String path) {
         try {
             InputStream inputStream = context.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
 
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ZooData.VertexInfo>>() {
+            Type type = new TypeToken<List<ExhibitWithGroup>>() {
             }.getType();
-            List<ZooData.VertexInfo> zooData = gson.fromJson(reader, type);
+            List<ExhibitWithGroup> zooData = gson.fromJson(reader, type);
 
             // This code is equivalent to:
             //
@@ -59,9 +61,9 @@ public class ZooData {
             //   indexedZooData[datum.id] = datum;
             // }
             //
-            Map<String, ZooData.VertexInfo> indexedZooData = zooData
+            Map<String, ExhibitWithGroup> indexedZooData = zooData
                     .stream()
-                    .collect(Collectors.toMap(v -> v.id, datum -> datum));
+                    .collect(Collectors.toMap(v -> v.exhibit.id, datum -> datum));
 
             return indexedZooData;
         } catch (IOException exception) {
@@ -69,17 +71,17 @@ public class ZooData {
         }
     }
 
-    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context context, String path) {
+    public static Map<String, Trail> loadEdgeInfoJSON(Context context, String path) {
         try {
             InputStream inputStream = context.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
 
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ZooData.EdgeInfo>>() {
+            Type type = new TypeToken<List<Trail>>() {
             }.getType();
-            List<ZooData.EdgeInfo> zooData = gson.fromJson(reader, type);
+            List<Trail> zooData = gson.fromJson(reader, type);
 
-            Map<String, ZooData.EdgeInfo> indexedZooData = zooData
+            Map<String, Trail> indexedZooData = zooData
                     .stream()
                     .collect(Collectors.toMap(v -> v.id, datum -> datum));
 
