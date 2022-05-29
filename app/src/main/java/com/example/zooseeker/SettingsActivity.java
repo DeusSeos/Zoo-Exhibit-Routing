@@ -40,14 +40,18 @@ public class SettingsActivity extends AppCompatActivity {
                         Toast.makeText(SettingsActivity.this, "Detailed Directions Enabled", Toast.LENGTH_SHORT).show();
                         break;
                 }
-                SharedPreferences.Editor editor = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE).edit();
-                editor.putString(UserSettings.CUSTOM_DIRECTION, settings.getCustomDirection());
-                editor.apply();
+                saveSettings();
             }
         });
 
 
 
+    }
+
+    private void saveSettings() {
+        SharedPreferences.Editor editor = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString(UserSettings.CUSTOM_DIRECTION, settings.getCustomDirection());
+        editor.apply();
     }
 
     private void onBackClicked(View view) {finish();}
