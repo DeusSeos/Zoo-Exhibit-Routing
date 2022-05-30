@@ -11,18 +11,21 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zooseeker.adapters.ExhibitAdapter;
 import com.example.zooseeker.adapters.SelectedExhibitAdapter;
 import com.example.zooseeker.db.ExhibitWithGroup;
 import com.example.zooseeker.db.ExhibitsDao;
+import com.example.zooseeker.db.IDDao;
 import com.example.zooseeker.db.PersistenceDatabase;
 import com.example.zooseeker.db.SearchDatabase;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SearchListActivity extends AppCompatActivity {
 
@@ -36,7 +39,9 @@ public class SearchListActivity extends AppCompatActivity {
     SelectedExhibitAdapter selectedAdapter;
 
     ExhibitsDao exhibitsDao;
-    List<ExhibitWithGroup> animalNameList = new ArrayList<>();
+
+    IDDao idDao;
+    ArrayList<ExhibitWithGroup> animalNameList = new ArrayList<>();
     LinkedHashSet<ExhibitWithGroup> selectedItems = new LinkedHashSet<>();
 
     @Override
@@ -47,7 +52,9 @@ public class SearchListActivity extends AppCompatActivity {
 
         // initialize db stuff
         SearchDatabase db = SearchDatabase.getDatabase(this);
+        PersistenceDatabase persistenceDatabase = PersistenceDatabase.getSingleton(this);
 
+        idDao = persistenceDatabase.IDDao();
         exhibitsDao = db.exhibitsDao();
 //        ZooDatabase db = ZooDatabase.getDatabase(this);
 
@@ -67,7 +74,7 @@ public class SearchListActivity extends AppCompatActivity {
 
         Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
         Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
-        animalNameList = exhibitsDao.getExhibits();
+        animalNameList = new ArrayList<>(exhibitsDao.getExhibits());
         Log.d("SearchListActivity", "animalNameList: " + animalNameList.toString());
 
         // set and populate adapter
@@ -100,12 +107,8 @@ public class SearchListActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.i("SearchListActivity", "Destroying...");
-        PersistenceDatabase persistenceDatabase = PersistenceDatabase.getSingleton(this);
-        ExhibitsDao exhibitsDao = persistenceDatabase.exhibitDao();
-        ArrayList<ExhibitWithGroup> selectedExhibits = new ArrayList<>(selectedItems);
-
-
-        exhibitsDao.insert();
+        List<String> selectedIDs = selectedItems.stream().map(ExhibitWithGroup::getExhibitID).collect(Collectors.toList());
+        idDao.insert(selectedIDs);
         super.onDestroy();
     }
 
@@ -115,6 +118,11 @@ public class SearchListActivity extends AppCompatActivity {
         this.selectedItems.add(query);
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("exhibits", animalNameList);
+    }
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
         ExhibitWithGroup ew =  (ExhibitWithGroup) adapterView.getItemAtPosition(position); //TODO: AdapterView not containing exhibits yet

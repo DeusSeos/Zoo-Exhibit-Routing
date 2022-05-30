@@ -31,7 +31,6 @@ public interface ExhibitsDao {
     @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' ORDER BY name ASC")
     LiveData<List<ExhibitWithGroup>> getExhibitsWithGroupsLive();
 
-
     @Transaction
     @Query("SELECT * FROM exhibits WHERE id=:id")
     ExhibitWithGroup getExhibitWithGroupById(String id);

@@ -24,6 +24,8 @@ public class ExhibitWithGroup implements Parcelable {
         return exhibit.name;
     }
 
+    public String getExhibitID() { return exhibit.id; }
+
     public String getGroupName() {
         if (group == null) return " ";
         return group.name;
