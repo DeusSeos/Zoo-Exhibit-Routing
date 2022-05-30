@@ -45,7 +45,7 @@ public class Pathfinder {
 
         this.selectedItems = selectedItems;
         // this is the naive no check approach (change this to at least check if we go over the list index)
-        this.fullPathIndex = 0;
+        this.fullPathIndex = -1;
         for (ExhibitWithGroup item : selectedItems) {
             if (item.exhibit.hasGroup()){
                 tempSelectedItemsIDs.add(item.group.id);
@@ -100,9 +100,12 @@ public class Pathfinder {
 
     public ArrayList<String> next() {
         Log.e("Next_index", String.valueOf(fullPathIndex));
-        if (fullPathIndex < fullPath.size()) {
+        if (fullPathIndex < fullPath.size()-1) {
             // return the next path from fullpath
-            return fullPath.get(fullPathIndex++);
+
+            fullPathIndex += 1;
+            Log.d("Pathfinder", "Index: " + fullPathIndex);
+            return fullPath.get(fullPathIndex);
         } else {
             Toast.makeText(context, "This is the end!", Toast.LENGTH_LONG).show();
             ArrayList<String> noMore = new ArrayList<>();
@@ -114,6 +117,7 @@ public class Pathfinder {
     public ArrayList<String> back() {
         if (fullPathIndex > 0) {
             // return the next path from fullpath
+            Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(fullPathIndex--);
         } else {
             Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
