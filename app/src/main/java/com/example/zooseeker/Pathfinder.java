@@ -98,6 +98,18 @@ public class Pathfinder {
 
     }
 
+    public ArrayList<String> summary() {
+        ArrayList<String> res = new ArrayList<>();
+        int start = 0;
+        int goal = 1;
+        while (goal < sortedSelectedItemsIDs.size()) {
+            String distance = String.valueOf(dijkstra.getPathWeight(sortedSelectedItemsIDs.get(start), sortedSelectedItemsIDs.get(goal)));
+            res.add(String.format("%f ,%fm", sortedSelectedItemsIDs.get(goal), distance));
+        }
+        return res;
+    }
+
+
     public ArrayList<String> next() {
         if (fullPathIndex < fullPath.size()-1) {
             // return the next path from fullpath
@@ -232,4 +244,5 @@ public class Pathfinder {
         }
         return path;
     }
+
 }
