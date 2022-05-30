@@ -123,7 +123,7 @@ public class Pathfinder {
         if (fullPathIndex > 0) {
             // return the next path from fullpath
             Log.d("Pathfinder", "Index: " + fullPathIndex);
-            return fullPath.get(fullPathIndex--);
+            return fullPath.get(--fullPathIndex);
         } else {
             Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
             return fullPath.get(0);
