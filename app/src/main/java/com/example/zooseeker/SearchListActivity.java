@@ -104,13 +104,13 @@ public class SearchListActivity extends AppCompatActivity {
         super.onRestart();
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.i("SearchListActivity", "Destroying...");
-        List<String> selectedIDs = selectedItems.stream().map(ExhibitWithGroup::getExhibitID).collect(Collectors.toList());
-        idDao.insert(selectedIDs);
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        Log.i("SearchListActivity", "Destroying...");
+//        List<String> selectedIDs = selectedItems.stream().map(ExhibitWithGroup::getExhibitID).collect(Collectors.toList());
+//        idDao.insert(selectedIDs);
+//        super.onDestroy();
+//    }
 
     public void selectEntry(ExhibitWithGroup query, int position) {
         this.adapter.remove(this.adapter.getItem(position));
@@ -122,6 +122,7 @@ public class SearchListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("exhibits", animalNameList);
+        outState.putParcelableArrayList("selected", );
     }
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
