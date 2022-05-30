@@ -102,7 +102,7 @@ public class Pathfinder {
         ArrayList<String> res = new ArrayList<>();
         int start = 0;
         int goal = 1;
-        res.add("Plan summary:");
+        res.add("Plan Summary:");
         while (goal < sortedSelectedItemsIDs.size()) {
             String distance = String.valueOf(dijkstra.getPathWeight(sortedSelectedItemsIDs.get(start), sortedSelectedItemsIDs.get(goal)));
             res.add(vInfo.get(sortedSelectedItemsIDs.get(goal)).name + ", " + distance + "m");
