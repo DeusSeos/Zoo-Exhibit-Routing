@@ -124,21 +124,21 @@ public class Pathfinder {
     }
 
     public ArrayList<String> skip(){
-        if(fullPathIndex >= fullPath.size()-1){
+        if(fullPathIndex >= fullPath.size()-2){
             Log.e("Skip_index", String.valueOf(fullPathIndex));
 
             Toast.makeText(context, "No more exhibit to skip!", Toast.LENGTH_LONG).show();
 //            ArrayList<String> noMore = new ArrayList<>();
 //            noMore.add("No more");
-            return fullPath.get(fullPathIndex-1);
+            return fullPath.get(fullPathIndex);
         }
         // Get current location
-        String sourceID = sortedSelectedItemsIDs.get(fullPathIndex - 1);
+        String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
         Log.d("source:", sourceID);
 
         // Remove next location
-        sortedSelectedItemsIDs.remove(fullPathIndex);
-        int nextIndex = fullPathIndex;
+        sortedSelectedItemsIDs.remove(fullPathIndex+1);
+        int nextIndex = fullPathIndex+1;
         // Add rest locations except exit
         List<String> newSelectedItems = new ArrayList<>();
         for(int i = nextIndex; i < sortedSelectedItemsIDs.size() - 1; i++) {
@@ -158,13 +158,13 @@ public class Pathfinder {
         int goalIndex = 1;
         while(goalIndex < leftID.size()) {
             GraphPath<String, IdentifiedWeightedEdge> path = buildPath(leftID, startIndex, goalIndex);
-            fullPath.set(fullPathIndex - 1 + startIndex, getDirections(path));
+            fullPath.set(fullPathIndex + startIndex, getDirections(path));
             goalIndex++;
             startIndex++;
         }
 //        for(int i = nextIndex)
         //Log.d("index", String.valueOf(fullPathIndex));
-        return fullPath.get(fullPathIndex - 1);
+        return fullPath.get(fullPathIndex);
     }
 
 
