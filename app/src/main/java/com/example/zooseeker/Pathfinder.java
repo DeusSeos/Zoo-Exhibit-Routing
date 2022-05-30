@@ -99,10 +99,8 @@ public class Pathfinder {
     }
 
     public ArrayList<String> next() {
-        Log.e("Next_index", String.valueOf(fullPathIndex));
         if (fullPathIndex < fullPath.size()-1) {
             // return the next path from fullpath
-
             fullPathIndex += 1;
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(fullPathIndex);
