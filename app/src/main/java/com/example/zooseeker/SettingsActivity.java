@@ -2,6 +2,7 @@ package com.example.zooseeker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -54,7 +55,10 @@ public class SettingsActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void onBackClicked(View view) {finish();}
+    private void onBackClicked(View view) {
+        Intent intent = getIntent();
+
+        finish();}
 
     private void loadSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);

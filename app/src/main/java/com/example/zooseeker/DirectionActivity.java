@@ -1,6 +1,7 @@
 package com.example.zooseeker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ public class DirectionActivity extends AppCompatActivity {
     private Pathfinder pathy;
     private ListView directionList;
     private ArrayList<ExhibitWithGroup> selectedItems;
+    UserSettings settings;
 
     List<String> directionsArray = new ArrayList<>();
     private ArrayAdapter<String> directionsAdapter;
@@ -33,6 +35,9 @@ public class DirectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_direction);
 
+        settings = (UserSettings) getApplication();
+        SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
+        boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
@@ -51,7 +56,12 @@ public class DirectionActivity extends AppCompatActivity {
 
         pathy = new Pathfinder(this, selectedItems);
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
-        pathy.optimizeSelectedItemsIDs();
+        if(!directions) {
+            pathy.optimizeBriefSelectedItemsIDs();
+        }else {
+            pathy.optimizeSelectedItemsIDs();
+        }
+
 
         directionsArray = pathy.next();
 
