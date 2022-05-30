@@ -104,7 +104,7 @@ public class Pathfinder {
             fullPathIndex += 1;
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(fullPathIndex);
-        } else if (fullPathIndex == fullPath.size()) {
+        } else if (fullPathIndex == fullPath.size()-1) {
             fullPathIndex++;
             Toast.makeText(context, "This is the end!", Toast.LENGTH_LONG).show();
             ArrayList<String> noMore = new ArrayList<>();
