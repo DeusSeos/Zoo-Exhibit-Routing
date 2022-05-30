@@ -32,11 +32,11 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int checkedButtonId) {
                 switch (checkedButtonId) {
                     case R.id.direction_option_a:
-                        settings.setCustomDirection(UserSettings.BRIEF_DIRECTION);
+                        settings.setCustomDirection(false);
                         Toast.makeText(SettingsActivity.this, "Brief Directions Enabled", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.direction_option_b:
-                        settings.setCustomDirection(UserSettings.DETAILED_DIRECTION);
+                        settings.setCustomDirection(true);
                         Toast.makeText(SettingsActivity.this, "Detailed Directions Enabled", Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void saveSettings() {
         SharedPreferences.Editor editor = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE).edit();
-        editor.putString(UserSettings.CUSTOM_DIRECTION, settings.getCustomDirection());
+        editor.putBoolean(UserSettings.CUSTOM_DIRECTION, settings.getCustomDirection());
         editor.apply();
     }
 
@@ -58,10 +58,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void loadSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
-        String directions = sharedPreferences.getString(UserSettings.CUSTOM_DIRECTION, UserSettings.BRIEF_DIRECTION);
-        settings.setCustomDirection(directions);
+        boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
         RadioButton radioButton;
-        if(directions == UserSettings.BRIEF_DIRECTION) {
+        if(!directions) {
             radioButton = findViewById(R.id.direction_option_a);
         } else {
             radioButton = findViewById(R.id.direction_option_b);

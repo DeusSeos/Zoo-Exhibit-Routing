@@ -6,17 +6,17 @@ public class UserSettings extends Application {
 
     public static final String PREFERENCES = "Preferences";
 
-    public static String CUSTOM_DIRECTION;
+    public static final String CUSTOM_DIRECTION = "false";
     public static final String BRIEF_DIRECTION = "briefDirection";
     public static final String DETAILED_DIRECTION = "detailedDirection";
 
-    private String customDirection;
+    private boolean customDirection;
 
-    public String getCustomDirection() {
+    public boolean getCustomDirection() {
         return customDirection;
     }
 
-    public void setCustomDirection(String customDirection) {
+    public void setCustomDirection(boolean customDirection) {
         this.customDirection = customDirection;
     }
 
