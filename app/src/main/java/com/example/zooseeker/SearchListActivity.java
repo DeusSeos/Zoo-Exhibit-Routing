@@ -1,26 +1,23 @@
 package com.example.zooseeker;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zooseeker.adapters.ExhibitAdapter;
 import com.example.zooseeker.adapters.SelectedExhibitAdapter;
-import com.example.zooseeker.db.Exhibit;
 import com.example.zooseeker.db.ExhibitWithGroup;
 import com.example.zooseeker.db.ExhibitsDao;
+import com.example.zooseeker.db.PersistenceDatabase;
 import com.example.zooseeker.db.SearchDatabase;
 
 import java.util.ArrayList;
@@ -52,8 +49,6 @@ public class SearchListActivity extends AppCompatActivity {
         SearchDatabase db = SearchDatabase.getDatabase(this);
 
         exhibitsDao = db.exhibitsDao();
-
-
 //        ZooDatabase db = ZooDatabase.getDatabase(this);
 
 
@@ -90,6 +85,30 @@ public class SearchListActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStop() {
+        Log.i("SearchListActivity", "Stopping...");
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.i("SearchListActivity", "Restarting...");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i("SearchListActivity", "Destroying...");
+        PersistenceDatabase persistenceDatabase = PersistenceDatabase.getSingleton(this);
+        ExhibitsDao exhibitsDao = persistenceDatabase.exhibitDao();
+        ArrayList<ExhibitWithGroup> selectedExhibits = new ArrayList<>(selectedItems);
+
+
+        exhibitsDao.insert();
+        super.onDestroy();
+    }
+
     public void selectEntry(ExhibitWithGroup query, int position) {
         this.adapter.remove(this.adapter.getItem(position));
         Log.d("SearchListActivity", "Adding to select: " + query);
@@ -112,7 +131,7 @@ public class SearchListActivity extends AppCompatActivity {
         if (!selectedItems.isEmpty()) {
             Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
             ArrayList<ExhibitWithGroup> arraySelectedItems = new ArrayList<>(selectedItems); //TODO: make directionActivity take exhibits
-            Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems.toString());
+            Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems);
             intent.putParcelableArrayListExtra("selected_list", arraySelectedItems); //TODO: Make parcelable take exhibits
             startActivity(intent);
         } else {
