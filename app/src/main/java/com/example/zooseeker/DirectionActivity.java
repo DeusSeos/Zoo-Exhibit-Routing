@@ -87,6 +87,7 @@ public class DirectionActivity extends AppCompatActivity {
         mockButton.setOnClickListener(view -> {
             String s = mockLocation.getText().toString();
             int flag = pathy.mock(s);
+            Log.d("flag", String.valueOf(flag));
             if (flag == -1){
 
             } else {

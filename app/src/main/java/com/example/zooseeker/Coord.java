@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.*;
+
 public class Coord {
     public Coord(double lat, double lng) {
         this.lat = lat;
@@ -39,10 +41,10 @@ public class Coord {
         return Double.compare(coord.lat, lat) == 0 && Double.compare(coord.lng, lng) == 0;
     }
 
-//    @Override
-//    public int hashCode() {
-//        return Objects.hashCode(lat, lng);
-//    }
+    @Override
+    public int hashCode() {
+        return (int) (this.lat * 100.0 + this.lng*100.0);
+    }
 
     @NonNull
     @Override
