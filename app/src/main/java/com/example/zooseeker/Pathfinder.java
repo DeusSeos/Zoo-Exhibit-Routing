@@ -1,7 +1,10 @@
 package com.example.zooseeker;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +16,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +25,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 // might be an apex reference
 public class Pathfinder {
@@ -37,6 +45,8 @@ public class Pathfinder {
     private int fullPathIndex;
     private HashMap<Integer, List<String>> hash = new HashMap<>();
     private Coord targetCoord;
+    private ArrayList<String> visited;
+    public static boolean flag;
 
 
     // Constructor for Pathfinder object
@@ -145,6 +155,30 @@ public class Pathfinder {
 
 
         return res;
+    }
+
+    public static void showAlert(Activity activity, String message) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
+
+        alertBuilder
+                .setTitle("Off-track!")
+                .setMessage(message)
+                .setNegativeButton("Don't bother", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Pathfinder.flag = false;
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Pathfinder.flag = true;
+                    }
+                })
+                .setCancelable(true);
+        AlertDialog alertDialog = alertBuilder.create();
+        alertDialog.show();
     }
 
     public ArrayList<String> summary() {

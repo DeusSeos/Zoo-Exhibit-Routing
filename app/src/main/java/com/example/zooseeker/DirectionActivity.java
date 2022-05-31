@@ -89,6 +89,15 @@ public class DirectionActivity extends AppCompatActivity {
             int flag = pathy.mock(s);
             Log.d("flag", String.valueOf(flag));
 
+            if (flag == -1) {
+                pathy.showAlert(this,"You are off-track!");
+
+                if (Pathfinder.flag == false) {
+                    directionList.setAdapter(directionsAdapter);
+                    return;
+                }
+            }
+
             directionsArray = pathy.update(flag);
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
