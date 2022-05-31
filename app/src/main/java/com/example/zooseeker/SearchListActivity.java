@@ -58,6 +58,8 @@ public class SearchListActivity extends AppCompatActivity {
         SearchDatabase db = SearchDatabase.getDatabase(this);
         PersistenceDatabase persistenceDatabase = PersistenceDatabase.getSingleton(this);
 
+
+
         idDao = persistenceDatabase.IDDao();
         exhibitsDao = db.exhibitsDao();
 
