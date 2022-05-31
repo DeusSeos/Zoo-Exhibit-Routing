@@ -1,7 +1,9 @@
 package com.example.zooseeker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -113,5 +115,13 @@ public class DirectionActivity extends AppCompatActivity {
             mockLocation.setText("");
         });
     }
+
+
+    void onSettingsClicked(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+
 
 }
