@@ -18,6 +18,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(tableName = "exhibits")
 public class Exhibit implements Parcelable {
@@ -135,6 +136,18 @@ public class Exhibit implements Parcelable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Exhibit)) return false;
+        Exhibit exhibit = (Exhibit) o;
+        return id.equals(exhibit.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Override
     public int describeContents() {
