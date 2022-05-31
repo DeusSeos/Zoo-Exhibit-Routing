@@ -82,7 +82,7 @@ public class DirectionActivity extends AppCompatActivity {
             directionList.setAdapter(directionsAdapter);
         });
 
-        nextButton.setOnClickListener(view -> {
+        mockButton.setOnClickListener(view -> {
 
         });
     }

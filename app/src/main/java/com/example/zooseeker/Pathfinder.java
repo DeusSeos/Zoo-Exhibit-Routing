@@ -45,6 +45,9 @@ public class Pathfinder {
         dijkstra = new DijkstraShortestPath<>(g);
 
         this.selectedItems = selectedItems;
+
+        this.currCoord = new Coord(vInfo.get("entrance_exit_gate").lat, vInfo.get("entrance_exit_gate").lng);
+
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = -1;
         for (ExhibitWithGroup item : selectedItems) {
@@ -117,6 +120,9 @@ public class Pathfinder {
     public ArrayList<String> next() {
         if (fullPathIndex < fullPath.size()-1) {
             // return the next path from fullpath
+//            this.currCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
+//                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
+
             fullPathIndex += 1;
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(fullPathIndex);
@@ -132,7 +138,6 @@ public class Pathfinder {
             noMore.add("No more");
             return noMore;
         }
-
     }
 
     public ArrayList<String> back() {
