@@ -44,9 +44,10 @@ public class Pathfinder {
     private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
     private int fullPathIndex;
     private HashMap<Integer, List<String>> hash = new HashMap<>();
-    private Coord targetCoord;
-    private ArrayList<String> visited;
-    public static boolean flag;
+    public static boolean flag; // serves as global variable to check the dialog
+    public Coord targetCoord;
+    private int targetSortedIndex;
+
 
 
     // Constructor for Pathfinder object
@@ -120,8 +121,9 @@ public class Pathfinder {
         Coord newCoord = new Coord(newLat, newLng);
 
         Log.d("hash", String.valueOf(this.hash.size()));
-
+        Log.d("coords", String.valueOf(targetCoord.lat));
         if (newCoord.hashCode() == this.targetCoord.hashCode()) {
+
             return -2;
         } else {
             for (int i = 0; i < this.hash.get(this.targetCoord.hashCode()).size(); i++){
@@ -145,7 +147,7 @@ public class Pathfinder {
         }
 
         if (flag == -1){
-            res.add("Need to replan");
+
             return res;
         }
 
@@ -169,7 +171,7 @@ public class Pathfinder {
                         Pathfinder.flag = false;
                     }
                 })
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Replan", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -203,6 +205,8 @@ public class Pathfinder {
 
             this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lat,
                     vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lng);
+            this.targetSortedIndex = this.fullPathIndex+1;
+
 
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(fullPathIndex);
@@ -233,6 +237,7 @@ public class Pathfinder {
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             ArrayList<String> currentPath = (ArrayList<String>) fullPath.get(--fullPathIndex).clone();
             Collections.reverse(currentPath);
+            fullPathIndex --;
             return currentPath;
         } else {
             Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();

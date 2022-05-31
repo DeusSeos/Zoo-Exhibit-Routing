@@ -94,13 +94,23 @@ public class DirectionActivity extends AppCompatActivity {
 
                 if (Pathfinder.flag == false) {
                     directionList.setAdapter(directionsAdapter);
+                    mockLocation.setText("");
                     return;
                 }
+            }
+
+            if (flag != -2) {
+                directionsArray = directionsArray.subList(flag, directionsArray.size());
+                directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+                directionList.setAdapter(directionsAdapter);
+                mockLocation.setText("");
+                return;
             }
 
             directionsArray = pathy.update(flag);
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
+            mockLocation.setText("");
         });
     }
 

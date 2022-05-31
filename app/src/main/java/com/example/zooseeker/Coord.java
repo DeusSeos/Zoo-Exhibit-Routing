@@ -43,7 +43,7 @@ public class Coord {
 
     @Override
     public int hashCode() {
-        return (int) (this.lat * 100.0 + this.lng*100.0);
+        return (int) (this.lat * 10000.0 + this.lng*10000.0);
     }
 
     @NonNull
