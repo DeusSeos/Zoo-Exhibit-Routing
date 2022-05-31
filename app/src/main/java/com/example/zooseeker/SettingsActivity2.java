@@ -10,14 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity2 extends AppCompatActivity {
 
     private com.example.zooseeker.UserSettings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_settings_2);
         settings = (com.example.zooseeker.UserSettings) getApplication();
         loadSharedPreferences();
         Button button = findViewById(R.id.back_settings_button);
