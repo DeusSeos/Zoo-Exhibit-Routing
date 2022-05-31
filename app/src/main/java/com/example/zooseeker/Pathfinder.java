@@ -200,6 +200,7 @@ public class Pathfinder {
         return totalWeight;
     }
 
+
     public ArrayList<String> sortID(List<String> tempSelectedItemsIDs, String sourceID) {
         if (sourceID == null){
             sourceID = "entrance_exit_gate";
@@ -220,6 +221,7 @@ public class Pathfinder {
             }
             shortest = Double.MAX_VALUE;
             sourceID = tempSource;
+
             selected.add(sourceID);
             tempSelectedItemsIDs.remove(sourceID);
         }
@@ -228,8 +230,7 @@ public class Pathfinder {
 
 
     public void optimizeBriefSelectedItemsIDs(String sourceID) {
-        //Ensure that the order begins at the entrance gate
-        //Ensure that the order begins at the entrance gate
+//Ensure that the order begins at the entrance gate
         sortedSelectedItemsIDs = new ArrayList<>();
         //String sourceID = "entrance_exit_gate";
 
@@ -259,7 +260,6 @@ public class Pathfinder {
         for(String s: sortedSelectedItemsIDs){
             Log.d("sortedID", s);
         }
-        Log.d("PathfinderBrief", "FULL PATH LOSER: " + fullPath.toString());
 
     }
     public ArrayList<String> getBriefDirections(GraphPath<String, IdentifiedWeightedEdge> path) {
@@ -334,5 +334,6 @@ public class Pathfinder {
             Log.d("Pathfinder", "E: " + e.toString());
         }
         return path;
+
     }
 }

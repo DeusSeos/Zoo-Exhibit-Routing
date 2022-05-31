@@ -55,6 +55,7 @@ public class DirectionActivity extends AppCompatActivity {
         });
 
 
+
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null) {
             selectedItems = getIntent().getParcelableArrayListExtra("selected_list");
@@ -65,6 +66,7 @@ public class DirectionActivity extends AppCompatActivity {
 
         pathy = new Pathfinder(this, selectedItems);
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
+
         if(!directions) {
             pathy.optimizeBriefSelectedItemsIDs(null);
         }else {
@@ -124,6 +126,8 @@ public class DirectionActivity extends AppCompatActivity {
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
+
     }
+
 
 }
