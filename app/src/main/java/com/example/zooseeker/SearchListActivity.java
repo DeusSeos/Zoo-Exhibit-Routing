@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 public class SearchListActivity extends AppCompatActivity {
 
     //Declared variables
+    Button clearButton;
     Button planButton;
     TextView selectedCount;
     ListView listView;
@@ -66,6 +67,8 @@ public class SearchListActivity extends AppCompatActivity {
         selectedListView = findViewById(R.id.selected_list);
         selectedCount = findViewById(R.id.count);
         planButton = findViewById(R.id.plan_button);
+        clearButton = findViewById(R.id.clear_button);
+
         searchView = findViewById(R.id.search_bar);
 
         // make the views disappear
@@ -109,7 +112,8 @@ public class SearchListActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new QueryListener(this, exhibitsDao, adapter, listView, selectedListView));
         listView.setOnItemClickListener(this::onItemClicked);
         planButton.setOnClickListener(this::onPlanClicked);
-        selectedCount.setText(String.valueOf(selectedItems.size()));
+        clearButton.setOnClickListener(this::onClearClicked);
+        updateSelectedCount();
     }
 
     @Override
@@ -121,6 +125,7 @@ public class SearchListActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         Log.i("SearchListActivity", "Stopping...");
+        idDao.deleteIds();
         List<String> selectedIDs = selectedItems.stream().map(ExhibitWithGroup::getExhibitID).collect(Collectors.toList());
         List<ID> idList = new ArrayList<>();
         for (String e : selectedIDs) {
@@ -175,7 +180,7 @@ public class SearchListActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         selectedAdapter.notifyDataSetChanged();
         selectedListView.setVisibility(View.VISIBLE);
-        selectedCount.setText(String.valueOf(selectedItems.size()));
+        updateSelectedCount();
     }
 
     public void onPlanClicked(View view) {
@@ -189,6 +194,23 @@ public class SearchListActivity extends AppCompatActivity {
             // Toast that they dum dum
             Toast.makeText(this, "Ooopsie you can't plan nothing silly!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void onClearClicked(View view){
+        Log.d("SearchListActivity", "Clear clicked");
+        if (!selectedItems.isEmpty()){
+            selectedItems.clear();
+            animalNameList = new ArrayList<>(exhibitsDao.getExhibits());
+            adapter.setItems(animalNameList);
+            selectedAdapter.notifyDataSetChanged();
+            listView.setAdapter(adapter);
+            updateSelectedCount();
+        }
+
+    }
+
+    public void updateSelectedCount(){
+        selectedCount.setText(String.valueOf(selectedItems.size()));
     }
 
 
