@@ -10,15 +10,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SettingsActivity2 extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     private com.example.zooseeker.UserSettings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings_2);
-        settings = (com.example.zooseeker.UserSettings) getApplication();
+        setContentView(R.layout.activity_settings);
+        settings = (UserSettings) getApplication();
         loadSharedPreferences();
         Button button = findViewById(R.id.back_settings_button);
         RadioGroup radioGroup1 = findViewById(R.id.direction_buttons);
