@@ -26,10 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-
 // might be an apex reference
 public class Pathfinder {
 
@@ -46,6 +42,7 @@ public class Pathfinder {
     private HashMap<Integer, List<String>> hash = new HashMap<>();
     public static boolean flag; // serves as global variable to check the dialog
     public Coord targetCoord;
+    public boolean isBack;
     private int targetSortedIndex;
 
 
@@ -53,6 +50,7 @@ public class Pathfinder {
     // Constructor for Pathfinder object
     // Get selectedItems and populate the exhibitInfo and trailInfo
     public Pathfinder(Context context, List<ExhibitWithGroup> selectedItems) {
+        this.isBack = false;
         this.context = context;
         g = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
         vInfo = ZooData.loadVertexInfoJSON(context, "exhibit_info");
@@ -120,10 +118,14 @@ public class Pathfinder {
         Double newLng = Double.valueOf(s.split(",")[1]);
         Coord newCoord = new Coord(newLat, newLng);
 
+        Log.d("target", String.valueOf(this.targetCoord.lat));
+        Log.d("isBack", String.valueOf(this.isBack));
+        Log.d("ind", String.valueOf(this.targetSortedIndex));
+        Log.d("full", String.valueOf(this.fullPathIndex));
+
         Log.d("hash", String.valueOf(this.hash.size()));
         Log.d("coords", String.valueOf(targetCoord.lat));
         if (newCoord.hashCode() == this.targetCoord.hashCode()) {
-
             return -2;
         } else {
             for (int i = 0; i < this.hash.get(this.targetCoord.hashCode()).size(); i++){
@@ -140,6 +142,8 @@ public class Pathfinder {
 
     public ArrayList<String> update(String loc){
         ArrayList<String> res = new ArrayList<>();
+
+
 
         return res;
     }
@@ -188,9 +192,17 @@ public class Pathfinder {
             // return the next path from fullpath
             fullPathIndex += 1;
 
-            this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lat,
-                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lng);
-            this.targetSortedIndex = this.fullPathIndex+1;
+
+            if (this.isBack == true) {
+                this.isBack = false;
+                this.targetSortedIndex = fullPathIndex;
+                this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
+                        vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
+            } else {
+                this.targetSortedIndex = fullPathIndex + 1;
+                this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lat,
+                        vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lng);
+            }
 
 
             Log.d("Pathfinder", "Index: " + fullPathIndex);
@@ -214,15 +226,29 @@ public class Pathfinder {
             Toast.makeText(context, "You haven't started", Toast.LENGTH_LONG).show();
             return this.summary();
         }
+
         if (fullPathIndex > 0) {
-            this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex-1)).lat,
-                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex-1)).lng);
-            this.targetSortedIndex = fullPathIndex-1;
+            if (this.isBack == true) {
+                this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex - 1)).lat,
+                        vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex - 1)).lng);
+                this.targetSortedIndex = fullPathIndex - 1;
+            } else {
+                Log.d("become", String.valueOf(isBack));
+                this.isBack = true;
+                this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
+                        vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
+                this.targetSortedIndex = fullPathIndex;
+            }
+
+            Log.d("tarInd", String.valueOf(targetSortedIndex));
+
+
 
             // return the next path from fullpath
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             ArrayList<String> currentPath = (ArrayList<String>) fullPath.get(--fullPathIndex).clone();
             Collections.reverse(currentPath);
+
             fullPathIndex --;
             return currentPath;
         } else {
@@ -247,8 +273,16 @@ public class Pathfinder {
             return fullPath.get(fullPathIndex);
         }
 
-
-        this.targetSortedIndex = fullPathIndex + 1;
+        if (this.isBack == true) {
+            this.isBack = false;
+            this.targetSortedIndex = fullPathIndex;
+            this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
+                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
+        } else {
+            this.targetSortedIndex = fullPathIndex + 1;
+            this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lat,
+                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lng);
+        }
         // Get current location
         String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
         Log.d("source:", sourceID);

@@ -116,7 +116,11 @@ public class DirectionActivity extends AppCompatActivity {
             }
 
             // flag != -2, user is walking along the way
-            directionsArray = directionsArray.subList(flag, directionsArray.size());
+            if (pathy.isBack == true){
+                directionsArray = directionsArray.subList(flag-1, directionsArray.size());
+            } else {
+                directionsArray = directionsArray.subList(flag, directionsArray.size());
+            }
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
             mockLocation.setText("");
