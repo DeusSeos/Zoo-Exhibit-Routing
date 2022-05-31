@@ -14,7 +14,7 @@ public class UserSettings extends Application {
         return customDirection;
     }
 
-    public void setCustomDirection(boolean customDirection) {
+    public void setDetailed(boolean customDirection) {
         this.customDirection = customDirection;
     }
 

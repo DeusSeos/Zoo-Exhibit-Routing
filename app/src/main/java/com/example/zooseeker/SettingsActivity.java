@@ -1,6 +1,5 @@
 package com.example.zooseeker;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -13,11 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private RadioGroup radioGroup;
-    private Button button;
-
     private com.example.zooseeker.UserSettings settings;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,27 +20,25 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         settings = (com.example.zooseeker.UserSettings) getApplication();
         loadSharedPreferences();
-        button = findViewById(R.id.back_settings_button);
-        radioGroup = findViewById(R.id.direction_buttons);
+        Button button = findViewById(R.id.back_settings_button);
+        RadioGroup radioGroup1 = findViewById(R.id.direction_buttons);
         button.setOnClickListener(this::onBackClicked);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedButtonId) {
-                switch (checkedButtonId) {
-                    case R.id.direction_option_a:
-                        settings.setCustomDirection(false);
-                        Toast.makeText(SettingsActivity.this, "Brief Directions Enabled", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.direction_option_b:
-                        settings.setCustomDirection(true);
-                        Toast.makeText(SettingsActivity.this, "Detailed Directions Enabled", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                saveSettings();
+        radioGroup1.setOnCheckedChangeListener((radioGroup, checkedButtonId) -> {
+            RadioButton brief, detailed;
+            brief = (RadioButton) findViewById(R.id.brief_direction);
+            detailed = (RadioButton) findViewById(R.id.detailed_direction);
+            if (brief.isChecked()) {
+                settings.setDetailed(false);
+                Toast.makeText(SettingsActivity.this, "Brief Directions Enabled", Toast.LENGTH_SHORT).show();
+            } else if (detailed.isChecked()) {
+                settings.setDetailed(true);
+                Toast.makeText(SettingsActivity.this, "Detailed Directions Enabled", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(SettingsActivity.this, "Invalid Direction", Toast.LENGTH_SHORT).show();
             }
+            saveSettings();
         });
-
-
 
     }
 
@@ -56,19 +49,23 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void onBackClicked(View view) {
-        Intent intent = getIntent();
-
-        finish();}
+        finish();
+    }
 
     private void loadSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(com.example.zooseeker.UserSettings.PREFERENCES, MODE_PRIVATE);
-        boolean directions = sharedPreferences.getBoolean(com.example.zooseeker.UserSettings.CUSTOM_DIRECTION, false);
-        RadioButton radioButton;
-        if(!directions) {
-            radioButton = findViewById(R.id.direction_option_a);
+        boolean detailed = sharedPreferences.getBoolean(com.example.zooseeker.UserSettings.CUSTOM_DIRECTION, false);
+
+        if (detailed) {
+            RadioButton radioButton;
+            radioButton = findViewById(R.id.detailed_direction);
+            radioButton.setChecked(true);
         } else {
-            radioButton = findViewById(R.id.direction_option_b);
+            RadioButton radioButton;
+            radioButton = findViewById(R.id.brief_direction);
+            radioButton.setChecked(true);
         }
-        radioButton.setChecked(true);
+
+
     }
 }
