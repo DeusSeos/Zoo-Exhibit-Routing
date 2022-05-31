@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ public class DirectionActivity extends AppCompatActivity {
         Button mockButton = findViewById(R.id.mock_button);
 
         EditText mockLocation = findViewById(R.id.location);
-//        ImageButton settingsButton = findViewById(R.id.settings_button);
+        ImageButton settingsButton = findViewById(R.id.settings_button);
 
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null) {
@@ -102,6 +103,12 @@ public class DirectionActivity extends AppCompatActivity {
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
         });
+
+
+
+
     }
+
+
 
 }
