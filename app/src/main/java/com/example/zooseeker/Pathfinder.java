@@ -114,8 +114,8 @@ public class Pathfinder {
         if (newCoord.hashCode() == this.targetCoord.hashCode()) {
             return -2;
         } else {
-            for (int i = 0; i < this.hash.get(this.targetCoord).size(); i++){
-                String tmp = this.hash.get(this.targetCoord).get(i);
+            for (int i = 0; i < this.hash.get(this.targetCoord.hashCode()).size(); i++){
+                String tmp = this.hash.get(this.targetCoord.hashCode()).get(i);
                 Coord stop = new Coord(vInfo.get(tmp).lat, vInfo.get(tmp).lng);
                 if (newCoord.equals(stop)){
                     return i;

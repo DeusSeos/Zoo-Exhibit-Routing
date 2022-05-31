@@ -88,13 +88,10 @@ public class DirectionActivity extends AppCompatActivity {
             String s = mockLocation.getText().toString();
             int flag = pathy.mock(s);
             Log.d("flag", String.valueOf(flag));
-            if (flag == -1){
 
-            } else {
-                directionsArray = pathy.update(flag);
-                directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-                directionList.setAdapter(directionsAdapter);
-            }
+            directionsArray = pathy.update(flag);
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
         });
     }
 
