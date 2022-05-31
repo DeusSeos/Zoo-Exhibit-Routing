@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +36,9 @@ public class DirectionActivity extends AppCompatActivity {
         Button nextButton = findViewById(R.id.next_button);
         Button backButton = findViewById(R.id.back_button);
         Button skipButton = findViewById(R.id.skip_button);
+        Button mockButton = findViewById(R.id.mock_button);
+
+        TextView location = findViewById(R.id.location);
 //        ImageButton settingsButton = findViewById(R.id.settings_button);
 
         // Try to load the selected items list from previous activity
@@ -76,6 +80,10 @@ public class DirectionActivity extends AppCompatActivity {
             directionsArray = pathy.skip();
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
+        });
+
+        nextButton.setOnClickListener(view -> {
+
         });
     }
 

@@ -31,6 +31,7 @@ public class Pathfinder {
     private ArrayList<ArrayList<String>> fullPath = new ArrayList<>();
     private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
     private int fullPathIndex;
+    private Coord currCoord;
 
 
     // Constructor for Pathfinder object
