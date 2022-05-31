@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -93,6 +94,25 @@ public class DirectionActivity extends AppCompatActivity {
     void onSettingsClicked(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateDirections();
+
+    }
+
+    private void updateDirections() {
+        settings = (UserSettings) getApplication();
+        SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
+        boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
+        pathy.pathUpdate(selectedItems, directions);
+        directionsArray = pathy.next();
+
+        //Create array to loop directions into
+        directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+        directionList.setAdapter(directionsAdapter);
     }
 
 }

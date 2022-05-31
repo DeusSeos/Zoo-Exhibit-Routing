@@ -84,7 +84,7 @@ public class Pathfinder {
             for (String sink : tempSelectedItemsIDs) {
                 GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
                 double curr = this.getDistance(path);
-                //Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
+                Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
                 if (curr < shortest) {
                     shortest = curr;
                     tempSource = sink;
@@ -251,7 +251,20 @@ public class Pathfinder {
         Log.d("PathfinderBriefDirection", directions.toString());
         return directions;
     }
-    public void pathUpdate(boolean direction) {
+    public void pathUpdate(List<ExhibitWithGroup> selectedItems, boolean direction) {
+        Log.d("pathupdate", "updating");
+        this.selectedItems = selectedItems;
+        // this is the naive no check approach (change this to at least check if we go over the list index)
+        this.fullPathIndex = 0;
+        fullPath.clear();
+        for (ExhibitWithGroup item : selectedItems) {
+            if (item.exhibit.hasGroup()){
+                tempSelectedItemsIDs.add(item.group.id);
+            } else {
+                tempSelectedItemsIDs.add(item.exhibit.id);
+            }
+
+        }
         if(direction) {
             optimizeSelectedItemsIDs();
         } else {
