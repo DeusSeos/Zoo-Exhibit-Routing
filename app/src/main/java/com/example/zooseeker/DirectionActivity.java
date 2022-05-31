@@ -89,6 +89,7 @@ public class DirectionActivity extends AppCompatActivity {
             int flag = pathy.mock(s);
             Log.d("flag", String.valueOf(flag));
 
+            // Use is off track
             if (flag == -1) {
                 pathy.showAlert(this,"You are off-track!");
 
@@ -97,17 +98,25 @@ public class DirectionActivity extends AppCompatActivity {
                     mockLocation.setText("");
                     return;
                 }
+
+                directionsArray = pathy.update(s);
+                directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+                directionList.setAdapter(directionsAdapter);
+                mockLocation.setText("");
             }
 
-            if (flag != -2) {
-                directionsArray = directionsArray.subList(flag, directionsArray.size());
+            // User arrives
+            if (flag == -2) {
+                directionsArray = new ArrayList<String>();
+                directionsArray.add("You arrived!");
                 directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
                 directionList.setAdapter(directionsAdapter);
                 mockLocation.setText("");
                 return;
             }
 
-            directionsArray = pathy.update(flag);
+            // flag != -2, user is walking along the way
+            directionsArray = directionsArray.subList(flag, directionsArray.size());
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
             mockLocation.setText("");

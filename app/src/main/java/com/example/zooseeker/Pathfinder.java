@@ -138,23 +138,8 @@ public class Pathfinder {
         return -1;
     }
 
-    public ArrayList<String> update(int flag){
+    public ArrayList<String> update(String loc){
         ArrayList<String> res = new ArrayList<>();
-
-        if (flag == -2){
-            res.add("You arrived!");
-            return res;
-        }
-
-        if (flag == -1){
-
-            return res;
-        }
-
-        for (int i = flag; i < this.fullPath.get(fullPathIndex).size(); i++){
-            res.add(fullPath.get(fullPathIndex).get(i));
-        }
-
 
         return res;
     }
@@ -232,6 +217,7 @@ public class Pathfinder {
         if (fullPathIndex > 0) {
             this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex-1)).lat,
                     vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex-1)).lng);
+            this.targetSortedIndex = fullPathIndex-1;
 
             // return the next path from fullpath
             Log.d("Pathfinder", "Index: " + fullPathIndex);
@@ -262,6 +248,7 @@ public class Pathfinder {
         }
 
 
+        this.targetSortedIndex = fullPathIndex + 1;
         // Get current location
         String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
         Log.d("source:", sourceID);
