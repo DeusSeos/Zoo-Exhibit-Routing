@@ -73,7 +73,7 @@ public class DirectionActivity extends AppCompatActivity {
             pathy.optimizeSelectedItemsIDs(null);
         }
 
-        directionsArray = pathy.next();
+        directionsArray = pathy.summary();
 
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
