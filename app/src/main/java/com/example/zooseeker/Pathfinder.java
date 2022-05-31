@@ -14,9 +14,11 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 
 // might be an apex reference
 public class Pathfinder {
@@ -31,7 +33,8 @@ public class Pathfinder {
     private ArrayList<ArrayList<String>> fullPath = new ArrayList<>();
     private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
     private int fullPathIndex;
-    private Coord currCoord;
+    private HashMap<Coord, List<String>> hash = new HashMap<>();
+    private Coord targetCoord;
 
 
     // Constructor for Pathfinder object
@@ -50,14 +53,15 @@ public class Pathfinder {
 
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = -1;
+
         for (ExhibitWithGroup item : selectedItems) {
             if (item.exhibit.hasGroup()){
                 tempSelectedItemsIDs.add(item.group.id);
             } else {
                 tempSelectedItemsIDs.add(item.exhibit.id);
             }
-
         }
+
         Log.d("Pathfinder", "temp Selected Items" + tempSelectedItemsIDs.toString());
         Log.d("info", "vInfo: " + vInfo.entrySet());
         Log.d("info", "eInfo: " + eInfo.entrySet());
@@ -102,6 +106,39 @@ public class Pathfinder {
 
     }
 
+    public int mock(String s){
+        Double newLat = Double.valueOf(s.split(",")[0]);
+        Double newLng = Double.valueOf(s.split(",")[1]);
+        Coord newCoord = new Coord(newLat, newLng);
+
+        if (newCoord.equals(this.targetCoord)){
+            return -2;
+        } else {
+            for (int i = 0; i < this.hash.get(this.targetCoord).size(); i++){
+                String tmp = this.hash.get(this.targetCoord).get(i);
+                Coord stop = new Coord(vInfo.get(tmp).lat, vInfo.get(tmp).lng);
+                if (newCoord.equals(stop)){
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public ArrayList<String> update(int flag){
+        ArrayList<String> res = new ArrayList<>();
+
+        if (flag == -2){
+            res.add("You arrived!");
+            return res;
+        }
+
+
+
+        return res;
+    }
+
     public ArrayList<String> summary() {
         ArrayList<String> res = new ArrayList<>();
         int start = 0;
@@ -120,19 +157,26 @@ public class Pathfinder {
     public ArrayList<String> next() {
         if (fullPathIndex < fullPath.size()-1) {
             // return the next path from fullpath
-//            this.currCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
-//                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
-
             fullPathIndex += 1;
+
+            this.currCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
+                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
+
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(fullPathIndex);
         } else if (fullPathIndex == fullPath.size()-1) {
+
+            this.currCoord = Coord.of(vInfo.get("entrance_exit_gate").lat, vInfo.get("entrance_exit_gate").lng);
+
             fullPathIndex++;
             Toast.makeText(context, "This is the end!", Toast.LENGTH_LONG).show();
             ArrayList<String> noMore = new ArrayList<>();
             noMore.add("No more");
             return noMore;
         } else {
+
+            this.currCoord = Coord.of(vInfo.get("entrance_exit_gate").lat, vInfo.get("entrance_exit_gate").lng);
+
             Toast.makeText(context, "This is the end!", Toast.LENGTH_LONG).show();
             ArrayList<String> noMore = new ArrayList<>();
             noMore.add("No more");
@@ -142,14 +186,21 @@ public class Pathfinder {
 
     public ArrayList<String> back() {
         if(fullPathIndex == -1) {
+            this.currCoord = Coord.of(vInfo.get("entrance_exit_gate").lat, vInfo.get("entrance_exit_gate").lng);
+
             Toast.makeText(context, "You haven't started", Toast.LENGTH_LONG).show();
             return this.summary();
         }
         if (fullPathIndex > 0) {
+            this.currCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
+                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
+
             // return the next path from fullpath
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(--fullPathIndex);
         } else {
+            this.currCoord = Coord.of(vInfo.get("entrance_exit_gate").lat, vInfo.get("entrance_exit_gate").lng);
+
             Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
             return fullPath.get(0);
         }
@@ -157,17 +208,23 @@ public class Pathfinder {
 
     public ArrayList<String> skip(){
         if(fullPathIndex == -1) {
+            this.currCoord = Coord.of(vInfo.get("entrance_exit_gate").lat, vInfo.get("entrance_exit_gate").lng);
             Toast.makeText(context, "You haven't started", Toast.LENGTH_LONG).show();
             return this.summary();
         }
         if(fullPathIndex >= fullPath.size()-2){
             Log.e("Skip_index", String.valueOf(fullPathIndex));
 
+            this.currCoord = Coord.of(vInfo.get("entrance_exit_gate").lat, vInfo.get("entrance_exit_gate").lng);
             Toast.makeText(context, "No more exhibit to skip!", Toast.LENGTH_LONG).show();
 //            ArrayList<String> noMore = new ArrayList<>();
 //            noMore.add("No more");
             return fullPath.get(fullPathIndex);
         }
+
+        this.currCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lat,
+                vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex)).lng);
+
         // Get current location
         String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
         Log.d("source:", sourceID);
