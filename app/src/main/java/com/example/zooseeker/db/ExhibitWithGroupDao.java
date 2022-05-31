@@ -2,7 +2,6 @@ package com.example.zooseeker.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
@@ -10,12 +9,12 @@ import androidx.room.Transaction;
 import java.util.List;
 
 @Dao
-public interface ExhibitsDao {
+public interface ExhibitWithGroupDao {
     @Insert
-    void insert(Exhibit... exhibits);
+    void insert(ExhibitWithGroup... exhibits);
 
     @Insert
-    void insert(List<Exhibit> exhibits);
+    void insert(List<ExhibitWithGroup> exhibits);
 
     @Query("SELECT COUNT(*) from exhibits")
     long count();
@@ -31,9 +30,10 @@ public interface ExhibitsDao {
     @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' ORDER BY name ASC")
     LiveData<List<ExhibitWithGroup>> getExhibitsWithGroupsLive();
 
+
     @Transaction
     @Query("SELECT * FROM exhibits WHERE id=:id")
-    ExhibitWithGroup getExhibitById(String id);
+    ExhibitWithGroup getExhibitWithGroupById(String id);
 
     @Transaction
     @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' ORDER BY name ASC")
@@ -42,6 +42,8 @@ public interface ExhibitsDao {
     @Transaction
     @Query("SELECT * FROM exhibits WHERE kind = 'EXHIBIT' || tags LIKE '%' || :in || name = :in ORDER BY name ASC")
     List<ExhibitWithGroup> getExhibitsByName(String in);
+
+
 
 
 }

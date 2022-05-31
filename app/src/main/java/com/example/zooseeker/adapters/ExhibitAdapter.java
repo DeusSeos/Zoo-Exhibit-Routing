@@ -35,6 +35,12 @@ public class ExhibitAdapter extends ArrayAdapter<ExhibitWithGroup>  implements F
         this.filteredItems = items;
     }
 
+    public void setItems(List<ExhibitWithGroup> items) {
+        this.originalItems = items;
+        this.filteredItems = items;
+    }
+
+
     @Override
     public void remove(@Nullable ExhibitWithGroup object) {
         originalItems.remove(object);

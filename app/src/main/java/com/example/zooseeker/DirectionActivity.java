@@ -47,6 +47,8 @@ public class DirectionActivity extends AppCompatActivity {
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(this::onSettingsClicked);
 
+        Button skipButton = findViewById(R.id.skip_button);        
+
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null) {
             selectedItems = getIntent().getParcelableArrayListExtra("selected_list");
@@ -57,12 +59,15 @@ public class DirectionActivity extends AppCompatActivity {
 
         pathy = new Pathfinder(this, selectedItems);
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
+
         if(!directions) {
             pathy.optimizeBriefSelectedItemsIDs();
         }else {
-            pathy.optimizeSelectedItemsIDs();
+            pathy.optimizeSelectedItemsIDs(null);
         }
 
+
+        pathy.optimizeSelectedItemsIDs(null);
 
         directionsArray = pathy.next();
 
@@ -117,6 +122,12 @@ public class DirectionActivity extends AppCompatActivity {
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
+    }
+        skipButton.setOnClickListener(view -> {
+            directionsArray = pathy.skip();
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+        });
     }
 
 }
