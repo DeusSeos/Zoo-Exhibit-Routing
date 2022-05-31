@@ -104,11 +104,15 @@ public class DirectionActivity extends AppCompatActivity {
     }
 
     private void updateDirections() {
+        int current = pathy.getFullPathIndex();
         settings = (UserSettings) getApplication();
         SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
         boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
         pathy.pathUpdate(selectedItems, directions);
         directionsArray = pathy.next();
+        for(int i = 1; i < current; i++) {
+            directionsArray = pathy.next();
+        }
 
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);

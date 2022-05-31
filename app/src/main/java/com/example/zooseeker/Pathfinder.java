@@ -271,4 +271,7 @@ public class Pathfinder {
             optimizeBriefSelectedItemsIDs();
         }
     }
+    public int getFullPathIndex() {
+        return fullPathIndex;
+    }
 }
