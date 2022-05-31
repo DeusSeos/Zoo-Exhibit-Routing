@@ -37,7 +37,7 @@ public abstract class SearchDatabase extends RoomDatabase {
 
     public synchronized static SearchDatabase getDatabase(Context context) {
         if (singleton == null) {
-            Log.d("Database", "YO YO YO");
+            Log.d("Database", "Getting database...");
             singleton = SearchDatabase.makeDatabase(context);
         }
         return singleton;
@@ -45,9 +45,7 @@ public abstract class SearchDatabase extends RoomDatabase {
     }
 
     private static SearchDatabase makeDatabase(Context context) {
-        Log.d("Database", "making database");
-//        Log.d("Database", "Populated " + String.valueOf(isPopulated()));
-        Log.d("Database", "Force POp " + String.valueOf(shouldForcePopulate));
+        Log.d("Database", "Making database...");
         return Room.databaseBuilder(context, SearchDatabase.class, "zooseeker.db")
                 .allowMainThreadQueries()
                 .addCallback(new Callback() {

@@ -7,6 +7,7 @@ import androidx.room.Embedded;
 import androidx.room.Relation;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Represents a group, with an optional group.
@@ -23,6 +24,8 @@ public class ExhibitWithGroup implements Parcelable {
     public String getExhibitName() {
         return exhibit.name;
     }
+
+    public String getExhibitID() { return exhibit.id; }
 
     public String getGroupName() {
         if (group == null) return " ";
@@ -65,6 +68,18 @@ public class ExhibitWithGroup implements Parcelable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExhibitWithGroup)) return false;
+        ExhibitWithGroup exhibit1 = (ExhibitWithGroup) o;
+        return Objects.equals(exhibit, exhibit1.exhibit);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(exhibit);
+    }
 
     @Override
     public int describeContents() {
