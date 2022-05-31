@@ -99,6 +99,21 @@ public class Pathfinder {
 
     }
 
+    public ArrayList<String> summary() {
+        ArrayList<String> res = new ArrayList<>();
+        int start = 0;
+        int goal = 1;
+        res.add("Plan Summary:");
+        while (goal < sortedSelectedItemsIDs.size()) {
+            String distance = String.valueOf(dijkstra.getPathWeight(sortedSelectedItemsIDs.get(start), sortedSelectedItemsIDs.get(goal)));
+            res.add(vInfo.get(sortedSelectedItemsIDs.get(goal)).name + ", " + distance + "m");
+            start++;
+            goal++;
+        }
+        return res;
+    }
+
+
     public ArrayList<String> next() {
         if (fullPathIndex < fullPath.size()-1) {
             // return the next path from fullpath
@@ -121,6 +136,10 @@ public class Pathfinder {
     }
 
     public ArrayList<String> back() {
+        if(fullPathIndex == -1) {
+            Toast.makeText(context, "You haven't started", Toast.LENGTH_LONG).show();
+            return this.summary();
+        }
         if (fullPathIndex > 0) {
             // return the next path from fullpath
             Log.d("Pathfinder", "Index: " + fullPathIndex);
@@ -132,6 +151,10 @@ public class Pathfinder {
     }
 
     public ArrayList<String> skip(){
+        if(fullPathIndex == -1) {
+            Toast.makeText(context, "You haven't started", Toast.LENGTH_LONG).show();
+            return this.summary();
+        }
         if(fullPathIndex >= fullPath.size()-2){
             Log.e("Skip_index", String.valueOf(fullPathIndex));
 
@@ -240,4 +263,5 @@ public class Pathfinder {
         }
         return path;
     }
+
 }

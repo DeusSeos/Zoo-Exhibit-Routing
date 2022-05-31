@@ -53,7 +53,7 @@ public class DirectionActivity extends AppCompatActivity {
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
         pathy.optimizeSelectedItemsIDs(null);
 
-        directionsArray = pathy.next();
+        directionsArray = pathy.summary();
 
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
