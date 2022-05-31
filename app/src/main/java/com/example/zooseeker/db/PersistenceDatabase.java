@@ -20,7 +20,7 @@ public abstract class PersistenceDatabase extends RoomDatabase {
 
     private static PersistenceDatabase singleton = null;
 
-    public abstract ExhibitsDao exhibitsDao();
+    public abstract ExhibitsDao exhibitDao();
 
     public synchronized static PersistenceDatabase getSingleton(Context context){
         if(singleton == null){
@@ -32,8 +32,12 @@ public abstract class PersistenceDatabase extends RoomDatabase {
 
     public static void populate(PersistenceDatabase instance, List<Exhibit> exhibitList){
         Log.i(PersistenceDatabase.class.getCanonicalName(), "Populating database from selected exhibit list...");
+        instance.exhibitDao().insert(exhibitList);
+    }
 
-
+    public static void clear(PersistenceDatabase instance){
+        Log.i(PersistenceDatabase.class.getCanonicalName(), "Clearing database of exhibits...");
+        instance.exhibitDao().deleteExhibits();
     }
 
     private static PersistenceDatabase makeDatabase(Context context) {
@@ -50,7 +54,7 @@ public abstract class PersistenceDatabase extends RoomDatabase {
 
 
     private static boolean isPopulated() {
-        return singleton.exhibitsDao().count() > 0;
+        return singleton.exhibitDao().count() > 0;
     }
 
 
