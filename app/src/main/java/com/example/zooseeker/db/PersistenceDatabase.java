@@ -28,7 +28,7 @@ public abstract class PersistenceDatabase extends RoomDatabase {
 
     }
 
-    public static void populate(PersistenceDatabase instance, List<String> idList){
+    public static void populate(PersistenceDatabase instance, List<ID> idList){
         Log.i(PersistenceDatabase.class.getCanonicalName(), "Populating database from selected exhibit list...");
         instance.IDDao().insert(idList);
     }

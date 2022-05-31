@@ -10,10 +10,10 @@ import java.util.List;
 public interface IDDao {
 
     @Insert
-    void insert(String... strings);
+    void insert(ID... ids);
 
     @Insert
-    void insert(List<String> idList);
+    void insert(List<ID> idList);
 
     @Query("SELECT COUNT(*) from id")
     long count();
@@ -22,6 +22,6 @@ public interface IDDao {
     void deleteIds();
 
     @Query("SELECT * FROM id")
-    List<String> getIds();
+    List<ID> getIds();
 
 }

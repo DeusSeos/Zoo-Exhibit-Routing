@@ -18,11 +18,13 @@ import com.example.zooseeker.adapters.ExhibitAdapter;
 import com.example.zooseeker.adapters.SelectedExhibitAdapter;
 import com.example.zooseeker.db.ExhibitWithGroup;
 import com.example.zooseeker.db.ExhibitsDao;
+import com.example.zooseeker.db.ID;
 import com.example.zooseeker.db.IDDao;
 import com.example.zooseeker.db.PersistenceDatabase;
 import com.example.zooseeker.db.SearchDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +48,7 @@ public class SearchListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("SearchListActivity" , "Creating...");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search_list);
@@ -56,7 +59,6 @@ public class SearchListActivity extends AppCompatActivity {
 
         idDao = persistenceDatabase.IDDao();
         exhibitsDao = db.exhibitsDao();
-//        ZooDatabase db = ZooDatabase.getDatabase(this);
 
 
         // initialize views
@@ -67,18 +69,38 @@ public class SearchListActivity extends AppCompatActivity {
         searchView = findViewById(R.id.search_bar);
 
         // make the views disappear
-        selectedListView.setVisibility(View.GONE);
+        selectedListView.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
         // get from db the items to populate our adapter
 
 
         Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
-        Log.d("SearchListActivity", "Exhibits: " + exhibitsDao.getExhibits().toString());
+
         animalNameList = new ArrayList<>(exhibitsDao.getExhibits());
+        if (idDao.count() > 0) {
+            List<ID> ids = idDao.getIds();
+
+            for (ID i : ids) {
+                ExhibitWithGroup exhibit = exhibitsDao.getExhibitById(i.id);
+                selectedItems.add(exhibit);
+
+                Log.d("SearchListActivity" , "Exhibit: " +  exhibit);
+                Log.d("SearchListActivity" , "Removing: " +  animalNameList.remove(exhibit));
+                Log.d("SearchListActivity" , "Contains: " +  animalNameList.contains(exhibit));
+                Log.i("SearchListActivity", "Loading: " + i);
+            }
+        }
+        idDao.deleteIds();
+
+
         Log.d("SearchListActivity", "animalNameList: " + animalNameList.toString());
 
         // set and populate adapter
         adapter = new ExhibitAdapter(this, animalNameList);
+//        for (ExhibitWithGroup e: selectedItems) {
+//            this.adapter.remove(e);
+//        }
+
         listView.setAdapter(adapter);
         selectedAdapter = new SelectedExhibitAdapter(this, 0, selectedItems);
         selectedListView.setAdapter(selectedAdapter);
@@ -87,14 +109,25 @@ public class SearchListActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new QueryListener(this, exhibitsDao, adapter, listView, selectedListView));
         listView.setOnItemClickListener(this::onItemClicked);
         planButton.setOnClickListener(this::onPlanClicked);
-
-
+        selectedCount.setText(String.valueOf(selectedItems.size()));
     }
 
+    @Override
+    protected void onStart() {
+        Log.i("SearchListActivity", "Starting...");
+        super.onStart();
+    }
 
     @Override
     protected void onStop() {
         Log.i("SearchListActivity", "Stopping...");
+        List<String> selectedIDs = selectedItems.stream().map(ExhibitWithGroup::getExhibitID).collect(Collectors.toList());
+        List<ID> idList = new ArrayList<>();
+        for (String e : selectedIDs) {
+            idList.add(new ID(e));
+            Log.i("SearchListActivity" , "Saving: " + e);
+        }
+        idDao.insert(idList);
         super.onStop();
     }
 
@@ -105,12 +138,27 @@ public class SearchListActivity extends AppCompatActivity {
     }
 
 //    @Override
-//    protected void onDestroy() {
-//        Log.i("SearchListActivity", "Destroying...");
-//        List<String> selectedIDs = selectedItems.stream().map(ExhibitWithGroup::getExhibitID).collect(Collectors.toList());
-//        idDao.insert(selectedIDs);
-//        super.onDestroy();
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        Log.d("SearchListActivity", "Save state");
+//        outState.putParcelableArrayList("exhibits", animalNameList);
+//        outState.putParcelableArrayList("selected", new ArrayList<>(selectedItems));
 //    }
+
+//    @Override
+//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        Log.d("SearchListActivity", "Restore Instance State");
+//        Log.d("SearchListActivity", "Animal name list: " + savedInstanceState.getParcelableArrayList("exhibits"));
+//
+//    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i("SearchListActivity", "Destroying...");
+
+        super.onDestroy();
+    }
 
     public void selectEntry(ExhibitWithGroup query, int position) {
         this.adapter.remove(this.adapter.getItem(position));
@@ -118,15 +166,9 @@ public class SearchListActivity extends AppCompatActivity {
         this.selectedItems.add(query);
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("exhibits", animalNameList);
-        outState.putParcelableArrayList("selected", );
-    }
 
     public void onItemClicked(AdapterView<?> adapterView, View view, int position, long id) {
-        ExhibitWithGroup ew =  (ExhibitWithGroup) adapterView.getItemAtPosition(position); //TODO: AdapterView not containing exhibits yet
+        ExhibitWithGroup ew = (ExhibitWithGroup) adapterView.getItemAtPosition(position); //TODO: AdapterView not containing exhibits yet
         Log.d("SearchListActivity", "Adding exhibit to selectedItems:" + ew.toString());
         selectEntry(ew, position);
         searchView.setQuery("", false);

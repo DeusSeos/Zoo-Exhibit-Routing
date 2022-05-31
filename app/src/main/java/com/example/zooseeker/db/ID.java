@@ -25,4 +25,10 @@ public class ID {
         return id;
     }
 
+    @Override
+    public String toString() {
+        return "ID{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }
