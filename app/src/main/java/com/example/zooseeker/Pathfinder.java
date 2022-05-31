@@ -15,6 +15,8 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -53,7 +55,7 @@ public class Pathfinder {
         this.fullPathIndex = -1;
 
         for (ExhibitWithGroup item : selectedItems) {
-            if (item.exhibit.hasGroup()){
+            if (item.exhibit.hasGroup()) {
                 tempSelectedItemsIDs.add(item.group.id);
             } else {
                 tempSelectedItemsIDs.add(item.exhibit.id);
@@ -98,9 +100,7 @@ public class Pathfinder {
             goalIndex++;
         }
 
-        for(String s: sortedSelectedItemsIDs){
-            Log.d("sortedID", s);
-        }
+        Log.d("Pathfinder", "Path of length: " + fullPath.size());
 
     }
 
@@ -111,11 +111,11 @@ public class Pathfinder {
 
         Log.d("hash", String.valueOf(this.hash.size()));
 
-        if (newCoord.hashCode() == this.targetCoord.hashCode()){
+        if (newCoord.hashCode() == this.targetCoord.hashCode()) {
             return -2;
         } else {
-            for (int i = 0; i < this.hash.get(this.targetCoord.hashCode()).size(); i++){
-                String tmp = this.hash.get(this.targetCoord.hashCode()).get(i);
+            for (int i = 0; i < this.hash.get(this.targetCoord).size(); i++){
+                String tmp = this.hash.get(this.targetCoord).get(i);
                 Coord stop = new Coord(vInfo.get(tmp).lat, vInfo.get(tmp).lng);
                 if (newCoord.equals(stop)){
                     return i;
@@ -197,10 +197,14 @@ public class Pathfinder {
 
             // return the next path from fullpath
             Log.d("Pathfinder", "Index: " + fullPathIndex);
-            return fullPath.get(--fullPathIndex);
+            ArrayList<String> currentPath = (ArrayList<String>) fullPath.get(--fullPathIndex).clone();
+            Collections.reverse(currentPath);
+            return currentPath;
         } else {
             Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
-            return fullPath.get(0);
+            ArrayList<String> currentPath = (ArrayList<String>) fullPath.get(0).clone();
+            Collections.reverse(currentPath);
+            return currentPath;
         }
     }
 
@@ -262,11 +266,11 @@ public class Pathfinder {
         Coord tmp = new Coord(vInfo.get(this.sortedSelectedItemsIDs.get(goalIndex)).lat, vInfo.get(this.sortedSelectedItemsIDs.get(goalIndex)).lng);
         this.hash.put(tmp.hashCode(), new ArrayList<String>());
 
-        String defaultMessage = "  %d. Walk %.0f meters along %s between '%s' and '%s'.\n";
+        String defaultMessage = "Walk %.0f meters along %s between '%s' and '%s'.\n";
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
             this.hash.get(tmp.hashCode()).add(vInfo.get(g.getEdgeSource(e)).id);
 
-            directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
+            directions.add(String.format(Locale.ENGLISH, defaultMessage,
                     g.getEdgeWeight(e),
                     eInfo.get(e.getId()).street,
                     vInfo.get(g.getEdgeSource(e)).name,
