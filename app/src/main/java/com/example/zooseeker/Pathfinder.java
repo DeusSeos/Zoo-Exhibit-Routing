@@ -359,5 +359,51 @@ public class Pathfinder {
         return path;
 
     }
+    public ArrayList<String> briefSkip(){
+        if(fullPathIndex == -1) {
+            Toast.makeText(context, "You haven't started", Toast.LENGTH_LONG).show();
+            return this.summary();
+        }
+        if(fullPathIndex >= fullPath.size()-2){
+            Log.e("Skip_index", String.valueOf(fullPathIndex));
 
+            Toast.makeText(context, "No more exhibit to skip!", Toast.LENGTH_LONG).show();
+//            ArrayList<String> noMore = new ArrayList<>();
+//            noMore.add("No more");
+            return fullPath.get(fullPathIndex);
+        }
+        // Get current location
+        String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
+        Log.d("source:", sourceID);
+
+        // Remove next location
+        sortedSelectedItemsIDs.remove(fullPathIndex+1);
+        int nextIndex = fullPathIndex+1;
+        // Add rest locations except exit
+        List<String> newSelectedItems = new ArrayList<>();
+        for(int i = nextIndex; i < sortedSelectedItemsIDs.size() - 1; i++) {
+            newSelectedItems.add(sortedSelectedItemsIDs.get(i));
+        }
+
+        ArrayList<String> leftID = sortID(newSelectedItems, sourceID);
+        leftID.add("entrance_exit_gate");
+        for(int i = 0; i < leftID.size(); i++){
+            this.sortedSelectedItemsIDs.set(i+nextIndex, leftID.get(i));
+        }
+        leftID.add(0, sourceID);
+
+        fullPath.remove(fullPath.size() - 1);
+
+        int startIndex = 0;
+        int goalIndex = 1;
+        while(goalIndex < leftID.size()) {
+            GraphPath<String, IdentifiedWeightedEdge> path = buildPath(leftID, startIndex, goalIndex);
+            fullPath.set(fullPathIndex + startIndex, getBriefDirections(path));
+            goalIndex++;
+            startIndex++;
+        }
+//        for(int i = nextIndex)
+        //Log.d("index", String.valueOf(fullPathIndex));
+        return fullPath.get(fullPathIndex);
+    }
 }

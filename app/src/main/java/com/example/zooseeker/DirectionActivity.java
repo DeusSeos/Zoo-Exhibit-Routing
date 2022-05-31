@@ -48,11 +48,7 @@ public class DirectionActivity extends AppCompatActivity {
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(this::onSettingsClicked);
         Button skipButton = findViewById(R.id.skip_button);
-        skipButton.setOnClickListener(view -> {
-            directionsArray = pathy.skip();
-            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-            directionList.setAdapter(directionsAdapter);
-        });
+        skipButton.setOnClickListener(this::onSkipClicked);
 
 
 
@@ -127,6 +123,20 @@ public class DirectionActivity extends AppCompatActivity {
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
 
+    }
+    void onSkipClicked(View view) {
+        settings = (UserSettings) getApplication();
+        SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
+        boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
+        if(!directions) {
+            directionsArray = pathy.briefSkip();
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+        }else {
+            directionsArray = pathy.skip();
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+        }
     }
 
 
