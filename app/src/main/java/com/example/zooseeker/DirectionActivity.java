@@ -1,12 +1,17 @@
 package com.example.zooseeker;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +25,7 @@ public class DirectionActivity extends AppCompatActivity {
     private Pathfinder pathy;
     private ListView directionList;
     private ArrayList<ExhibitWithGroup> selectedItems;
+    UserSettings settings;
 
     List<String> directionsArray = new ArrayList<>();
     private ArrayAdapter<String> directionsAdapter;
@@ -33,9 +39,13 @@ public class DirectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_direction);
 
+        settings = (UserSettings) getApplication();
+        SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
+        boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
         // Initialize variables
         directionList = findViewById(R.id.direction_list);
         Button nextButton = findViewById(R.id.next_button);
+
         Button backButton = findViewById(R.id.back_button);
         Button skipButton = findViewById(R.id.skip_button);
         Button mockButton = findViewById(R.id.mock_button);
@@ -43,6 +53,8 @@ public class DirectionActivity extends AppCompatActivity {
 
         EditText mockLocation = findViewById(R.id.location);
 //        ImageButton settingsButton = findViewById(R.id.settings_button);
+        ImageButton settingsButton = findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(this::onSettingsClicked);
 
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null) {
@@ -55,6 +67,12 @@ public class DirectionActivity extends AppCompatActivity {
         pathy = new Pathfinder(this, selectedItems);
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
         pathy.optimizeSelectedItemsIDs(null);
+        if(!directions) {
+            pathy.optimizeBriefSelectedItemsIDs();
+        }else {
+            pathy.optimizeSelectedItemsIDs(null);
+        }
+
 
         directionsArray = pathy.summary();
 
@@ -70,6 +88,7 @@ public class DirectionActivity extends AppCompatActivity {
             directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
             directionList.setAdapter(directionsAdapter);
         });
+
 
         backButton.setOnClickListener(view -> {
             directionsArray = pathy.back();
@@ -115,6 +134,36 @@ public class DirectionActivity extends AppCompatActivity {
                 return;
             }
 
+
+
+    }
+
+    void onSettingsClicked(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateDirections();
+
+    }
+
+    private void updateDirections() {
+        int current = pathy.getFullPathIndex();
+        settings = (UserSettings) getApplication();
+        SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
+        boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
+        pathy.pathUpdate(selectedItems, directions);
+        directionsArray = pathy.next();
+        for(int i = 1; i < current; i++) {
+            directionsArray = pathy.next();
+        }
+
+        //Create array to loop directions into
+        directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+        directionList.setAdapter(directionsAdapter);
             // flag != -2, user is walking along the way
             if (pathy.isBack == true){
                 directionsArray = directionsArray.subList(flag-1, directionsArray.size());
