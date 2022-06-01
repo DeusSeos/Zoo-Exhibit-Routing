@@ -18,17 +18,17 @@
         app:layout_constraintVertical_bias="0.048">
 
         <RadioButton
-            android:id="@+id/direction_option_a"
+            android:id="@+id/brief_direction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Brief Directions"
+            android:text="@string/brief_directions"
             android:textSize="16sp" />
 
         <RadioButton
-            android:id="@+id/direction_option_b"
+            android:id="@+id/detailed_direction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Detailed Directions"
+            android:text="@string/detailed_directions"
             android:textSize="16sp" />
 
     </RadioGroup>
@@ -37,7 +37,7 @@
         android:id="@+id/settings_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
-        android:text="Directions"
+        android:text="@string/directions"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,13 +64,13 @@
         android:id="@+id/back_settings_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
+        android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.006"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.994" />
+        app:layout_constraintVertical_bias="0.945" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,15 +39,13 @@ public class Pathfinder {
     private HashMap<Integer, List<String>> hash = new HashMap<>();
     public static boolean flag; // serves as global variable to check the dialog
     public Coord targetCoord;
-    public boolean isBack;
     private int targetSortedIndex;
-
+    public boolean isBack;
 
 
     // Constructor for Pathfinder object
     // Get selectedItems and populate the exhibitInfo and trailInfo
     public Pathfinder(Context context, List<ExhibitWithGroup> selectedItems) {
-        this.isBack = false;
         this.context = context;
         g = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
         vInfo = ZooData.loadVertexInfoJSON(context, "exhibit_info");
@@ -123,6 +121,7 @@ public class Pathfinder {
         Log.d("hash", String.valueOf(this.hash.size()));
         Log.d("coords", String.valueOf(targetCoord.lat));
         if (newCoord.hashCode() == this.targetCoord.hashCode()) {
+
             return -2;
         } else {
             for (int i = 0; i < this.hash.get(this.targetCoord.hashCode()).size(); i++){

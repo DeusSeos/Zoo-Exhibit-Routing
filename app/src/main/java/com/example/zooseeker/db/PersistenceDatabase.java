@@ -25,7 +25,6 @@ public abstract class PersistenceDatabase extends RoomDatabase {
             singleton = PersistenceDatabase.makeDatabase(context);
         }
         return singleton;
-
     }
 
     public static void populate(PersistenceDatabase instance, List<ID> idList){

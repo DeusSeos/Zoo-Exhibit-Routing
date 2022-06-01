@@ -1,6 +1,7 @@
 package com.example.zooseeker;
 
 import android.content.Intent;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +30,6 @@ public class DirectionActivity extends AppCompatActivity {
 
     List<String> directionsArray = new ArrayList<>();
     private ArrayAdapter<String> directionsAdapter;
-
 
     public DirectionActivity() {
     }
@@ -74,6 +74,19 @@ public class DirectionActivity extends AppCompatActivity {
 
 
         directionsArray = pathy.summary();
+
+        Persistence persistence = new Persistence();
+        int persistenceIndex = persistence.loadIndex(this);
+
+        Log.d("DirectionActivity" , "Pathfinder has index of: " + pathy.getFullPathIndex() );
+        Log.d("DirectionActivity" , "Persistance has index of: " + persistenceIndex);
+
+        if(persistenceIndex > -1){
+
+            while (pathy.getFullPathIndex() < persistenceIndex){
+                directionsArray = pathy.next();
+            }
+        }
 
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
@@ -164,7 +177,7 @@ public class DirectionActivity extends AppCompatActivity {
         boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
         pathy.pathUpdate(selectedItems, directions);
         directionsArray = pathy.next();
-        for (int i = 1; i < current; i++) {
+        for (int i = -1; i < current; i++) {
             directionsArray = pathy.next();
         }
 

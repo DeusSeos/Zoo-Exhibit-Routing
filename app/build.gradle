@@ -39,6 +39,8 @@ dependencies {
 
     implementation 'androidx.test:core:1.4.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+    implementation 'androidx.navigation:navigation-ui:2.3.5'
     def gson_version = "2.9.0"
     def room_version = "2.4.2"
     def jgrapht_version = '1.5.1'
