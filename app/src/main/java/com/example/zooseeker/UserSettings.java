@@ -8,6 +8,10 @@ public class UserSettings extends Application {
 
     public static final String CUSTOM_DIRECTION = "false";
 
+
+
+    private int currentIndex;
+
     private boolean customDirection;
 
     public boolean getCustomDirection() {

@@ -57,6 +57,15 @@ public class DirectionActivity extends AppCompatActivity {
 
         directionsArray = pathy.summary();
 
+        Persistence persistence = new Persistence();
+        int persistenceIndex = persistence.loadIndex(this);
+
+        if(persistenceIndex > -1){
+            while (pathy.getFullPathIndex() < persistenceIndex){
+                directionsArray = pathy.next();
+            }
+        }
+
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
@@ -121,7 +130,9 @@ public class DirectionActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         Log.d("DirectionActivity", "Stopping...");
-
+        Persistence persistence = new Persistence();
+        persistence.saveIndex(this, pathy.getFullPathIndex());
+        Log.d("DirectionActivity", "Saved Index: " + persistence.loadIndex(this));
         super.onStop();
     }
 

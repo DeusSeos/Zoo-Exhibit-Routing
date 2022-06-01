@@ -65,7 +65,5 @@ public class SettingsActivity extends AppCompatActivity {
             radioButton = findViewById(R.id.brief_direction);
             radioButton.setChecked(true);
         }
-
-
     }
 }

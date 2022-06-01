@@ -369,4 +369,8 @@ public class Pathfinder {
         return path;
     }
 
+
+    public int getFullPathIndex() {
+        return fullPathIndex;
+    }
 }
