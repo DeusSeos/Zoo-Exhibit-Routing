@@ -13,7 +13,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.List;
 
-@Database(entities = {ID.class}, version = 1)
+@Database(entities = {ID.class}, version = 1, exportSchema = false)
 public abstract class PersistenceDatabase extends RoomDatabase {
 
     private static PersistenceDatabase singleton = null;
