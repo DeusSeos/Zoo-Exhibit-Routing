@@ -143,8 +143,6 @@ public class Pathfinder {
     public ArrayList<String> update(String loc){
         ArrayList<String> res = new ArrayList<>();
 
-
-
         return res;
     }
 
