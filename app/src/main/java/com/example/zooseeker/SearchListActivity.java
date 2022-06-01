@@ -102,9 +102,8 @@ public class SearchListActivity extends AppCompatActivity {
 
         // set and populate adapter
         adapter = new ExhibitAdapter(this, animalNameList);
-//        for (ExhibitWithGroup e: selectedItems) {
-//            this.adapter.remove(e);
-//        }
+
+
 
         listView.setAdapter(adapter);
         selectedAdapter = new SelectedExhibitAdapter(this, 0, selectedItems);
@@ -116,6 +115,13 @@ public class SearchListActivity extends AppCompatActivity {
         planButton.setOnClickListener(this::onPlanClicked);
         clearButton.setOnClickListener(this::onClearClicked);
         updateSelectedCount();
+
+        Persistence persistence = new Persistence();
+
+        if(persistence.loadIndex(this) > -1){
+            moveToDirection();
+        }
+
     }
 
     @Override
@@ -135,7 +141,10 @@ public class SearchListActivity extends AppCompatActivity {
             Log.i("SearchListActivity" , "Saving: " + e);
         }
         idDao.insert(idList);
+        Persistence persistence = new Persistence();
+        persistence.saveIndex(this, -1);
         super.onStop();
+    // uselsess push ting
     }
 
     @Override
@@ -144,7 +153,13 @@ public class SearchListActivity extends AppCompatActivity {
         super.onRestart();
     }
 
-//    @Override
+    @Override
+    protected void onPause() {
+        Log.i("SearchListActivity", "Pausing");
+        super.onPause();
+    }
+
+    //    @Override
 //    protected void onSaveInstanceState(@NonNull Bundle outState) {
 //        super.onSaveInstanceState(outState);
 //        Log.d("SearchListActivity", "Save state");
@@ -215,5 +230,13 @@ public class SearchListActivity extends AppCompatActivity {
         selectedCount.setText(String.valueOf(selectedItems.size()));
     }
 
+
+    private void moveToDirection(){
+        Intent intent = new Intent(SearchListActivity.this, DirectionActivity.class);
+        ArrayList<ExhibitWithGroup> arraySelectedItems = new ArrayList<>(selectedItems); //TODO: make directionActivity take exhibits
+        Log.d("SearchListActivity", "Adding Arraylist of selectedItems to extra:" + arraySelectedItems);
+        intent.putParcelableArrayListExtra("selected_list", arraySelectedItems); //TODO: Make parcelable take exhibits
+        startActivity(intent);
+    }
 
 }

@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".DirectionActivity">
 
-    <ListView
-        android:id="@+id/direction_list"
-        android:layout_width="331dp"
-        android:layout_height="617dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.324" />
-
     <ImageButton
         android:id="@+id/settings_button"
         android:layout_width="wrap_content"
@@ -28,6 +18,43 @@
         app:layout_constraintVertical_bias="0.006"
         app:srcCompat="@drawable/ic_icons8_settings"
         android:contentDescription="@string/settings_button" />
+
+    <ListView
+        android:id="@+id/direction_list"
+        android:layout_width="331dp"
+        android:layout_height="600dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.324" >
+    </ListView>
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="230dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Location"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.248"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.913" />
+
+    <Button
+        android:id="@+id/mock_button"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:text="Mock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.851"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.913" />
 
     <Button
         android:id="@+id/next_button"
@@ -61,7 +88,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.123"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+        app:layout_constraintTop_toBottomOf="@+id/direction_list" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

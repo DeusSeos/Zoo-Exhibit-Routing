@@ -1,7 +1,10 @@
 package com.example.zooseeker;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,10 +16,19 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 // might be an apex reference
 public class Pathfinder {
@@ -31,6 +43,11 @@ public class Pathfinder {
     private ArrayList<ArrayList<String>> fullPath = new ArrayList<>();
     private DijkstraShortestPath<String, IdentifiedWeightedEdge> dijkstra;
     private int fullPathIndex;
+    private HashMap<Integer, List<String>> hash = new HashMap<>();
+    public static boolean flag; // serves as global variable to check the dialog
+    public Coord targetCoord;
+    private int targetSortedIndex;
+
 
 
     // Constructor for Pathfinder object
@@ -44,16 +61,19 @@ public class Pathfinder {
         dijkstra = new DijkstraShortestPath<>(g);
 
         this.selectedItems = selectedItems;
+
         // this is the naive no check approach (change this to at least check if we go over the list index)
         this.fullPathIndex = -1;
+
         for (ExhibitWithGroup item : selectedItems) {
-            if (item.exhibit.hasGroup()){
+            if (item.exhibit.hasGroup()) {
                 tempSelectedItemsIDs.add(item.group.id);
             } else {
                 tempSelectedItemsIDs.add(item.exhibit.id);
             }
 
         }
+
         Log.d("Pathfinder", "temp Selected Items" + tempSelectedItemsIDs.toString());
         Log.d("info", "vInfo: " + vInfo.entrySet());
         Log.d("info", "eInfo: " + eInfo.entrySet());
@@ -87,15 +107,81 @@ public class Pathfinder {
         while(goalIndex < sortedSelectedItemsIDs.size()) {
             GraphPath<String, IdentifiedWeightedEdge> path = buildPath(sortedSelectedItemsIDs, startIndex, goalIndex);
 //            Log.d("Pathfinder", "HIIIII: " + getDirections(path));
-            fullPath.add(getDirections(path));
+            fullPath.add(getDirections(path, goalIndex));
             startIndex++;
             goalIndex++;
         }
 
-        for(String s: sortedSelectedItemsIDs){
-            Log.d("sortedID", s);
+        Log.d("Pathfinder", "Path of length: " + fullPath.size());
+
+    }
+
+    public int mock(String s){
+        Double newLat = Double.valueOf(s.split(",")[0]);
+        Double newLng = Double.valueOf(s.split(",")[1]);
+        Coord newCoord = new Coord(newLat, newLng);
+
+        Log.d("hash", String.valueOf(this.hash.size()));
+        Log.d("coords", String.valueOf(targetCoord.lat));
+        if (newCoord.hashCode() == this.targetCoord.hashCode()) {
+
+            return -2;
+        } else {
+            for (int i = 0; i < this.hash.get(this.targetCoord.hashCode()).size(); i++){
+                String tmp = this.hash.get(this.targetCoord.hashCode()).get(i);
+                Coord stop = new Coord(vInfo.get(tmp).lat, vInfo.get(tmp).lng);
+                if (newCoord.equals(stop)){
+                    return i;
+                }
+            }
         }
 
+        return -1;
+    }
+
+    public ArrayList<String> update(int flag){
+        ArrayList<String> res = new ArrayList<>();
+
+        if (flag == -2){
+            res.add("You arrived!");
+            return res;
+        }
+
+        if (flag == -1){
+
+            return res;
+        }
+
+        for (int i = flag; i < this.fullPath.get(fullPathIndex).size(); i++){
+            res.add(fullPath.get(fullPathIndex).get(i));
+        }
+
+
+        return res;
+    }
+
+    public static void showAlert(Activity activity, String message) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
+
+        alertBuilder
+                .setTitle("Off-track!")
+                .setMessage(message)
+                .setNegativeButton("Don't bother", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Pathfinder.flag = false;
+                    }
+                })
+                .setPositiveButton("Replan", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Pathfinder.flag = true;
+                    }
+                })
+                .setCancelable(true);
+        AlertDialog alertDialog = alertBuilder.create();
+        alertDialog.show();
     }
 
     public ArrayList<String> summary() {
@@ -117,6 +203,12 @@ public class Pathfinder {
         if (fullPathIndex < fullPath.size()-1) {
             // return the next path from fullpath
             fullPathIndex += 1;
+
+            this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lat,
+                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex+1)).lng);
+            this.targetSortedIndex = this.fullPathIndex+1;
+
+
             Log.d("Pathfinder", "Index: " + fullPathIndex);
             return fullPath.get(fullPathIndex);
         } else if (fullPathIndex == fullPath.size()-1) {
@@ -140,12 +232,20 @@ public class Pathfinder {
             return this.summary();
         }
         if (fullPathIndex > 0) {
+            this.targetCoord = Coord.of(vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex-1)).lat,
+                    vInfo.get(sortedSelectedItemsIDs.get(fullPathIndex-1)).lng);
+
             // return the next path from fullpath
             Log.d("Pathfinder", "Index: " + fullPathIndex);
-            return fullPath.get(--fullPathIndex);
+            ArrayList<String> currentPath = (ArrayList<String>) fullPath.get(--fullPathIndex).clone();
+            Collections.reverse(currentPath);
+            fullPathIndex --;
+            return currentPath;
         } else {
             Toast.makeText(context, "Can't go back any further", Toast.LENGTH_SHORT).show();
-            return fullPath.get(0);
+            ArrayList<String> currentPath = (ArrayList<String>) fullPath.get(0).clone();
+            Collections.reverse(currentPath);
+            return currentPath;
         }
     }
 
@@ -162,6 +262,8 @@ public class Pathfinder {
 //            noMore.add("No more");
             return fullPath.get(fullPathIndex);
         }
+
+
         // Get current location
         String sourceID = sortedSelectedItemsIDs.get(fullPathIndex);
         Log.d("source:", sourceID);
@@ -188,7 +290,7 @@ public class Pathfinder {
         int goalIndex = 1;
         while(goalIndex < leftID.size()) {
             GraphPath<String, IdentifiedWeightedEdge> path = buildPath(leftID, startIndex, goalIndex);
-            fullPath.set(fullPathIndex + startIndex, getDirections(path));
+            fullPath.set(fullPathIndex + startIndex, getDirections(path, goalIndex));
             goalIndex++;
             startIndex++;
         }
@@ -198,12 +300,18 @@ public class Pathfinder {
     }
 
 
-    public ArrayList<String> getDirections(GraphPath<String, IdentifiedWeightedEdge> path) {
+    public ArrayList<String> getDirections(GraphPath<String, IdentifiedWeightedEdge> path, int goalIndex) {
         ArrayList<String> directions = new ArrayList<>();
         int i = 1;
-        String defaultMessage = "  %d. Walk %.0f meters along %s between '%s' and '%s'.\n";
+
+        Coord tmp = new Coord(vInfo.get(this.sortedSelectedItemsIDs.get(goalIndex)).lat, vInfo.get(this.sortedSelectedItemsIDs.get(goalIndex)).lng);
+        this.hash.put(tmp.hashCode(), new ArrayList<String>());
+
+        String defaultMessage = "Walk %.0f meters along %s between '%s' and '%s'.\n";
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
-            directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
+            this.hash.get(tmp.hashCode()).add(vInfo.get(g.getEdgeSource(e)).id);
+
+            directions.add(String.format(Locale.ENGLISH, defaultMessage,
                     g.getEdgeWeight(e),
                     eInfo.get(e.getId()).street,
                     vInfo.get(g.getEdgeSource(e)).name,
@@ -223,7 +331,6 @@ public class Pathfinder {
         return totalWeight;
     }
 
-
     public ArrayList<String> sortID(List<String> tempSelectedItemsIDs, String sourceID) {
         if (sourceID == null){
             sourceID = "entrance_exit_gate";
@@ -234,7 +341,7 @@ public class Pathfinder {
         ArrayList<String> selected = new ArrayList<>();
         while (!tempSelectedItemsIDs.isEmpty()) {
             for (String sink : tempSelectedItemsIDs) {
-                GraphPath<String, IdentifiedWeightedEdge> path = DijkstraShortestPath.findPathBetween(g, sourceID, sink);
+                GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
                 double curr = this.getDistance(path);
                 //Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
                 if (curr < shortest) {
@@ -244,12 +351,11 @@ public class Pathfinder {
             }
             shortest = Double.MAX_VALUE;
             sourceID = tempSource;
-
             selected.add(sourceID);
             tempSelectedItemsIDs.remove(sourceID);
         }
-            return selected;
-        }
+        return selected;
+    }
 
 
     public void optimizeBriefSelectedItemsIDs(String sourceID) {
@@ -360,9 +466,6 @@ public class Pathfinder {
             optimizeBriefSelectedItemsIDs(null);
         }
     }
-    public int getFullPathIndex() {
-        return fullPathIndex;
-    }
 
     public GraphPath<String, IdentifiedWeightedEdge> buildPath(List<String> sortedSelectedItemsIDs, int startIndex, int goalIndex) {
         String sourceItemID;
@@ -376,7 +479,6 @@ public class Pathfinder {
             Log.d("Pathfinder", "E: " + e.toString());
         }
         return path;
-
     }
     public ArrayList<String> briefSkip(){
         if(fullPathIndex == -1) {
@@ -424,5 +526,10 @@ public class Pathfinder {
 //        for(int i = nextIndex)
         //Log.d("index", String.valueOf(fullPathIndex));
         return fullPath.get(fullPathIndex);
+    }
+
+
+    public int getFullPathIndex() {
+        return fullPathIndex;
     }
 }

@@ -1,15 +1,16 @@
 package com.example.zooseeker;
 
 import android.content.Intent;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,9 +49,9 @@ public class DirectionActivity extends AppCompatActivity {
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(this::onSettingsClicked);
         Button skipButton = findViewById(R.id.skip_button);
-        skipButton.setOnClickListener(this::onSkipClicked);
+        Button mockButton = findViewById(R.id.mock_button);
 
-
+        EditText mockLocation = findViewById(R.id.location);
 
         // Try to load the selected items list from previous activity
         if (getIntent().getParcelableArrayListExtra("selected_list") != null) {
@@ -71,6 +72,15 @@ public class DirectionActivity extends AppCompatActivity {
 
         directionsArray = pathy.summary();
 
+        Persistence persistence = new Persistence();
+        int persistenceIndex = persistence.loadIndex(this);
+
+        if(persistenceIndex > -1){
+            while (pathy.getFullPathIndex() < persistenceIndex){
+                directionsArray = pathy.next();
+            }
+        }
+
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
@@ -84,7 +94,6 @@ public class DirectionActivity extends AppCompatActivity {
             directionList.setAdapter(directionsAdapter);
         });
 
-
         backButton.setOnClickListener(view -> {
             directionsArray = pathy.back();
             Log.d("DirectionActivity", "Previous directions: " + directionsArray.toString());
@@ -92,21 +101,34 @@ public class DirectionActivity extends AppCompatActivity {
             directionList.setAdapter(directionsAdapter);
         });
 
+        mockButton.setOnClickListener(view -> {
+            String s = mockLocation.getText().toString();
+            int flag = pathy.mock(s);
+            Log.d("flag", String.valueOf(flag));
+
+            if (flag == -1) {
+                pathy.showAlert(this,"You are off-track!");
+
+                if (Pathfinder.flag == false) {
+                    directionList.setAdapter(directionsAdapter);
+                    return;
+                }
+            }
+
+            directionsArray = pathy.update(flag);
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+        });
 
 
     }
+
 
     void onSettingsClicked(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateDirections();
-
-    }
 
     private void updateDirections() {
         int current = pathy.getFullPathIndex();
@@ -139,5 +161,12 @@ public class DirectionActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        updateDirections();
+
+    }
 
 }
