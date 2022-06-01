@@ -78,7 +78,7 @@ public class Pathfinder {
     //Create a list of the ids of our selected attractions in an optimized visiting order, also ensures that the list begins and ends with the entrance/exit gate
     //(maybe there's a more optimized route plan we can make I just took shortest distance from the start and kept figuring out which one was the shortest distance from each
     //subsequent stop)
-    public void optimizeSelectedItemsIDs(String sourceID) {
+    public void optimizeSelectedItemsIDs() {
         //Ensure that the order begins at the entrance gate
         sortedSelectedItemsIDs = new ArrayList<>();
         //String sourceID = "entrance_exit_gate";
@@ -87,27 +87,13 @@ public class Pathfinder {
         sortedSelectedItemsIDs.add("entrance_exit_gate");
 
 
-        Log.d("Pathfinder", "sourceId:" + sourceID);
+//        Log.d("Pathfinder", "sourceId:" + sourceID);
         Log.d("Pathfinder", g.vertexSet().toString());
         Log.d("Pathfinder", tempSelectedItemsIDs.toString());
         // Get a sorted strings of exhibits
 
         for(String i : sortID(this.tempSelectedItemsIDs, null)) {
             sortedSelectedItemsIDs.add(i);
-        while (!tempSelectedItemsIDs.isEmpty()) {
-            for (String sink : tempSelectedItemsIDs) {
-                GraphPath<String, IdentifiedWeightedEdge> path =  DijkstraShortestPath.findPathBetween(g ,sourceID, sink);
-                double curr = this.getDistance(path);
-                Log.d("Pathfinder", "sourceId:" + sourceID + " sink:" + sink);
-                if (curr < shortest) {
-                    shortest = curr;
-                    tempSource = sink;
-                }
-            }
-            shortest = Double.MAX_VALUE;
-            sourceID = tempSource;
-            sortedSelectedItemsIDs.add(sourceID);
-            tempSelectedItemsIDs.remove(sourceID);
         }
         sortedSelectedItemsIDs.add("entrance_exit_gate");
         int startIndex = 0;
@@ -406,7 +392,7 @@ public class Pathfinder {
         }
         return totalWeight;
     }
-    }
+
 
     public ArrayList<String> sortID(List<String> tempSelectedItemsIDs, String sourceID) {
         if (sourceID == null){
