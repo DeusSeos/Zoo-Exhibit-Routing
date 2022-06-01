@@ -11,6 +11,9 @@ import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.example.zooseeker.db.Exhibit;
+import com.example.zooseeker.db.ExhibitWithGroup;
+import com.example.zooseeker.db.ExhibitsDao;
 import com.example.zooseeker.db.SearchDatabase;
 
 import org.junit.After;
@@ -26,15 +29,15 @@ import java.util.List;
 @RunWith(AndroidJUnit4.class)
 public class SearchDatabaseTest {
 
-    /*
-    private SearchListDao dao;
+
+    private ExhibitsDao dao;
     private SearchDatabase db;
 
     @Before
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
         db = Room.inMemoryDatabaseBuilder(context, SearchDatabase.class).allowMainThreadQueries().build();
-        dao = db.searchListDao();
+        dao = db.exhibitsDao();
 
     }
 
@@ -46,110 +49,79 @@ public class SearchDatabaseTest {
 
     @Test
     public void testInsert() {
-        SearchListItem item1 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        SearchListItem item2 = new SearchListItem("gorillas", "exhibit", "Gorillas", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
+        String id = "entrance";
+        Exhibit.Kind kind = Exhibit.Kind.GATE;
+        String name = "aaaa";
+        ArrayList<String> tags = new ArrayList<String>();
+        tags.add("sheesh");
+        double lat = 40.0;
+        double lng = 41.0;
+        Exhibit newExhibit = new Exhibit(id, null, kind, name, tags, lat, lng);
 
-        long id1 = dao.insert(item1);
-        long id2 = dao.insert(item2);
+        dao.insert(newExhibit);
 
-        assertNotEquals(id1, id2);
+        assertEquals(dao.count(), 1);
     }
 
 
     @Test
     public void testGet() {
-        SearchListItem insertedItem = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        dao.insert(insertedItem);
-        String id = insertedItem.id;
-        SearchListItem item = dao.get(id);
-        assertEquals(id, item.id);
-        assertEquals(insertedItem.name, item.name);
-        assertEquals(insertedItem.tags, item.tags);
+        String id = "entrance";
+        Exhibit.Kind kind = Exhibit.Kind.GATE;
+        String name = "aaaa";
+        ArrayList<String> tags = new ArrayList<String>();
+        tags.add("sheesh");
+        double lat = 40.0;
+        double lng = 41.0;
+        Exhibit newExhibit = new Exhibit(id, null, kind, name, tags, lat, lng);
+        dao.insert(newExhibit);
+
+
+        ExhibitWithGroup item = dao.getExhibitById(id);
+        assertEquals(newExhibit.name, item.getExhibitName());
+        assertEquals(newExhibit.id, item.getExhibitID());
     }
 
-    @Test
-    public void testUpdate() {
-        SearchListItem item = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        dao.insert(item);
-        String id = item.id;
-
-        item = dao.get(id);
-        item.name = "exhibit";
-        int itemsUpdated = dao.update(item);
-        assertEquals(1, itemsUpdated);
-
-        item = dao.get(id);
-        assertNotNull(item);
-        assertEquals("exhibit", item.name);
-
-    }
 
     @Test
     public void testDelete() {
-        SearchListItem item = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        dao.insert(item);
-        String id = item.id;
+        String id = "entrance";
+        Exhibit.Kind kind = Exhibit.Kind.GATE;
+        String name = "aaaa";
+        ArrayList<String> tags = new ArrayList<String>();
+        tags.add("sheesh");
+        double lat = 40.0;
+        double lng = 41.0;
+        Exhibit newExhibit = new Exhibit(id, null, kind, name, tags, lat, lng);
+        dao.insert(newExhibit);
 
-        item = dao.get(id);
-        int itemsDeleted = dao.delete(item);
-        assertEquals(1, itemsDeleted);
-        assertNull(dao.get(id));
+        dao.deleteExhibits();
+        assertEquals(0, dao.count());
     }
+
 
     @Test
     public void testReturnNames() {
-        SearchListItem item = new SearchListItem("fentrance_exit_gate", "gate", "FEntrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        dao.insert(item);
-        String id1 = item.id;
+        String id1 = "hue";
+        String id2 = "huehue";
+        Exhibit.Kind kind = Exhibit.Kind.GATE;
+        ArrayList<String> tags = new ArrayList<String>();
+        tags.add("sheesh");
+        double lat = 40.0;
+        double lng = 41.0;
+        Exhibit newExhibit = new Exhibit(id1, null, kind, "Entrance and Exit Gate", tags, lat, lng);
+        dao.insert(newExhibit);
 
-        SearchListItem item2 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        dao.insert(item2);
-        String id2 = item2.id;
 
-        List<String> names = dao.getByName();
-        List<String> correctNames = new ArrayList<>(Arrays.asList("Entrance and Exit Gate", "FEntrance and Exit Gate"));
-        assertEquals(correctNames, names);
+        Exhibit newExhibit2 = new Exhibit(id2, null, kind, "FEntrance and Exit Gate", tags, lat, lng);
+        dao.insert(newExhibit2);
+
+
+
+        assertEquals(newExhibit2.name, "FEntrance and Exit Gate");
+        assertEquals(newExhibit.name, "Entrance and Exit Gate");
     }
 
-    @Test
-    public void testReturnNamesByTag() {
-        SearchListItem item = new SearchListItem("fentrance_exit_gate", "gate", "FEntrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal", "area"})));
-        dao.insert(item);
-
-        SearchListItem item2 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        dao.insert(item2);
-
-        SearchListItem item3 = new SearchListItem("hentrance_exit_gate", "gate", "HEntrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"area"})));
-        dao.insert(item3);
-
-        List<String> names = dao.getByTag("area");
-        List<String> correctNames = new ArrayList<String>(
-                Arrays.asList("FEntrance and Exit Gate",
-                        "HEntrance and Exit Gate"));
-        assertEquals(correctNames, names);
-    }
-    @Test
-    public void testReturnNameByInput() {
-        SearchListItem item = new SearchListItem("fentrance_exit_gate", "gate", "FEntrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal", "area"})));
-        dao.insert(item);
-
-        SearchListItem item2 = new SearchListItem("entrance_exit_gate", "gate", "Entrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"animal"})));
-        dao.insert(item2);
-
-        SearchListItem item3 = new SearchListItem("hentrance_exit_gate", "gate", "HEntrance and Exit Gate", new ArrayList<String>(Arrays.asList(new String[]{"area"})));
-        dao.insert(item3);
-
-        List<String> names = dao.getByInput("area");
-        List<String> correctNames = new ArrayList<String>(
-                Arrays.asList("FEntrance and Exit Gate",
-                        "HEntrance and Exit Gate"));
-        assertEquals(correctNames, names);
-        List<String> correctName = new ArrayList<String>(
-                Arrays.asList("Entrance and Exit Gate"));
-        List<String> singleName = dao.getByInput("Entrance and Exit Gate");
-        assertEquals(correctName, singleName);
-    }
-    */
 
 
 }
