@@ -16,10 +16,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -142,6 +139,34 @@ public class Pathfinder {
 
     public ArrayList<String> update(String loc){
         ArrayList<String> res = new ArrayList<>();
+
+        int currInd = fullPathIndex;
+        Double newLat = Double.valueOf(loc.split(",")[0]);
+        Double newLng = Double.valueOf(loc.split(",")[1]);
+        String tmpSource = "";
+
+        for (Map.Entry<String, Exhibit> pair: vInfo.entrySet()){
+            if (pair.getValue().lat == newLat && pair.getValue().lng == newLng){
+                tmpSource = pair.getKey();
+            }
+        }
+
+        List<String> newSelected = new ArrayList<>();
+
+        if (this.isBack == true) {
+            for (int i = this.targetSortedIndex-1; i <sortedSelectedItemsIDs.size(); i++){
+                newSelected.add(this.sortedSelectedItemsIDs.get(i));
+            }
+            //newSelected.add(sortedSelectedItemsIDs.get(this.targetSortedIndex-1));
+        } else {
+            for (int i = this.targetSortedIndex; i < sortedSelectedItemsIDs.size(); i++){
+                newSelected.add(this.sortedSelectedItemsIDs.get(i));
+            }
+        }
+
+        ArrayList<String> newSorted = sortID(newSelected, tmpSource);
+        newSorted.add("entrance_exit_gate");
+
 
         return res;
     }
