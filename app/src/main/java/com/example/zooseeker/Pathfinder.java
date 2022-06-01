@@ -158,10 +158,10 @@ public class Pathfinder {
         List<String> newSelected = new ArrayList<>();
 
         if (this.isBack == true) {
-            for (int i = this.targetSortedIndex-1; i <sortedSelectedItemsIDs.size(); i++){
+            for (int i = this.targetSortedIndex; i <sortedSelectedItemsIDs.size(); i++){
                 newSelected.add(this.sortedSelectedItemsIDs.get(i));
             }
-            //newSelected.add(sortedSelectedItemsIDs.get(this.targetSortedIndex-1));
+            //newSelected.add(this.sortedSelectedItemsIDs.get(targetSortedIndex-1));
         } else {
             for (int i = this.targetSortedIndex; i < sortedSelectedItemsIDs.size()-1; i++){
                 newSelected.add(this.sortedSelectedItemsIDs.get(i));
@@ -171,8 +171,14 @@ public class Pathfinder {
         ArrayList<String> newSorted = sortID(newSelected, tmpSource);
         newSorted.add("entrance_exit_gate");
 
-        for(int i = 0; i < newSorted.size(); i++){
-            this.sortedSelectedItemsIDs.set(i+nextInd, newSorted.get(i));
+        if (isBack == false) {
+            for (int i = 0; i < newSorted.size(); i++) {
+                this.sortedSelectedItemsIDs.set(i + nextInd, newSorted.get(i));
+            }
+        } else {
+            for (int i = 0; i < newSorted.size(); i++) {
+                this.sortedSelectedItemsIDs.set(i + nextInd, newSorted.get(i));
+            }
         }
 
         newSorted.add(0, tmpSource);
@@ -186,16 +192,8 @@ public class Pathfinder {
         }
 //        for(int i = nextIndex)
         //Log.d("index", String.valueOf(fullPathIndex));
-        Log.d("path", fullPath.get(fullPathIndex).get(0));
+        //Log.d("path", fullPath.get(fullPathIndex).get(0));
         return fullPath.get(fullPathIndex);
-    }
-
-    public static void judgePostive(){
-        flag = true;
-    }
-
-    public static void judgeNegative(){
-        flag = false;
     }
 
     public static void showAlert(Activity activity, String message) {
