@@ -144,7 +144,7 @@ public class SearchListActivity extends AppCompatActivity {
         Persistence persistence = new Persistence();
         persistence.saveIndex(this, -1);
         super.onStop();
-
+    // uselsess push ting
     }
 
     @Override
