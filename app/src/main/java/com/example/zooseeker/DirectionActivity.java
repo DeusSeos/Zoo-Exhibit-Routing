@@ -66,11 +66,10 @@ public class DirectionActivity extends AppCompatActivity {
 
         pathy = new Pathfinder(this, selectedItems);
         // could make this a call in the constructor (depends if we want to always optimize path first or not)
-        pathy.optimizeSelectedItemsIDs(null);
         if(!directions) {
             pathy.optimizeBriefSelectedItemsIDs();
         }else {
-            pathy.optimizeSelectedItemsIDs(null);
+            pathy.optimizeSelectedItemsIDs();
         }
 
 
@@ -119,11 +118,10 @@ public class DirectionActivity extends AppCompatActivity {
             Log.d("flag", String.valueOf(flag));
             // Use is off track
             if (flag == -1) {
-                pathy.showAlert(this,"You are off-track!\nClick replan if need.");
+                pathy.showAlert(this, "You are off-track!\nClick replan if need.");
                 Log.d("replan", String.valueOf(Pathfinder.flag));
                 return;
             }
-
             // User arrives
             if (flag == -2) {
                 directionsArray = new ArrayList<String>();
@@ -134,9 +132,18 @@ public class DirectionActivity extends AppCompatActivity {
                 return;
             }
 
-
-
+            // flag != -2, user is walking along the way
+            if (pathy.isBack == true){
+                directionsArray = directionsArray.subList(flag-1, directionsArray.size());
+            } else {
+                directionsArray = directionsArray.subList(flag, directionsArray.size());
+            }
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+            mockLocation.setText("");
+        });
     }
+
 
     void onSettingsClicked(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -157,23 +164,14 @@ public class DirectionActivity extends AppCompatActivity {
         boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
         pathy.pathUpdate(selectedItems, directions);
         directionsArray = pathy.next();
-        for(int i = 1; i < current; i++) {
+        for (int i = 1; i < current; i++) {
             directionsArray = pathy.next();
         }
 
         //Create array to loop directions into
         directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
         directionList.setAdapter(directionsAdapter);
-            // flag != -2, user is walking along the way
-            if (pathy.isBack == true){
-                directionsArray = directionsArray.subList(flag-1, directionsArray.size());
-            } else {
-                directionsArray = directionsArray.subList(flag, directionsArray.size());
-            }
-            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-            directionList.setAdapter(directionsAdapter);
-            mockLocation.setText("");
-        });
     }
+
 
 }
