@@ -118,7 +118,14 @@ public class DirectionActivity extends AppCompatActivity {
 
     }
 
-//    private void updateDirections() {
+    @Override
+    protected void onStop() {
+        Log.d("DirectionActivity", "Stopping...");
+
+        super.onStop();
+    }
+
+    //    private void updateDirections() {
 //        int current = pathy.getFullPathIndex();
 //        settings = (UserSettings) getApplication();
 //        SharedPreferences sharedPreferences = getSharedPreferences(UserSettings.PREFERENCES, MODE_PRIVATE);
