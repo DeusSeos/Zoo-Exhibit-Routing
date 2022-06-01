@@ -138,18 +138,22 @@ public class Pathfinder {
     }
 
     public ArrayList<String> update(String loc){
-        ArrayList<String> res = new ArrayList<>();
-
-        int currInd = fullPathIndex;
+        int nextInd = fullPathIndex+1;
         Double newLat = Double.valueOf(loc.split(",")[0]);
         Double newLng = Double.valueOf(loc.split(",")[1]);
         String tmpSource = "";
-
+        Log.d("check", "1");
         for (Map.Entry<String, Exhibit> pair: vInfo.entrySet()){
-            if (pair.getValue().lat == newLat && pair.getValue().lng == newLng){
-                tmpSource = pair.getKey();
+            Log.d("ids", String.valueOf(pair.getValue().lat));
+            if (pair != null && pair.getValue().lat != null) {
+                if (Double.compare(pair.getValue().lat, newLat) == 0 && Double.compare(pair.getValue().lng, newLng) == 0) {
+                    Log.d("latitude", String.valueOf(pair.getValue().lat));
+                    tmpSource = pair.getKey();
+                }
             }
         }
+
+        Log.d("source", tmpSource);
 
         List<String> newSelected = new ArrayList<>();
 
@@ -159,7 +163,7 @@ public class Pathfinder {
             }
             //newSelected.add(sortedSelectedItemsIDs.get(this.targetSortedIndex-1));
         } else {
-            for (int i = this.targetSortedIndex; i < sortedSelectedItemsIDs.size(); i++){
+            for (int i = this.targetSortedIndex; i < sortedSelectedItemsIDs.size()-1; i++){
                 newSelected.add(this.sortedSelectedItemsIDs.get(i));
             }
         }
@@ -167,8 +171,31 @@ public class Pathfinder {
         ArrayList<String> newSorted = sortID(newSelected, tmpSource);
         newSorted.add("entrance_exit_gate");
 
+        for(int i = 0; i < newSorted.size(); i++){
+            this.sortedSelectedItemsIDs.set(i+nextInd, newSorted.get(i));
+        }
 
-        return res;
+        newSorted.add(0, tmpSource);
+        int startIndex = 0;
+        int goalIndex = 1;
+        while(goalIndex < newSorted.size()) {
+            GraphPath<String, IdentifiedWeightedEdge> path = buildPath(newSorted, startIndex, goalIndex);
+            fullPath.set(fullPathIndex + startIndex, getDirections(path, goalIndex));
+            goalIndex++;
+            startIndex++;
+        }
+//        for(int i = nextIndex)
+        //Log.d("index", String.valueOf(fullPathIndex));
+        Log.d("path", fullPath.get(fullPathIndex).get(0));
+        return fullPath.get(fullPathIndex);
+    }
+
+    public static void judgePostive(){
+        flag = true;
+    }
+
+    public static void judgeNegative(){
+        flag = false;
     }
 
     public static void showAlert(Activity activity, String message) {
@@ -177,16 +204,11 @@ public class Pathfinder {
         alertBuilder
                 .setTitle("Off-track!")
                 .setMessage(message)
-                .setNegativeButton("Don't bother", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Pathfinder.flag = false;
-                    }
-                })
-                .setPositiveButton("Replan", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Got it", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                        //Pathfinder.judgePostive();
+                        //dialog.dismiss();
                         Pathfinder.flag = true;
                     }
                 })

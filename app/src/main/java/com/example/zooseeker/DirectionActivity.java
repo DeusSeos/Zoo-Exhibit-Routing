@@ -24,6 +24,7 @@ public class DirectionActivity extends AppCompatActivity {
     List<String> directionsArray = new ArrayList<>();
     private ArrayAdapter<String> directionsAdapter;
 
+
     public DirectionActivity() {
     }
 
@@ -38,6 +39,7 @@ public class DirectionActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.back_button);
         Button skipButton = findViewById(R.id.skip_button);
         Button mockButton = findViewById(R.id.mock_button);
+        Button replanButton = findViewById(R.id.replan_button);
 
         EditText mockLocation = findViewById(R.id.location);
 //        ImageButton settingsButton = findViewById(R.id.settings_button);
@@ -83,26 +85,24 @@ public class DirectionActivity extends AppCompatActivity {
             directionList.setAdapter(directionsAdapter);
         });
 
+        replanButton.setOnClickListener(view -> {
+            String s = mockLocation.getText().toString();
+            directionsArray = pathy.update(s);
+            directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
+            directionList.setAdapter(directionsAdapter);
+            mockLocation.setText("");
+        });
+
 
         mockButton.setOnClickListener(view -> {
             String s = mockLocation.getText().toString();
             int flag = pathy.mock(s);
             Log.d("flag", String.valueOf(flag));
-
             // Use is off track
             if (flag == -1) {
-                pathy.showAlert(this,"You are off-track!");
-
-                if (Pathfinder.flag == false) {
-                    directionList.setAdapter(directionsAdapter);
-                    mockLocation.setText("");
-                    return;
-                }
-
-                directionsArray = pathy.update(s);
-                directionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, directionsArray);
-                directionList.setAdapter(directionsAdapter);
-                mockLocation.setText("");
+                pathy.showAlert(this,"You are off-track!\nClick replan if need.");
+                Log.d("replan", String.valueOf(Pathfinder.flag));
+                return;
             }
 
             // User arrives
