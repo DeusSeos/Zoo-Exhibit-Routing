@@ -109,11 +109,6 @@ public class DirectionActivity extends AppCompatActivity {
             startActivity(settingsIntent);
         });
 
-
-
-
-
-
     }
 
     @Override
