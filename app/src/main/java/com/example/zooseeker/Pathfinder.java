@@ -287,37 +287,56 @@ public class Pathfinder {
     }
     public ArrayList<String> getBriefDirections(GraphPath<String, IdentifiedWeightedEdge> path) {
         ArrayList<String> directions = new ArrayList<>();
+        List<IdentifiedWeightedEdge> edgePath = path.getEdgeList();
         int i = 1;
         double edgeWeight = 0;
         String j = null;
-        IdentifiedWeightedEdge e1 = null;
+        IdentifiedWeightedEdge e = null;
         String defaultMessage = "  %d. Walk %.0f meters along %s to '%s'.\n";
-        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
-            if(j == null) {
-                j = e.getId();
-                edgeWeight = g.getEdgeWeight(e);
+        for (int k = 0; k < edgePath.size(); k++) {
+            if(edgePath.size() == 1) {
+                e = edgePath.get(k);
+                directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
+                        g.getEdgeWeight(e),
+                        eInfo.get(e.getId()).street,
+                        vInfo.get(g.getEdgeSource(e)).name));
                 continue;
             }
-            if(eInfo.get(e.getId()).street.equals(eInfo.get(j).street)) {
-                Log.d("PathfinderBriefDirection", eInfo.get(e.getId()).street);
-                edgeWeight += g.getEdgeWeight(e);
-                j = e.getId();
-            } else {
+            int l = k + 1;
+            if (l >= edgePath.size()) {
+                if(edgeWeight == 0) {
+                    edgeWeight = g.getEdgeWeight(edgePath.get(k));
+                }
+                e = edgePath.get(k);
                 directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
                         edgeWeight,
-                        eInfo.get(j).street,
-                        eInfo.get(e.getId()).street));
+                        eInfo.get(e.getId()).street,
+                        vInfo.get(g.getEdgeSource(e)).name));
                 i++;
-                Log.d("PAthFInderstreet", eInfo.get(e.getId()).street);
-                j = e.getId();
-                edgeWeight = 0 + g.getEdgeWeight(e);
-                e1 = e;
+                continue;
+            }
+            e = edgePath.get(k);
+            IdentifiedWeightedEdge e1 = edgePath.get(l);
+            if(eInfo.get(e.getId()).street.equals(eInfo.get(e1.getId()).street)) {
+                Log.d("PathfinderBriefDirection", "inequalsloop");
+                j = eInfo.get(e.getId()).street;
+                if(edgeWeight == 0) {
+                    edgeWeight = g.getEdgeWeight(e) + g.getEdgeWeight(e1);
+                }
+                edgeWeight += g.getEdgeWeight(e1);
+            }else {
+                if(edgeWeight == 0) {
+                    edgeWeight = g.getEdgeWeight(edgePath.get(k));
+                }
+                directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
+                        edgeWeight,
+                        j,
+                        eInfo.get(e1.getId()).street));
+                j = eInfo.get(e1.getId()).street;
+                edgeWeight = 0;
+                i++;
             }
         }
-        directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
-                edgeWeight,
-                eInfo.get(j).street,
-                vInfo.get(g.getEdgeTarget(e1)).name));
         Log.d("PathfinderBriefDirection", directions.toString());
         return directions;
     }
