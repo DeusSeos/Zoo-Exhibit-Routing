@@ -137,7 +137,7 @@ public class DirectionActivity extends AppCompatActivity {
         boolean directions = sharedPreferences.getBoolean(UserSettings.CUSTOM_DIRECTION, false);
         pathy.pathUpdate(selectedItems, directions);
         directionsArray = pathy.next();
-        for (int i = 0; i < current; i++) {
+        for (int i = -1; i < current; i++) {
             directionsArray = pathy.next();
         }
 
@@ -165,7 +165,7 @@ public class DirectionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        updateDirections();
+        updateDirections();
 
     }
 

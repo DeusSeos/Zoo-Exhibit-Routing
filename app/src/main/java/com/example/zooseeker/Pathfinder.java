@@ -436,7 +436,7 @@ public class Pathfinder {
                 }
                 directions.add(String.format(Locale.ENGLISH, defaultMessage, i,
                         edgeWeight,
-                        j,
+                        eInfo.get(e.getId()).street,
                         eInfo.get(e1.getId()).street));
                 j = eInfo.get(e1.getId()).street;
                 edgeWeight = 0;
